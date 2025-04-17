@@ -1,13 +1,12 @@
 #include "OnAnswer/kthMissing.h"
-#include "OnAnswer/books.h"
+#include "OnAnswer/painter.h"
 #include <iostream>
 
 int main() {
 
-    vector<int> arr = {25, 46, 28, 49, 24};
-    int n = 5;
-    int m = 4;
-    int ans = findMinMaxPages(arr,m);
+    vector<int> a = {10, 20, 30, 40};
+    int k = 2;
+    int ans = painterPartition(a, k);
     cout << "The answer is: " << ans << "\n";
     return 0;
 }
