@@ -1,12 +1,9 @@
-#include "OnAnswer/kthMissing.h"
-#include "OnAnswer/painter.h"
+#include "Array2D/maxone.h"
 #include <iostream>
 
 int main() {
+    vector<vector<int>> matrix = {{0, 0, 1}, {0, 0, 1}, {0, 0, 0}, {0, 1, 1}};
+    cout << "The row with maximum no. of 1's is: " << maxOne_bs(matrix) << '\n';
 
-    vector<int> a = {10, 20, 30, 40};
-    int k = 2;
-    int ans = painterPartition(a, k);
-    cout << "The answer is: " << ans << "\n";
     return 0;
 }
