@@ -1,14 +1,11 @@
 #include <vector>
 using namespace std;
-template <typename T>
-void merge(vector<T> &arr, int low, int mid, int high)
-{
+template <typename T> void merge(vector<T> &arr, int low, int mid, int high) {
     vector<T> temp;
     int left = low;
     int right = mid + 1;
 
-    while (left <= mid && right <= high)
-    {
+    while (left <= mid && right <= high) {
         if (arr[left] <= arr[right])
             temp.push_back(arr[left++]);
         else
@@ -24,9 +21,7 @@ void merge(vector<T> &arr, int low, int mid, int high)
         arr[i] = temp[i - low];
 }
 
-template <typename T>
-void merge_sort(vector<T> &arr, int low, int high)
-{
+template <typename T> void merge_sort(vector<T> &arr, int low, int high) {
     if (low >= high)
         return;
     int mid = (low + high) / 2;

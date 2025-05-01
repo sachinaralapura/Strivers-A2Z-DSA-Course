@@ -1,8 +1,7 @@
 #include <bits/stdc++.h>
 #include <iostream>
 using namespace std;
-template <typename T>
-void zeroToLeft(vector<T> &arr);
+template <typename T> void zeroToLeft(vector<T> &arr);
 // {
 //     int n = arr.size();
 //     int j = -1;
@@ -94,28 +93,25 @@ int getSingleElement_hash(vector<int> &arr);
 //     return -1;
 // }
 
-int getSingleElement_hashMap(vector<int> &arr);
-// {
-//     // size of the array:
-//     int n = arr.size();
+int getSingleElement_hashMap(vector<int> &arr) {
+    // size of the array:
+    int n = arr.size();
 
-//     // Declare the hashmap.
-//     // And hash the given array:
-//     map<int, int> mpp;
-//     for (int i = 0; i < n; i++)
-//     {
-//         mpp[arr[i]]++;
-//     }
-//     // Find the single element and return the answer:
-//     for (auto it : mpp)
-//     {
-//         if (it.second == 1)
-//             return it.first;
-//     }
-//     // This line will never execute
-//     // if the array contains a single element.
-//     return -1;
-// }
+    // Declare the hashmap.
+    // And hash the given array:
+    unordered_map<int, int> mpp;
+    for (int i = 0; i < n; i++) {
+        mpp[arr[i]]++;
+    }
+    // Find the single element and return the answer:
+    for (auto it : mpp) {
+        if (it.second == 1)
+            return it.first;
+    }
+    // This line will never execute
+    // if the array contains a single element.
+    return -1;
+}
 
 int getSingleElement_XOR(vector<int> &arr);
 // {
@@ -200,15 +196,13 @@ int getLongestSubarray_LRPointer(vector<int> &arr, long long k);
 //     return maxLen;
 // }
 
-// // Problem Statement : Given an array of integers arr[] and an integer target.
-// // 1st variant : Return YES if there exist two numbers such that their sum is equal to the target.Otherwise, return NO.
-// // 2nd variant : Return indices of the two numbers such that their sum is equal to the target.Otherwise,
-// //  we will return {-1, -1}.
-// // Note : You are not allowed to use the same element twice.Example : If the target is equal to 6 and
-// // num[1] = 3,
-// // then nums[1] + nums[1] = target is not a solution.
-// // first variant
-string twoSum1(vector<int> &arr, int k);
+// Problem Statement : Given an array of integers arr[] and an integer target.
+// 1st variant : Return YES if there exist two numbers such that their sum is equal to the
+// target.Otherwise, return NO. 2nd variant : Return indices of the two numbers such that their sum
+// is equal to the target.Otherwise, we will return {-1, -1}. Note : You are not allowed to use the
+// same element twice.Example : If the target is equal to 6 and num[1] = 3, then nums[1] + nums[1] =
+// target is not a solution. first variant
+string twoSum1_brute(vector<int> &arr, int k);
 // {
 //     int n = arr.size();
 //     for (int i = 0; i < n; i++)
@@ -262,7 +256,8 @@ string twoSum_hash(vector<int> &arr, int target);
 // 3 Sum : Find triplets that add up to a zero
 // Problem Statement : Given an array of N integers, your task is to find unique triplets
 // that add up to give a sum of zero.In short, you need to return an array of all the
-// unique triplets[arr[a], arr[b], arr[c]] such that i != j, j != k, k != i, and their sum is equal to zero.
+// unique triplets[arr[a], arr[b], arr[c]] such that i != j, j != k, k != i, and their sum is equal
+// to zero.
 vector<vector<int>> threeSum_brute(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -348,29 +343,24 @@ vector<vector<int>> threeSum_better(vector<int> &arr);
 // 4 Sum | Find Quads that add up to a target value
 // Problem Statement : Given an array of N integers,
 //  your task is to find unique quads that add up to give a target value.
-//  In short, you need to return an array of all the unique quadruplets[arr[a], arr[b], arr[c], arr[d]]
-//  such that their sum is equal to a given target.
-vector<vector<int>> fourSum_Opt(vector<int> &arr, int target)
-{
+//  In short, you need to return an array of all the unique quadruplets[arr[a], arr[b], arr[c],
+//  arr[d]] such that their sum is equal to a given target.
+vector<vector<int>> fourSum_Opt(vector<int> &arr, int target) {
     int n = arr.size();
     sort(arr.begin(), arr.end());
     vector<vector<int>> ans;
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         if (i > 0 && arr[i - 1] == arr[i])
             continue;
-        for (int j = i + 1; j < n; j++)
-        {
+        for (int j = i + 1; j < n; j++) {
             if (j > i + 1 && arr[j - 1] == arr[j])
                 continue;
             int k = j + 1;
             int l = n - 1;
-            while (k < l)
-            {
+            while (k < l) {
                 long long sum = (long long)arr[i] + arr[j] + arr[k] + arr[l];
-                if (sum == target)
-                {
+                if (sum == target) {
                     vector<int> temp = {arr[i] + arr[j] + arr[k] + arr[l]};
                     ans.push_back(temp);
                     k++;
@@ -379,8 +369,7 @@ vector<vector<int>> fourSum_Opt(vector<int> &arr, int target)
                         k++;
                     while (k < l && arr[l + 1] == arr[l])
                         l--;
-                }
-                else if (sum < target)
+                } else if (sum < target)
                     k++;
                 else
                     l--;
@@ -392,7 +381,8 @@ vector<vector<int>> fourSum_Opt(vector<int> &arr, int target)
 
 // Kadane's Algorithm : Maximum Subarray Sum in an Array
 // Problem Statement : Given an integer array arr, find the contiguous
-// subarray(containing at least one number) which has the largest sum and returns its sum and prints the subarray.
+// subarray(containing at least one number) which has the largest sum and returns its sum and prints
+// the subarray.
 long long maxSubarraySum(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -457,15 +447,13 @@ int maxLen(vector<int> &arr);
 // Count the number of subarrays with given xor K
 // Problem Statement : Given an array of integers A and an integer B.
 // Find the total number of subarrays having bitwise XOR of all elements equal to k.
-int subarraysWithXorKOpt(vector<int> arr, int k)
-{
+int subarraysWithXorKOpt(vector<int> arr, int k) {
     int n = arr.size();
     unordered_map<int, int> mpp;
     mpp[0] = 1;
     int cnt = 0;
     int totalXor = 0;
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         totalXor = totalXor ^ arr[i];
         int x = totalXor ^ k;
         cnt = cnt + mpp[x];
@@ -477,8 +465,7 @@ int subarraysWithXorKOpt(vector<int> arr, int k)
 // Merge Overlapping Sub - intervals
 // Problem Statement : Given an array of intervals,
 //  merge all the overlapping intervals and return an array of non - overlapping intervals.
-vector<vector<int>> mergeOverlappingIntervalsOpt(vector<vector<int>> &arr)
-{
+vector<vector<int>> mergeOverlappingIntervalsOpt(vector<vector<int>> &arr) {
     int n = arr.size();
     vector<vector<int>> ans;
     sort(arr.begin(), arr.end());
@@ -495,46 +482,38 @@ vector<vector<int>> mergeOverlappingIntervalsOpt(vector<vector<int>> &arr)
 // Problem statement: Given two sorted arrays arr1[] and arr2[] of sizes n and m
 // in non-decreasing order. Merge them in sorted order. Modify arr1 so that it contains
 // the first N elements and modify arr2 so that it contains the last M elements.
-void merge(vector<long long> &arr1, vector<long long> &arr2)
-{
+void merge(vector<long long> &arr1, vector<long long> &arr2) {
     int n = arr1.size();
     int m = arr2.size();
     int left = n - 1;
     int right = 0;
-    while (left >= 0 && right < m)
-    {
-        if (arr1[left] > arr2[right])
-        {
+    while (left >= 0 && right < m) {
+        if (arr1[left] > arr2[right]) {
             swap(arr1[left], arr2[right]);
             left--;
             right++;
-        }
-        else
+        } else
             break;
     }
     sort(arr1.begin(), arr1.end());
     sort(arr2.begin(), arr2.end());
 }
 
-void swapIfGreater(vector<long long> &arr1, vector<long long> &arr2, int index1, int index2)
-{
+void swapIfGreater(vector<long long> &arr1, vector<long long> &arr2, int index1, int index2) {
     if (arr1[index1] > arr2[index2])
         swap(arr1[index1], arr2[index2]);
 }
 
-void Merge_gap(vector<long long> &arr1, vector<long long> &arr2)
-{
+void Merge_gap(vector<long long> &arr1, vector<long long> &arr2) {
     int n = arr1.size();
     int m = arr2.size();
     int len = (n + m);
     int gap = (len / 2) + (len % 2);
 
-    while (gap > 0)
-    {
+    while (gap > 0) {
         int left = 0;
         int right = left + gap;
-        while (right < len)
-        {
+        while (right < len) {
             // arr1 && arr2
             if (left < n && right >= n)
                 swapIfGreater(arr1, arr2, left, right - n);
@@ -553,7 +532,8 @@ void Merge_gap(vector<long long> &arr1, vector<long long> &arr2)
     }
 }
 // // Stock Buy And Sell
-// // Problem Statement : You are given an array of prices where prices[i] is the price of a given stock on an ith day.
+// // Problem Statement : You are given an array of prices where prices[i] is the price of a given
+// stock on an ith day.
 int BuySell(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -571,11 +551,11 @@ int BuySell(vector<int> &arr);
 //     return maxDiff;
 // }
 
-int BuySell_Opt(vector<int> &arr);
+// int BuySell_Opt(vector<int> &arr)
 // {
 //     int n = arr.size();
 //     int maxProfit = 0;
-//     int minPrice = INT_MIN;
+//     int minPrice = INT_MAX;
 //     for (int i = 0; i < n; i++)
 //     {
 //         minPrice = min(arr[i], minPrice);
@@ -612,7 +592,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 // }
 
 // // next_permutation : find next lexicographically greater permutation
-// // Problem Statement : Given an array Arr[] of integers, rearrange the numbers of the given array into the
+// // Problem Statement : Given an array Arr[] of integers, rearrange the numbers of the given array
+// into the
 // //  lexicographically next greater permutation of numbers.If such an arrangement is not possible,
 // // it must rearrange to the lowest possible order(i.e., sorted in ascending order).
 // // Input format :
@@ -620,7 +601,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 // // Output:
 // //  Arr[] = {2, 1, 3}
 
-// // Explanation : All permutations of{1, 2, 3} are{{1, 2, 3}, {1, 3, 2}, {2, 13}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}}.So,
+// // Explanation : All permutations of{1, 2, 3} are{{1, 2, 3}, {1, 3, 2}, {2, 13}, {2, 3, 1}, {3,
+// 1, 2}, {3, 2, 1}}.So,
 // // the next permutation just after{1, 3, 2} is{2, 1, 3}.
 // bool Next_permutation(vector<int> &arr);
 // template <typename T>
@@ -675,8 +657,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 
 // // Leaders in an Array
 // // Problem Statement : Given an array,print all the elements which are leaders.
-// // A Leader is an element that is greater than all of the elements on its right side in the array.
-// vector<int> printLeadersBruteForce(vector<int> &arr)
+// // A Leader is an element that is greater than all of the elements on its right side in the
+// array. vector<int> printLeadersBruteForce(vector<int> &arr)
 // {
 //     int n = arr.size();
 //     vector<int> ans;
@@ -901,19 +883,16 @@ int findAllSubarraysWithGivenSum(vector<int> &arr, int k);
 // }
 
 // Program to generate Pascal's Triangle
-// Variation 1 : Given row number r and column number c.Print the element at position(r, c) in Pascal’s triangle.
-// int nCr(int n, int r);
-// int pascalTriangle(int r, int c)
+// Variation 1 : Given row number r and column number c.Print the element at position(r, c) in
+// Pascal’s triangle. int nCr(int n, int r); int pascalTriangle(int r, int c)
 // {
 //     int element = nCr(r - 1, c - 1);
 //     return element;
 // }
 
-int nCr(int n, int r)
-{
+int nCr(int n, int r) {
     long long res = 1;
-    for (int i = 0; i < r; i++)
-    {
+    for (int i = 0; i < r; i++) {
         res = res * (n - i);
         res = res / (i + 1);
     }
@@ -930,12 +909,10 @@ int nCr(int n, int r)
 // }
 
 // Variation 3 : Given the number of rows n.Print the first n rows of Pascal’s triangle.
-vector<vector<int>> pascalTriangle(int n)
-{
+vector<vector<int>> pascalTriangle(int n) {
     vector<vector<int>> ans;
     // Store the entire pascal's triangle:
-    for (int row = 1; row <= n; row++)
-    {
+    for (int row = 1; row <= n; row++) {
         vector<int> tempLst; // temporary list
         for (int col = 1; col <= row; col++)
             tempLst.push_back(nCr(row - 1, col - 1));
