@@ -6,8 +6,12 @@
 using namespace std;
 
 template <typename T> ST *findMiddle(ST *head) {
-    ST *fast = head;
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
     ST *slow = head;
+    // a node previous to middle 
+    ST *fast = head->next;
 
     while (fast != nullptr && fast->next != nullptr) {
         slow = slow->next;
@@ -16,4 +20,4 @@ template <typename T> ST *findMiddle(ST *head) {
     return slow;
 }
 
-#endif 
+#endif

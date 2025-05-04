@@ -30,4 +30,4 @@ template <typename T> SllNode<T> *reverse_recursive(SllNode<T> *head) {
     return newHead;
 }
 
-#endif 
+#endif

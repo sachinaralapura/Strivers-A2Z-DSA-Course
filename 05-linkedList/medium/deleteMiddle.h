@@ -1,3 +1,6 @@
+#ifndef DELETE_MIDDLE
+#define DELETE_MIDDLE
+
 #include "../ll.h"
 #include "findMiddle.h"
 template <typename T> ST *deleteMiddleNode(ST *head) {
@@ -18,3 +21,5 @@ template <typename T> ST *deleteMiddleNode(ST *head) {
     delete deleteNode;
     return head;
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef ODD_EVEN
+#define ODD_EVEN
+
 #include "../ll.h"
 #include <type_traits>
 
@@ -25,3 +28,5 @@ template <typename T> SllNode<T> *OddEven(SllNode<T> *head) {
     }
     return evenHead->next;
 }
+
+#endif

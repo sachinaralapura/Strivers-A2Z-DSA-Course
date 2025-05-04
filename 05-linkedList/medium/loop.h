@@ -1,3 +1,5 @@
+#ifndef FIND_LOOP
+#define FIND_LOOP
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -57,3 +59,5 @@ template <typename T> int LoopLength(SllNode<T> *h) {
 
     return 0;
 }
+
+#endif

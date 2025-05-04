@@ -1,3 +1,6 @@
+#ifndef DELETE_TAIL
+#define DELETE_TAIL
+
 #include "../ll.h"
 
 template <typename T> ST *deleteTailFromNth(ST *head, int n, int length) {
@@ -23,3 +26,5 @@ template <typename T> ST *deleteTailFromNth(ST *head, int n, int length) {
     delete (deleteNode);
     return head;
 }
+
+#endif
