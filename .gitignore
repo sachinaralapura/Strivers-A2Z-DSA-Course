@@ -3,3 +3,5 @@ a.out
 .vscode
 settings.json
 .clang-format
+.clangd
+test.cpp

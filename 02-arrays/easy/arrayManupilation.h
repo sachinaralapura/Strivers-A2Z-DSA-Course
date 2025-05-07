@@ -93,7 +93,7 @@ int getSingleElement_hash(vector<int> &arr);
 //     return -1;
 // }
 
-int getSingleElement_hashMap(vector<int> &arr) {
+inline int getSingleElement_hashMap(vector<int> &arr) {
     // size of the array:
     int n = arr.size();
 
@@ -197,11 +197,12 @@ int getLongestSubarray_LRPointer(vector<int> &arr, long long k);
 // }
 
 // Problem Statement : Given an array of integers arr[] and an integer target.
-// 1st variant : Return YES if there exist two numbers such that their sum is equal to the
-// target.Otherwise, return NO. 2nd variant : Return indices of the two numbers such that their sum
-// is equal to the target.Otherwise, we will return {-1, -1}. Note : You are not allowed to use the
-// same element twice.Example : If the target is equal to 6 and num[1] = 3, then nums[1] + nums[1] =
-// target is not a solution. first variant
+// 1st variant : Return YES if there exist two numbers such that their sum is
+// equal to the target.Otherwise, return NO. 2nd variant : Return indices of the
+// two numbers such that their sum is equal to the target.Otherwise, we will
+// return {-1, -1}. Note : You are not allowed to use the same element
+// twice.Example : If the target is equal to 6 and num[1] = 3, then nums[1] +
+// nums[1] = target is not a solution. first variant
 string twoSum1_brute(vector<int> &arr, int k);
 // {
 //     int n = arr.size();
@@ -254,10 +255,10 @@ string twoSum_hash(vector<int> &arr, int target);
 // }
 
 // 3 Sum : Find triplets that add up to a zero
-// Problem Statement : Given an array of N integers, your task is to find unique triplets
-// that add up to give a sum of zero.In short, you need to return an array of all the
-// unique triplets[arr[a], arr[b], arr[c]] such that i != j, j != k, k != i, and their sum is equal
-// to zero.
+// Problem Statement : Given an array of N integers, your task is to find unique
+// triplets that add up to give a sum of zero.In short, you need to return an
+// array of all the unique triplets[arr[a], arr[b], arr[c]] such that i != j, j
+// != k, k != i, and their sum is equal to zero.
 vector<vector<int>> threeSum_brute(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -343,9 +344,9 @@ vector<vector<int>> threeSum_better(vector<int> &arr);
 // 4 Sum | Find Quads that add up to a target value
 // Problem Statement : Given an array of N integers,
 //  your task is to find unique quads that add up to give a target value.
-//  In short, you need to return an array of all the unique quadruplets[arr[a], arr[b], arr[c],
-//  arr[d]] such that their sum is equal to a given target.
-vector<vector<int>> fourSum_Opt(vector<int> &arr, int target) {
+//  In short, you need to return an array of all the unique quadruplets[arr[a],
+//  arr[b], arr[c], arr[d]] such that their sum is equal to a given target.
+inline vector<vector<int>> fourSum_Opt(vector<int> &arr, int target) {
     int n = arr.size();
     sort(arr.begin(), arr.end());
     vector<vector<int>> ans;
@@ -381,8 +382,8 @@ vector<vector<int>> fourSum_Opt(vector<int> &arr, int target) {
 
 // Kadane's Algorithm : Maximum Subarray Sum in an Array
 // Problem Statement : Given an integer array arr, find the contiguous
-// subarray(containing at least one number) which has the largest sum and returns its sum and prints
-// the subarray.
+// subarray(containing at least one number) which has the largest sum and
+// returns its sum and prints the subarray.
 long long maxSubarraySum(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -412,8 +413,9 @@ long long maxSubarraySum(vector<int> &arr);
 // }
 
 // Length of the longest subarray with zero Sum
-// Problem Statement : Given an array containing both positive and negative integers,
-// we have to find the length of the longest subarray with the sum of all elements equal to zero.
+// Problem Statement : Given an array containing both positive and negative
+// integers, we have to find the length of the longest subarray with the sum of
+// all elements equal to zero.
 int maxLen(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -446,8 +448,9 @@ int maxLen(vector<int> &arr);
 
 // Count the number of subarrays with given xor K
 // Problem Statement : Given an array of integers A and an integer B.
-// Find the total number of subarrays having bitwise XOR of all elements equal to k.
-int subarraysWithXorKOpt(vector<int> arr, int k) {
+// Find the total number of subarrays having bitwise XOR of all elements equal
+// to k.
+int inline subarraysWithXorKOpt(vector<int> arr, int k) {
     int n = arr.size();
     unordered_map<int, int> mpp;
     mpp[0] = 1;
@@ -464,8 +467,10 @@ int subarraysWithXorKOpt(vector<int> arr, int k) {
 
 // Merge Overlapping Sub - intervals
 // Problem Statement : Given an array of intervals,
-//  merge all the overlapping intervals and return an array of non - overlapping intervals.
-vector<vector<int>> mergeOverlappingIntervalsOpt(vector<vector<int>> &arr) {
+//  merge all the overlapping intervals and return an array of non - overlapping
+//  intervals.
+vector<vector<int>> inline mergeOverlappingIntervalsOpt(
+    vector<vector<int>> &arr) {
     int n = arr.size();
     vector<vector<int>> ans;
     sort(arr.begin(), arr.end());
@@ -480,9 +485,10 @@ vector<vector<int>> mergeOverlappingIntervalsOpt(vector<vector<int>> &arr) {
 
 // Merge two Sorted Arrays Without Extra Space
 // Problem statement: Given two sorted arrays arr1[] and arr2[] of sizes n and m
-// in non-decreasing order. Merge them in sorted order. Modify arr1 so that it contains
-// the first N elements and modify arr2 so that it contains the last M elements.
-void merge(vector<long long> &arr1, vector<long long> &arr2) {
+// in non-decreasing order. Merge them in sorted order. Modify arr1 so that it
+// contains the first N elements and modify arr2 so that it contains the last M
+// elements.
+void inline merge(vector<long long> &arr1, vector<long long> &arr2) {
     int n = arr1.size();
     int m = arr2.size();
     int left = n - 1;
@@ -499,12 +505,13 @@ void merge(vector<long long> &arr1, vector<long long> &arr2) {
     sort(arr2.begin(), arr2.end());
 }
 
-void swapIfGreater(vector<long long> &arr1, vector<long long> &arr2, int index1, int index2) {
+inline void swapIfGreater(vector<long long> &arr1, vector<long long> &arr2,
+                          int index1, int index2) {
     if (arr1[index1] > arr2[index2])
         swap(arr1[index1], arr2[index2]);
 }
 
-void Merge_gap(vector<long long> &arr1, vector<long long> &arr2) {
+inline void Merge_gap(vector<long long> &arr1, vector<long long> &arr2) {
     int n = arr1.size();
     int m = arr2.size();
     int len = (n + m);
@@ -532,8 +539,8 @@ void Merge_gap(vector<long long> &arr1, vector<long long> &arr2) {
     }
 }
 // // Stock Buy And Sell
-// // Problem Statement : You are given an array of prices where prices[i] is the price of a given
-// stock on an ith day.
+// // Problem Statement : You are given an array of prices where prices[i] is
+// the price of a given stock on an ith day.
 int BuySell(vector<int> &arr);
 // {
 //     int n = arr.size();
@@ -566,7 +573,8 @@ int BuySell(vector<int> &arr);
 
 // // Rearrange Array Elements by Sign
 // // Problem Statement :
-// // There’s an array ‘A’ of size ‘N’ with an equal number of positive and negative elements.
+// // There’s an array ‘A’ of size ‘N’ with an equal number of positive and
+// negative elements.
 // // Without altering the relative order of positive and negative elements,
 // // you must return an array of alternately positive and negative values.
 vector<int> RearrangebySign(vector<int> &arr);
@@ -592,17 +600,19 @@ vector<int> RearrangebySign(vector<int> &arr);
 // }
 
 // // next_permutation : find next lexicographically greater permutation
-// // Problem Statement : Given an array Arr[] of integers, rearrange the numbers of the given array
-// into the
-// //  lexicographically next greater permutation of numbers.If such an arrangement is not possible,
-// // it must rearrange to the lowest possible order(i.e., sorted in ascending order).
+// // Problem Statement : Given an array Arr[] of integers, rearrange the
+// numbers of the given array into the
+// //  lexicographically next greater permutation of numbers.If such an
+// arrangement is not possible,
+// // it must rearrange to the lowest possible order(i.e., sorted in ascending
+// order).
 // // Input format :
 // //  Arr[] = {1, 3, 2}
 // // Output:
 // //  Arr[] = {2, 1, 3}
 
-// // Explanation : All permutations of{1, 2, 3} are{{1, 2, 3}, {1, 3, 2}, {2, 13}, {2, 3, 1}, {3,
-// 1, 2}, {3, 2, 1}}.So,
+// // Explanation : All permutations of{1, 2, 3} are{{1, 2, 3}, {1, 3, 2}, {2,
+// 13}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}}.So,
 // // the next permutation just after{1, 3, 2} is{2, 1, 3}.
 // bool Next_permutation(vector<int> &arr);
 // template <typename T>
@@ -642,8 +652,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 //         return false;
 //     }
 
-//     // swap breakIndex element with least great element to the right of the breakIndex
-//     for (int i = n - 1; i > breakIndex; i--)
+//     // swap breakIndex element with least great element to the right of the
+//     breakIndex for (int i = n - 1; i > breakIndex; i--)
 //     {
 //         if (arr[i] > arr[breakIndex])
 //         {
@@ -656,9 +666,10 @@ vector<int> RearrangebySign(vector<int> &arr);
 // }
 
 // // Leaders in an Array
-// // Problem Statement : Given an array,print all the elements which are leaders.
-// // A Leader is an element that is greater than all of the elements on its right side in the
-// array. vector<int> printLeadersBruteForce(vector<int> &arr)
+// // Problem Statement : Given an array,print all the elements which are
+// leaders.
+// // A Leader is an element that is greater than all of the elements on its
+// right side in the array. vector<int> printLeadersBruteForce(vector<int> &arr)
 // {
 //     int n = arr.size();
 //     vector<int> ans;
@@ -697,8 +708,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 
 // Longest Consecutive Sequence in an Array
 // Problem Statement : You are given an array of ‘N’ integers.
-// You need to find the length of the longest sequence which contains the consecutive elements.
-// int longestSuccessiveElements(vector<int> &arr)
+// You need to find the length of the longest sequence which contains the
+// consecutive elements. int longestSuccessiveElements(vector<int> &arr)
 // {
 //     unordered_set<int> st;
 //     int maxCnt = 0;
@@ -723,8 +734,8 @@ vector<int> RearrangebySign(vector<int> &arr);
 
 // Set Matrix Zero
 // Problem Statement : Given a matrix if an element in the matrix is 0
-// then you will have to set its entire column and row to 0 and then return the matrix.
-// vector<vector<int>> zeroMatrix(vector<vector<int>> &matrix)
+// then you will have to set its entire column and row to 0 and then return the
+// matrix. vector<vector<int>> zeroMatrix(vector<vector<int>> &matrix)
 // {
 //     int rowSize = matrix.size();
 //     int colSize = matrix[0].size();
@@ -800,8 +811,9 @@ vector<int> RearrangebySign(vector<int> &arr);
 // }
 
 // Rotate Image by 90 degree
-// Problem Statement : Given a matrix, your task is to rotate the matrix 90 degrees clockwise.
-vector<vector<int>> rotateMatrix(vector<vector<int>> &matrix) {
+// Problem Statement : Given a matrix, your task is to rotate the matrix 90
+// degrees clockwise.
+inline vector<vector<int>> rotateMatrix(vector<vector<int>> &matrix) {
     int n = matrix.size();
     int m = matrix[0].size();
     // transpose the matrix
@@ -881,14 +893,15 @@ int findAllSubarraysWithGivenSum(vector<int> &arr, int k);
 // }
 
 // Program to generate Pascal's Triangle
-// Variation 1 : Given row number r and column number c.Print the element at position(r, c) in
-// Pascal’s triangle. int nCr(int n, int r); int pascalTriangle(int r, int c)
+// Variation 1 : Given row number r and column number c.Print the element at
+// position(r, c) in Pascal’s triangle. int nCr(int n, int r); int
+// pascalTriangle(int r, int c)
 // {
 //     int element = nCr(r - 1, c - 1);
 //     return element;
 // }
 
-int nCr(int n, int r) {
+inline int nCr(int n, int r) {
     long long res = 1;
     for (int i = 0; i < r; i++) {
         res = res * (n - i);
@@ -906,8 +919,9 @@ int nCr(int n, int r) {
 //     }
 // }
 
-// Variation 3 : Given the number of rows n.Print the first n rows of Pascal’s triangle.
-vector<vector<int>> pascalTriangle(int n) {
+// Variation 3 : Given the number of rows n.Print the first n rows of Pascal’s
+// triangle.
+inline vector<vector<int>> pascalTriangle(int n) {
     vector<vector<int>> ans;
     // Store the entire pascal's triangle:
     for (int row = 1; row <= n; row++) {
