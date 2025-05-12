@@ -21,9 +21,14 @@ string getHash(string &s) {
 }
 
 int main(int argc, char const *argv[]) {
-    string str = "sachin";
-    string ans = getHash(str);
-    cout << ans << endl;
+    // string str = "sachin";
+    // string ans = getHash(str);
+    // cout << ans << endl;
+
+    int n = 3;
+    int k = 2;
+    cout << (n << k) << endl;
+    cout << (n * (1 << k)) << endl;
     return 0;
 }
 

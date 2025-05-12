@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
- void solve(int i, int n, string str, string &temp, vector<string> &ans) {
+inline void solve(int i, int n, string str, string &temp, vector<string> &ans) {
     if (i == n) {
         ans.push_back(temp);
         return;
