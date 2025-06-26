@@ -1,3 +1,5 @@
+#ifndef LL_DELETE_DUPLICATE
+#define LL_DELETE_DUPLICATE
 // Delete all duplicates in sorted DLL
 #include "../ll.h"
 #include <cstdlib>
@@ -19,3 +21,4 @@ template <typename T> DT *DDuplicates(DT *head) {
     }
     return head;
 }
+#endif

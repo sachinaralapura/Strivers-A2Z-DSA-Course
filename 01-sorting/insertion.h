@@ -1,3 +1,5 @@
+#ifndef SORT_INSERTION
+#define SORT_INSERTION
 template <typename T>
 void insertion_sort(T arr[], int n)
 {
@@ -13,3 +15,5 @@ void insertion_sort(T arr[], int n)
         }
     }
 }
+
+#endif

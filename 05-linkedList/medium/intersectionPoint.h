@@ -1,5 +1,5 @@
-#ifndef INTER_POINT
-#define INTER_POINT
+#ifndef LL_INTER_POINT
+#define LL_INTER_POINT
 #include "../ll.h"
 
 template <typename T> ST *IPoint(ST *head1, ST *head2) {

@@ -28,17 +28,3 @@ vector<vector<int>> subsets(vector<int> arr) {
     }
     return ans;
 }
-
-int main() {
-    vector<int> arr = {1, 2, 3, 4, 5};
-    vector<vector<int>> ans;
-    vector<int> ds;
-    ans = subsets(arr);
-    for (auto it : ans) {
-        cout << "[ ";
-        for (auto i : it) {
-            cout << i << " ";
-        }
-        cout << "]" << endl;
-    }
-}

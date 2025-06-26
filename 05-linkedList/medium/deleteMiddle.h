@@ -1,5 +1,5 @@
-#ifndef DELETE_MIDDLE
-#define DELETE_MIDDLE
+#ifndef LL_DELETE_MIDDLE
+#define LL_DELETE_MIDDLE
 
 #include "../ll.h"
 #include "findMiddle.h"

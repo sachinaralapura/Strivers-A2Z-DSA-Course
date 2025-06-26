@@ -1,6 +1,3 @@
-#include <iostream>
-using namespace std;
-
 // using built-in function
 int NumOfSetBit(int n) { return __builtin_popcount(n); }
 
@@ -27,10 +24,4 @@ int NumOfSetBitTwo(int n) {
 int Distance(int start, int goal) {
     int res = start ^ goal;
     return NumOfSetBit(res);
-}
-
-int main() {
-    int res = Distance(8, 7);
-    cout << res << endl;
-    return 1;
 }

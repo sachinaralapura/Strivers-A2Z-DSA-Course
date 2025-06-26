@@ -1,5 +1,5 @@
-#ifndef ODD_EVEN
-#define ODD_EVEN
+#ifndef LL_ODD_EVEN
+#define LL_ODD_EVEN
 
 #include "../ll.h"
 #include <type_traits>

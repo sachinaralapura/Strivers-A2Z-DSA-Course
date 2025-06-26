@@ -1,5 +1,3 @@
-#include <iostream>
-using namespace std;
 // return xor from 1 to n
 int findXor(int n) {
     int reminder = n % 4;
@@ -15,9 +13,3 @@ int findXor(int n) {
 }
 
 int findXorRange(int l, int r) { return findXor(l - 1) ^ findXor(r); }
-
-int main() {
-    int xorr = findXorRange(4, 8);
-    cout << xorr << endl;
-    return 0;
-}

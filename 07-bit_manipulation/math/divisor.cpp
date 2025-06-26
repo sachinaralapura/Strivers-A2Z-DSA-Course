@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #include <cmath>
-#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -15,12 +14,4 @@ vector<int> divisors(int n) {
         }
     }
     return divisor;
-}
-int main() {
-    vector<int> ans = divisors(36);
-    for (auto i : ans) {
-        cout << i << " ";
-    }
-
-    return 0;
 }

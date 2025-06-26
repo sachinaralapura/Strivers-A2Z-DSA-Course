@@ -1,3 +1,6 @@
+#ifndef SORT_MERGE
+#define SORT_MERGE
+
 #include <vector>
 using namespace std;
 template <typename T> void merge(vector<T> &arr, int low, int mid, int high) {
@@ -29,3 +32,5 @@ template <typename T> void merge_sort(vector<T> &arr, int low, int high) {
     merge_sort<T>(arr, mid + 1, high);
     merge<T>(arr, low, mid, high);
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifndef LL_TWO_SUM
+#define LL_TWO_SUM
 // given a sorted dll , find pairs that adds up to given number
 #include "../ll.h"
 #include <utility>
@@ -23,3 +25,4 @@ template <typename T> vector<pair<T, T>> twoSum(DT *head, DT *tail, int k) {
     }
     return ans;
 }
+#endif

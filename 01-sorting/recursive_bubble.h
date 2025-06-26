@@ -1,3 +1,6 @@
+#ifndef SORT_RECURSIVE_BUBBLE
+#define SORT_RECURSIVE_BUBBLE
+
 #include <vector>
 using namespace std;
 template <typename T> void bubble_sort_recursive(vector<T> &arr, int n) {
@@ -17,3 +20,5 @@ template <typename T> void bubble_sort_recursive(vector<T> &arr, int n) {
         return;
     bubble_sort_recursive(arr, n - 1);
 }
+
+#endif

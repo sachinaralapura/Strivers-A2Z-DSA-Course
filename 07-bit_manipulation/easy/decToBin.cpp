@@ -1,9 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#include <iostream>
-int main() {
-    int dec = 13;
-
+string decToBin(int dec) {
     string binary = "";
     while (dec != 0) {
         if (dec % 2 == 1)
@@ -14,5 +11,5 @@ int main() {
     }
 
     reverse(binary.begin(), binary.end());
-    cout << binary << endl;
+    return binary;
 }

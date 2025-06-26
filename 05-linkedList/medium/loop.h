@@ -1,5 +1,5 @@
-#ifndef FIND_LOOP
-#define FIND_LOOP
+#ifndef LL_FIND_LOOP
+#define LL_FIND_LOOP
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -30,10 +30,10 @@ template <typename T> SllNode<T> *FindFirstNode(SllNode<T> *h) {
     }
 
     if (loop) {
-        slow = head;
+        slow = h;
         while (slow != fast) {
             slow = slow->next;
-            fast = fasst->next;
+            fast = fast->next;
         }
         return slow;
     }

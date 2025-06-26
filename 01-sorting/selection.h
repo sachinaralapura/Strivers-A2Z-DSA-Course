@@ -1,3 +1,6 @@
+#ifndef SORT_SELECTION
+#define SORT_SELECTION
+
 // The algorithm steps are as follows :
 
 // First, we will select the range of the unsorted array using a loop(say i) that indicates the
@@ -26,3 +29,5 @@ template <typename T> void selection_sort(T arr[], int n) {
         arr[i] = t;
     }
 }
+
+#endif

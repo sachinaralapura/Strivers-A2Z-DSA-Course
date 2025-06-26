@@ -1,3 +1,5 @@
+#ifndef LL_GROUP_REVERSE
+#define LL_GROUP_REVERSE
 #include "../ll.h"
 #include "../medium/reverse.h"
 
@@ -17,11 +19,11 @@ template <typename T> ST *groupReverse(ST *head, int k, int n) {
             break;
         ST *nextNode = kthNode->next;
         kthNode->next = nullptr;
-        temp == head ? head = reverse_iter(temp)
-                     : prevNode->next = reverse_iter(temp);
+        temp == head ? head = reverse_iter(temp) : prevNode->next = reverse_iter(temp);
 
         prevNode = temp;
         temp = nextNode;
     }
     return head;
 }
+#endif

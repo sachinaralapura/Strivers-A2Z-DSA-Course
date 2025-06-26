@@ -1,5 +1,5 @@
-#ifndef FINDMIDDLE_H
-#define FINDMIDDLE_H
+#ifndef LL_FINDMIDDLE_H
+#define LL_FINDMIDDLE_H
 
 #include "../ll.h"
 #include <bits/stdc++.h>
@@ -10,7 +10,7 @@ template <typename T> ST *findMiddle(ST *head) {
         return head;
 
     ST *slow = head;
-    // a node previous to middle 
+    // a node previous to middle
     ST *fast = head->next;
 
     while (fast != nullptr && fast->next != nullptr) {

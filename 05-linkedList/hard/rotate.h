@@ -1,3 +1,5 @@
+#ifndef LL_ROTATE
+#define LL_ROTATE
 #include "../ll.h"
 
 template <typename T> ST *rotateLL(ST *head, int k) {
@@ -16,3 +18,4 @@ template <typename T> ST *rotateLL(ST *head, int k) {
     temp->next = nullptr;
     return head;
 }
+#endif

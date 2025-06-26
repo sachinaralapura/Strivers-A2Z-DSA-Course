@@ -1,5 +1,5 @@
-#ifndef ADD_ONE
-#define ADD_ONE
+#ifndef LL_ADD_ONE
+#define LL_ADD_ONE
 #include "../ll.h"
 #include "reverse.h"
 template <typename T> ST *addOneLinkList(ST *head) {

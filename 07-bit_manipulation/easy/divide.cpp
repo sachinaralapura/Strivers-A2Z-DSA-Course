@@ -1,5 +1,5 @@
 #include <climits>
-#include <iostream>
+#include <math.h>
 using namespace std;
 
 int divide(int dividend, int divisor) {
@@ -24,10 +24,4 @@ int divide(int dividend, int divisor) {
     if (quotient == (1 << 31) && !positive)
         return INT_MIN;
     return positive ? quotient : -quotient;
-}
-
-int main() {
-    int quotient = divide(22, -3);
-    cout << quotient << endl;
-    return 0;
 }

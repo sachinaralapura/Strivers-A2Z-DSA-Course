@@ -93,8 +93,3 @@ int setRightmostUnsetBit(int n) {
 bool AllBitOne(int n) { return !((n + 1) & n); }
 
 void swapNumber(int *, int *);
-int main() {
-    int pos = getFirstSetBitTwo(10);
-    cout << pos << endl;
-    return 0;
-}

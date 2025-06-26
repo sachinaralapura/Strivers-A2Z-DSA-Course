@@ -1,3 +1,6 @@
+#ifndef SORT_QUICK
+#define SORT_QUICK
+
 #include <vector>
 using namespace std;
 
@@ -27,3 +30,5 @@ template <typename T> int partition(vector<T> &arr, int low, int high) {
     swap(arr[low], arr[j]);
     return j;
 }
+
+#endif

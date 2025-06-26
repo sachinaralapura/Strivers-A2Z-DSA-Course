@@ -1,3 +1,6 @@
+#ifndef SORT_RECURSIVE_INSERTION
+#define SORT_RECURSIVE_INSERTION
+
 #include <vector>
 using namespace std;
 
@@ -15,3 +18,5 @@ template <typename T> void recursive_insertion_sort(vector<T> &arr, int i, int n
 
     recursive_insertion_sort(arr, i + 1, n);
 }
+
+#endif

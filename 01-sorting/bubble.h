@@ -1,3 +1,5 @@
+#ifndef SORT_BUBBLE
+#define SORT_BUBBLE
 template <typename T>
 void bubble_sort(T arr[], int n)
 {
@@ -17,3 +19,5 @@ void bubble_sort(T arr[], int n)
             break;
     }
 }
+
+#endif

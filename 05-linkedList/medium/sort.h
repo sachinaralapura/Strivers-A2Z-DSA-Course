@@ -1,3 +1,5 @@
+#ifndef LL_SORT
+#define LL_SORT
 #include "../ll.h"
 #include "findMiddle.h"
 template <typename T> ST *mergeSort(ST *head);
@@ -46,3 +48,4 @@ template <typename T> ST *mergeSort(ST *head) {
 
     return merge<T>(left, right);
 }
+#endif

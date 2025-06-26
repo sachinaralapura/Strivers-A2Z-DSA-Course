@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-void SieveOfEratosthenes(int n) {
+vector<bool> SieveOfEratosthenes(int n) {
     vector<bool> prime(n + 1, true);
     for (int p = 2; p * p <= n; p++) {
         if (prime[p] == true) {
@@ -12,9 +11,5 @@ void SieveOfEratosthenes(int n) {
     for (int p = 2; p <= n; p++)
         if (prime[p])
             cout << p << " ";
-}
-
-int main() {
-    SieveOfEratosthenes(100);
-    return 0;
+    return prime;
 }

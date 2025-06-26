@@ -1,5 +1,5 @@
-#ifndef DELETE_TAIL
-#define DELETE_TAIL
+#ifndef LL_DELETE_TAIL
+#define LL_DELETE_TAIL
 
 #include "../ll.h"
 

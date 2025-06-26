@@ -1,5 +1,5 @@
-#ifndef REVERSE_H
-#define REVERSE_H
+#ifndef LL_REVERSE_H
+#define LL_REVERSE_H
 
 #include "../ll.h"
 #include <bits/stdc++.h>

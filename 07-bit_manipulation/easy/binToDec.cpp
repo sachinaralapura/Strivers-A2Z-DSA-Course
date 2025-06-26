@@ -1,9 +1,7 @@
 #include <bits/stdc++.h>
 #include <cmath>
 using namespace std;
-#include <iostream>
-int main() {
-    string bin = "1101";
+int binToDec(string bin) {
     int decimal = 0;
     int p2 = 1;
     int n = bin.size();
@@ -12,5 +10,5 @@ int main() {
             decimal += p2;
         p2 = p2 * 2;
     }
-    cout << decimal << endl;
+    return decimal;
 }

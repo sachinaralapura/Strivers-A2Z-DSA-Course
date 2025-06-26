@@ -5,3 +5,10 @@ settings.json
 .clang-format
 .clangd
 test.cpp
+*.js
+CyberNetyx
+hash.cpp
+build.sh
+build
+include
+main.cpp

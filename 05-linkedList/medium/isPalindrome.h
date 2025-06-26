@@ -1,5 +1,5 @@
-#ifndef ISPALINDROME_H
-#define ISPALINDROME_H
+#ifndef LL_ISPALINDROME_H
+#define LL_ISPALINDROME_H
 #include "../ll.h"
 
 template <typename T> bool IsPalindrome(SllNode<T> *head) {

@@ -1,5 +1,5 @@
-#ifndef ADD_TWO
-#define ADD_TWO
+#ifndef LL_ADD_TWO
+#define LL_ADD_TWO
 #include "../ll.h"
 
 template <typename T> ST *AddTwoLL(ST *l1, ST *l2) {

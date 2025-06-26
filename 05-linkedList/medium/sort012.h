@@ -1,3 +1,5 @@
+#ifndef LL_SORT_012
+#define LL_SORT_012
 #include "../ll.h"
 
 template <typename T> void swapNode(ST *node1, ST *node2) {
@@ -40,3 +42,4 @@ template <typename T> ST *sort123(ST *head, ST *tail, int n) {
      }
   return head;
 }
+#endif
