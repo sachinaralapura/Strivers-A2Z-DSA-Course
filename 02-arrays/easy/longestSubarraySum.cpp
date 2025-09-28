@@ -10,8 +10,7 @@ int getLongestSubarray(vector<int> &arr, long long k) {
         long long sum = 0;
         for (int j = i; j < n; j++) {
             sum += arr[j];
-            if (sum == k)
-                len = max(len, j - i + 1);
+            if (sum == k) len = max(len, j - i + 1);
         }
     }
     return len;
@@ -26,17 +25,10 @@ int getLongestSubarray_PrifixSum(vector<int> &arr, long long k) {
     for (int i = 0; i < n; i++) {
         // calculate the prefix sum till index i:
         sum += arr[i];
-        if (sum == k)
-            maxLen = max(maxLen, i + 1);
-
+        if (sum == k) maxLen = max(maxLen, i + 1);
         long long rem = sum - k;
-        if (prefixSum.find(rem) != prefixSum.end()) {
-            int len = i - prefixSum[rem];
-            maxLen = max(maxLen, len);
-        }
-
-        if (prefixSum.find(sum) != prefixSum.end())
-            prefixSum[sum] = i;
+        if (prefixSum.find(rem) != prefixSum.end()) maxLen = max(maxLen, i - prefixSum[rem]);
+        if (prefixSum.find(sum) == prefixSum.end()) prefixSum[sum] = i;
     }
     return maxLen;
 }
@@ -53,12 +45,10 @@ int getLongestSubarray_LRPointer(vector<int> &arr, long long k) {
             sum = sum - arr[left];
             left++;
         }
-        if (sum == k)
-            maxLen = max(maxLen, right - left + 1);
+        if (sum == k) maxLen = max(maxLen, right - left + 1);
 
         right++;
-        if (right < n)
-            sum += arr[right];
+        if (right < n) sum += arr[right];
     }
     return maxLen;
 }
