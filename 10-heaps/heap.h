@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <type_traits>
 #include <vector>
 using namespace std;
 template <class T, class Compare = less<T>> class BinaryHeap {
@@ -25,6 +26,10 @@ template <class T, class Compare = less<T>> class BinaryHeap {
     T removeRootNode();
     void swap(int, int);
     bool isEmpty() { return _arr.empty(); }
+    bool isMinHeap();
+    bool isMaxHeap();
+    T kthSmallestElement(int);
+    T kthLargestElement(int);
 };
 
 template <class T, class Compare> BinaryHeap<T, Compare>::BinaryHeap(const Compare &comp) : _compare(comp) {}
@@ -138,4 +143,54 @@ template <class T, class Compare> void BinaryHeap<T, Compare>::buildHeapify(vect
     _arr = arr;
     for (int i = ((n / 2) - 1); i >= 0; i--)
         heapifyDown(i);
+}
+
+template <class T, class Compare> bool BinaryHeap<T, Compare>::isMinHeap() {
+    if (!is_arithmetic_v<T>) throw "No a arithmetic type";
+    for (int i = 0; i < (_arr.size() / 2); i++) {
+        int left = leftChildIndex(i);
+        if (left != -1 && _arr[left] < _arr[i]) return false;
+        int right = rightChildIndex(i);
+        if (right != -1 && _arr[right] < _arr[i]) return false;
+    }
+    return true;
+}
+
+template <class T, class Compare> bool BinaryHeap<T, Compare>::isMaxHeap() {
+    if (!is_arithmetic_v<T>) throw "No a arithmetic type";
+    for (int i = 0; i < (_arr.size() / 2); i++) {
+        int left = leftChildIndex(i);
+        if (left != -1 && _arr[left] > _arr[i]) return false;
+        int right = rightChildIndex(i);
+        if (right != -1 && _arr[right] > _arr[i]) return false;
+    }
+    return true;
+}
+
+template <class T, class Compare> T BinaryHeap<T, Compare>::kthSmallestElement(int k) {
+    if (!is_arithmetic_v<T>) throw "No a arithmetic type";
+    if (k <= 0 || k > _arr.size()) throw "k is out of bounds";
+    BinaryHeap<T, greater<T>> minHeap; // Min-heap to store the elements
+    for (const T &element : _arr) {
+        minHeap.insertNode(element);
+    }
+    T kthSmallest;
+    for (int i = 0; i < k; i++) {
+        kthSmallest = minHeap.removeRootNode();
+    }
+    return kthSmallest;
+}
+
+template <class T, class Compare> T BinaryHeap<T, Compare>::kthLargestElement(int k) {
+    if (!is_arithmetic_v<T>) throw "No a arithmetic type";
+    if (k <= 0 || k > _arr.size()) throw "k is out of bounds";
+    BinaryHeap<T, less<T>> maxHeap; // Max-heap to store the elements
+    for (const T &element : _arr) {
+        maxHeap.insertNode(element);
+    }
+    T kthLargest;
+    for (int i = 0; i < k; i++) {
+        kthLargest = maxHeap.removeRootNode();
+    }
+    return kthLargest;
 }
