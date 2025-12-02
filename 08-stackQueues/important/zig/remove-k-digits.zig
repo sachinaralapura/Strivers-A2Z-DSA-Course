@@ -29,11 +29,11 @@ fn removeKDigits(allocoator: Allocoator, num: []const u8, limit: u32) ![]const u
     return res.toOwnedSlice();
 }
 
-// pub fn main() !void {
-//     const allocator = gpa.allocator();
-//     const num = "141234";
-//     const k: u32 = 3;
-//     const res = try removeKDigits(allocator, num, k);
-//     defer allocator.free(res);
-//     std.debug.print("{s}", .{res});
-// }
+pub fn main() !void {
+    const allocator = gpa.allocator();
+    const num = "141234";
+    const k: u32 = 3;
+    const res = try removeKDigits(allocator, num, k);
+    defer allocator.free(res);
+    std.debug.print("{s}", .{res});
+}
