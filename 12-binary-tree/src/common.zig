@@ -9,6 +9,13 @@ pub fn bufferedPrint(comptime fmt: []const u8, args: anytype) !void {
     try stdout.flush();
 }
 
+pub fn isNumber(comptime T: type) bool {
+    return switch (@typeInfo(T)) {
+        .int, .float, .comptime_int, .comptime_float => true,
+        else => false,
+    };
+}
+
 pub fn add(a: i32, b: i32) i32 {
     return a + b;
 }

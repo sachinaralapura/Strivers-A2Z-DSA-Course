@@ -28,5 +28,5 @@ pub fn assignCookie(cookie: []usize, greed: []usize) usize {
 pub fn main() !void {
     var cookie = [_]usize{ 4, 2, 1, 2, 1, 3 };
     var greed = [_]usize{ 1, 5, 3, 3, 4 };
-    try assignCookie(cookie[0..], greed[0..]);
+    _ = assignCookie(cookie[0..], greed[0..]);
 }

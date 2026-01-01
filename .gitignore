@@ -11,3 +11,5 @@ hash.cpp
 build.sh
 build
 include
+.zig-cache
+zig-out

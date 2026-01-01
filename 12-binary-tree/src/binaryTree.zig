@@ -1,8 +1,11 @@
 pub const std = @import("std");
+pub const common = @import("common.zig");
+
 pub const Allocator = std.mem.Allocator;
 pub const ArrayList = std.ArrayList;
 pub const Writer = std.Io.Writer;
 pub const OrderT = enum(u8) { In, Pre, Post };
+pub const IsNumber = common.isNumber;
 
 pub fn Node(comptime T: type) type {
     return struct {
@@ -301,12 +304,10 @@ pub fn BinaryTree(comptime T: type) type {
 
         pub fn isBalanced(self: *Self) bool {
             // return isBalancedTree(self.root.?);
+            if (self.root == null) return true;
             return isBalancedOpt(self.root.?).bal;
         }
-        fn isBalancedOpt(node: ?*NodeT) struct {
-            height: usize,
-            bal: bool = true,
-        } {
+        fn isBalancedOpt(node: ?*NodeT) struct { height: usize, bal: bool = true } {
             if (node == null) return .{ .height = 0 };
 
             const l = isBalancedOpt(node.?.left);
@@ -328,7 +329,9 @@ pub fn BinaryTree(comptime T: type) type {
             const r_bal = isBalancedTree(node.?.right);
             return l_bal and r_bal;
         }
+
         pub fn maxDiameter(self: *Self) usize {
+            if (self.root == null) return 0;
             var diameter: usize = 0;
             _ = maxDiameterTree(&diameter, self.root.?);
             return diameter;
@@ -339,6 +342,56 @@ pub fn BinaryTree(comptime T: type) type {
             const r_height = maxDiameterTree(diameter, node.?.right);
             diameter.* = @max(diameter.*, l_height + r_height);
             return 1 + @max(l_height, r_height);
+        }
+
+        pub fn maxSumPath(self: *Self) T {
+            comptime if (!IsNumber(T)) @compileError("Node type should be number\n");
+            var maxSum: T = 0;
+            _ = maxSumPathTree(&maxSum, self.root);
+            return maxSum;
+        }
+        fn maxSumPathTree(max: *T, node: ?*NodeT) T {
+            if (node == null) return 0;
+            const l_max = @max(0, maxSumPathTree(max, node.?.left));
+            const r_max = @max(0, maxSumPathTree(max, node.?.right));
+            max.* = @max(max.*, l_max + r_max + node.?.data);
+            return @max(l_max, r_max) + node.?.data;
+        }
+
+        pub fn identical(self: *Self, root: *Self) bool {
+            if (self.root == null and root.root == null) return true;
+            if (self.root == null or root.root == null) return false;
+            return identicalTree(self.root.?, root.root.?);
+        }
+        fn identicalTree(a: ?*NodeT, b: ?*NodeT) bool {
+            if (a == null and b == null) return true;
+            if (a == null or b == null) return false;
+            if (a.?.data != b.?.data) return false;
+            const l = identicalTree(a.?.left, b.?.left);
+            const r = identicalTree(a.?.right, b.?.right);
+            return l and r;
+        }
+
+        pub fn zigZag(self: *Self, visit: fn (data: T) void, direction: bool) !void {
+            if (self.root == null) return;
+            var flag: bool = direction;
+            var queue: ArrayList(*NodeT) = try .initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.append(self.allocator, self.root.?);
+            while (queue.items.len > 0) {
+                const size = queue.items.len;
+                var row = try self.allocator.alloc(T, size);
+                defer self.allocator.free(row);
+                for (0..size) |i| {
+                    const front = queue.orderedRemove(0);
+                    const index: usize = if (flag) i else (size - 1 - i);
+                    row[index] = front.data;
+                    if (front.left) |l| try queue.append(self.allocator, l);
+                    if (front.right) |r| try queue.append(self.allocator, r);
+                }
+                for (row) |t| visit(t);
+                flag = !flag;
+            }
         }
     };
 }
