@@ -12,10 +12,12 @@ int func(string str, int k) {
         mpp[str[right]]++;
         while (mpp.size() > k) {
             mpp[str[left]]--;
-            if (mpp[str[left]] == 0) mpp.erase(str[left]);
+            if (mpp[str[left]] == 0)
+                mpp.erase(str[left]);
             left += 1;
         }
-        if (mpp.size() <= k) max_len = max(max_len, (right - left + 1));
+        if (mpp.size() <= k)
+            max_len = max(max_len, (right - left + 1));
         right += 1;
     }
     return max_len;

@@ -1,5 +1,7 @@
 // using built-in function
-int NumOfSetBit(int n) { return __builtin_popcount(n); }
+int NumOfSetBit(int n) {
+    return __builtin_popcount(n);
+}
 
 int NumberOfSetBitOne(int n) {
     int count = 0;

@@ -35,7 +35,8 @@ inline bool Solution::searchNext(int row, int col, int index) {
     if (index == word.length())
         return true;
 
-    if (row < 0 || col < 0 || row >= n || col >= m || matrix[row][col] == '#' or word[index] != matrix[row][col])
+    if (row < 0 || col < 0 || row >= n || col >= m || matrix[row][col] == '#' or
+        word[index] != matrix[row][col])
         return false;
 
     char ch = matrix[row][col];

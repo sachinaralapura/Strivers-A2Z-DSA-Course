@@ -12,4 +12,6 @@ int findXor(int n) {
     return -1;
 }
 
-int findXorRange(int l, int r) { return findXor(l - 1) ^ findXor(r); }
+int findXorRange(int l, int r) {
+    return findXor(l - 1) ^ findXor(r);
+}

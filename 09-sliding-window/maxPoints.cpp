@@ -32,7 +32,7 @@ int maxPoints(std::vector<int> arr, int k) {
 }
 
 int main() {
-    std::vector<int> arr = {9,7,7,9,7,7,9};
+    std::vector<int> arr = {9, 7, 7, 9, 7, 7, 9};
     const int max_points = maxPoints(arr, 7);
     std::cout << "Max Points : " << max_points << std::endl;
     return 0;

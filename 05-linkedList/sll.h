@@ -81,7 +81,8 @@ template <class T> void Sll<T>::deleteNode(T el) {
         delete temp;
     } else {
         ST *pred, *tmp;
-        for (pred = head, tmp = head->next; tmp != nullptr && !(tmp->info == el); pred = pred->next, tmp = tmp->next)
+        for (pred = head, tmp = head->next; tmp != nullptr && !(tmp->info == el);
+             pred = pred->next, tmp = tmp->next)
             if (tmp != nullptr) {
                 pred->next = tmp->next;
                 if (tmp == tail)
@@ -98,35 +99,55 @@ template <class T> bool Sll<T>::search(T el) const {
     return temp != nullptr;
 }
 
-template <class T> void Sll<T>::reverse() { head = reverse_iter(head); }
+template <class T> void Sll<T>::reverse() {
+    head = reverse_iter(head);
+}
 
-template <class T> ST *Sll<T>::getMiddle() { return findMiddle(head); }
+template <class T> ST *Sll<T>::getMiddle() {
+    return findMiddle(head);
+}
 
-template <class T> bool Sll<T>::isPalindrome() { return IsPalindrome(head); }
+template <class T> bool Sll<T>::isPalindrome() {
+    return IsPalindrome(head);
+}
 
-template <class T> void Sll<T>::SegregatetoOddEVen() { this->head = OddEven<T>(head); }
+template <class T> void Sll<T>::SegregatetoOddEVen() {
+    this->head = OddEven<T>(head);
+}
 
 template <class T> void Sll<T>::deleteNthTail(int n) {
     int lenght = this->length();
     this->head = deleteTailFromNth(this->head, n, lenght);
 }
 
-template <class T> void Sll<T>::deleteMiddle() { this->head = deleteMiddleNode(this->head); }
+template <class T> void Sll<T>::deleteMiddle() {
+    this->head = deleteMiddleNode(this->head);
+}
 
-template <class T> void Sll<T>::sort() { this->head = sortlinkedList<T>(this->head); }
+template <class T> void Sll<T>::sort() {
+    this->head = sortlinkedList<T>(this->head);
+}
 
-template <class T> void Sll<T>::sortZeroOneTwo() { this->head = sort123(this->head, this->tail, this->length()); }
+template <class T> void Sll<T>::sortZeroOneTwo() {
+    this->head = sort123(this->head, this->tail, this->length());
+}
 
-template <class T> ST *Sll<T>::intersectionPoint(ST *head1, ST *head2) { return IPoint(head1, head2); }
+template <class T> ST *Sll<T>::intersectionPoint(ST *head1, ST *head2) {
+    return IPoint(head1, head2);
+}
 
 template <class T> void Sll<T>::addOne() {
     // this->head = addOneLinkList(this->head);
     this->head = addOne_recursive(this->head);
 }
 
-template <class T> void Sll<T>::reverseGroup(int k) { this->head = groupReverse(this->head, k, this->length()); }
+template <class T> void Sll<T>::reverseGroup(int k) {
+    this->head = groupReverse(this->head, k, this->length());
+}
 
-template <class T> void Sll<T>::rotate(int k) { this->head = rotateLL(this->head, k); }
+template <class T> void Sll<T>::rotate(int k) {
+    this->head = rotateLL(this->head, k);
+}
 
 template <class T> void Sll<T>::printAll() const {
     ST *tmp;

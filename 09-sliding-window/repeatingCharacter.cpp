@@ -45,7 +45,8 @@ int repeatingCharacterTwoPointer(string str, int k) {
             changes = (right - left + 1) - max_freq;
             left++;
         }
-        if (changes <= k) max_len = max(max_len, right - left + 1);
+        if (changes <= k)
+            max_len = max(max_len, right - left + 1);
         right++;
     }
     return max_len;

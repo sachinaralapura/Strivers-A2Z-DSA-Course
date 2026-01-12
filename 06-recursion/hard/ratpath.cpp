@@ -6,7 +6,9 @@ class Solution {
     string dlru = "DLRU";
     vector<string> ans;
     vector<vector<int>> grid;
-    Solution(vector<vector<int>> grid) { this->grid = grid; }
+    Solution(vector<vector<int>> grid) {
+        this->grid = grid;
+    }
     vector<string> GetResult() {
         string str = "";
         nextPath(0, 0, grid.size(), str);

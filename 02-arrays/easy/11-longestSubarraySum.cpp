@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// // Problem Statement : Given an array and a sum k, we need to print the
-// //  length of the longest subarray that sums to k.
+// Problem Statement : Given an array and a sum k, we need to print the
+// length of the longest subarray that sums to k.
 int getLongestSubarray(vector<int> &arr, long long k) {
     int n = arr.size();
     int len = 0;
@@ -22,7 +22,6 @@ int getLongestSubarray_PrifixSum(vector<int> &arr, long long k) {
     int maxLen = 0;
     long long sum = 0;
     map<long long, int> prefixSum;
-
     for (int i = 0; i < n; i++) {
         // calculate the prefix sum till index i:
         sum += arr[i];

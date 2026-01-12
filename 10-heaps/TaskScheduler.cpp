@@ -1,7 +1,7 @@
 #include "heap.h"
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 struct Task {
@@ -92,7 +92,7 @@ unsigned int TaskScheduler(vector<char> tasks, int interval = 2) {
                 scheduledTasks.push_back(t);
             }
         }
-        
+
         bool anyRemaining = false;
         for (const Task &t : tempTasks) {
             if (t.time > 0) {
@@ -100,11 +100,12 @@ unsigned int TaskScheduler(vector<char> tasks, int interval = 2) {
                 taskHeap.insertNode(t);
             }
         }
-        
+
         if (anyRemaining) {
             maxTime += (n + 1); // We must wait for the full cycle
             // Add idle tasks for visualization if needed
-            for(int i=0; i < (n + 1 - workDone); ++i) scheduledTasks.push_back(Task{'_', 0});
+            for (int i = 0; i < (n + 1 - workDone); ++i)
+                scheduledTasks.push_back(Task{'_', 0});
         } else {
             maxTime += workDone; // Last batch, only count actual work
         }
@@ -115,7 +116,7 @@ unsigned int TaskScheduler(vector<char> tasks, int interval = 2) {
 int main() {
     vector<char> tasks = {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'B', 'C', 'C', 'C'};
     int interval = 2;
-    
+
     cout << "--- Simulation Approach ---" << endl;
     int totalTime = TaskScheduler(tasks, interval);
     cout << "Total time: " << totalTime << endl;
@@ -124,7 +125,7 @@ int main() {
         cout << t.name << " ";
     }
     cout << endl << endl;
-    
+
     cout << "--- Optimized Math Approach ---" << endl;
     cout << "Total time: " << TaskSchedulerOptimized(tasks, interval) << endl;
 

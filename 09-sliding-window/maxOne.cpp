@@ -18,7 +18,8 @@ int maxone_brute(const vector<int> &vec, int k) {
     for (int i = 0; i < n; i++) {
         int zeros = 0;
         for (int j = i; j < n; j++) {
-            if (vec[j] == 0) zeros++;
+            if (vec[j] == 0)
+                zeros++;
             if (zeros <= k)
                 maxLen = max(maxLen, j - i + 1);
             else
@@ -34,12 +35,15 @@ int maxone_two_pointer(const vector<int> &vec, int k) {
     int maxLen = INT_MIN;
     int zeros = 0;
     while (r < n) {
-        if (vec[r] == 0) zeros++;
+        if (vec[r] == 0)
+            zeros++;
         while (zeros > k) {
-            if (vec[l] == 0) zeros--;
+            if (vec[l] == 0)
+                zeros--;
             l++;
         }
-        if (zeros <= k) maxLen = max(maxLen, r - l + 1);
+        if (zeros <= k)
+            maxLen = max(maxLen, r - l + 1);
         r++;
     }
     return maxLen;
@@ -51,12 +55,15 @@ int maxone_two_pointer_opt(const vector<int> &vec, int k) {
     int maxLen = INT_MIN;
     int zeros = 0;
     while (r < n) {
-        if (vec[r] == 0) zeros++;
+        if (vec[r] == 0)
+            zeros++;
         if (zeros > k) {
-            if (vec[l] == 0) zeros--;
+            if (vec[l] == 0)
+                zeros--;
             l++;
         }
-        if (zeros <= k) maxLen = max(maxLen, r - l + 1);
+        if (zeros <= k)
+            maxLen = max(maxLen, r - l + 1);
         r++;
     }
     return maxLen;

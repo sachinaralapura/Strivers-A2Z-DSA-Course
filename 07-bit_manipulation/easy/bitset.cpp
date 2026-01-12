@@ -30,8 +30,8 @@ void IsbitSet(int n, int k) {
 }
 
 // count the number of set bits in a number
-// property used subtracting 1 from a binary number flips all the bits from the rightmost set bit (1) to the end of the
-// number (0s).
+// property used subtracting 1 from a binary number flips all the bits from the rightmost set bit
+// (1) to the end of the number (0s).
 int NumOfSetBit(int n) {
     int count = 0;
     while (n != 0) {
@@ -90,6 +90,8 @@ int setRightmostUnsetBit(int n) {
 }
 
 // Check if all the bits is one
-bool AllBitOne(int n) { return !((n + 1) & n); }
+bool AllBitOne(int n) {
+    return !((n + 1) & n);
+}
 
 void swapNumber(int *, int *);

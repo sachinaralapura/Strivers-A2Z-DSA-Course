@@ -11,7 +11,9 @@ class MinStack {
     int curMin;
 
   public:
-    MinStack() { Top = -1; }
+    MinStack() {
+        Top = -1;
+    }
     void push(int data) {
         if (Top == -1) {
             Top = 0;
@@ -57,7 +59,9 @@ template <typename T> class minStackOptimal {
     T currMin;
 
   public:
-    minStackOptimal() { Top = -1; }
+    minStackOptimal() {
+        Top = -1;
+    }
     void push(T data) {
         if (Top == -1) {
             currMin = data;
@@ -91,7 +95,9 @@ template <typename T> class minStackOptimal {
             return currMin;
         return ele;
     }
-    T getMin() { return currMin; }
+    T getMin() {
+        return currMin;
+    }
 };
 
 int main() {

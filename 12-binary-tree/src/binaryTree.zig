@@ -691,7 +691,7 @@ pub fn BinaryTree(comptime T: type) type {
             if (self.root) |root| return symmetricalTree(root.left, root.right) else return true;
         }
 
-        pub fn symmetricalTree(a: ?*NodeT, b: ?*NodeT) bool {
+        fn symmetricalTree(a: ?*NodeT, b: ?*NodeT) bool {
             if (a == null and b == null) return true;
             if (a == null or b == null) return false;
             if (a.?.data != b.?.data) return false;

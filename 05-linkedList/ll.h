@@ -13,7 +13,9 @@ template <class T> class SllNode {
   public:
     T info;
     SllNode *next;
-    SllNode() { next = nullptr; }
+    SllNode() {
+        next = nullptr;
+    }
     SllNode(T i, ST *in = 0) {
         info = i;
         next = in;
@@ -29,10 +31,16 @@ template <class T> class Sll {
     Sll();
     Sll(vector<T> list);
     ~Sll();
-    ST *getHead() const { return head; }
-    void setHead(ST *h) { this->head = h; }
+    ST *getHead() const {
+        return head;
+    }
+    void setHead(ST *h) {
+        this->head = h;
+    }
 
-    bool isEmpty() { return head == nullptr; }
+    bool isEmpty() {
+        return head == nullptr;
+    }
     int length() {
         int length = 0;
         ST *temp = head;
@@ -69,7 +77,9 @@ template <class T> class DllNode {
   public:
     T info;
     DT *next, *prev;
-    DT() { next = prev = nullptr; }
+    DT() {
+        next = prev = nullptr;
+    }
     DT(const T &info, DT *n = nullptr, DT *p = nullptr) {
         this->info = info;
         this->next = n;
@@ -82,10 +92,14 @@ template <class T> class DoublyLinkedList {
     DT *head, *tail;
 
   public:
-    DoublyLinkedList<T>() { head = tail = nullptr; }
+    DoublyLinkedList<T>() {
+        head = tail = nullptr;
+    }
     DoublyLinkedList<T>(vector<T> &);
     ~DoublyLinkedList<T>();
-    bool isEmpty() { return head == nullptr; }
+    bool isEmpty() {
+        return head == nullptr;
+    }
     int length();
     void addToTail(const T &el);
     T deleteTail();

@@ -12,8 +12,12 @@ class PalindromePartition {
     void func(int index, string s, vector<string> &ds);
     bool isPalindrome(string s, int start, int end);
     PalindromePartition() : str("") {}
-    PalindromePartition(string s) : str(s) { func(0, this->str, this->ds); }
-    vector<vector<string>> GetResult() { return result; }
+    PalindromePartition(string s) : str(s) {
+        func(0, this->str, this->ds);
+    }
+    vector<vector<string>> GetResult() {
+        return result;
+    }
 };
 
 inline void PalindromePartition::func(int index, string s, vector<string> &ds) {

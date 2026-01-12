@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Given an unsorted array that contains even number of occurrences for all numbers except two numbers. The task is to
-// find the two numbers which have odd occurrences
+// Given an unsorted array that contains even number of occurrences for all numbers except two
+// numbers. The task is to find the two numbers which have odd occurrences
 vector<int> SingleNumber(vector<int> arr) {
     int n = arr.size();
     int xorVal = 0;

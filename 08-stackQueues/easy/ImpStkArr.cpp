@@ -24,11 +24,17 @@ template <typename T> void Stack<T>::push(T data) {
     arr[Top] = data;
 }
 
-template <typename T> void Stack<T>::pop() { Top--; }
+template <typename T> void Stack<T>::pop() {
+    Top--;
+}
 
-template <typename T> T Stack<T>::top() { return arr[Top]; }
+template <typename T> T Stack<T>::top() {
+    return arr[Top];
+}
 
-template <typename T> int Stack<T>::size() { return Top + 1; }
+template <typename T> int Stack<T>::size() {
+    return Top + 1;
+}
 
 int main() {
     Stack<int> stk;

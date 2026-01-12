@@ -1,5 +1,6 @@
-// Given two strings s and t of lengths m and n respectively, return the minimum window of s such that every character
-// in t (including duplicates) is included in the window. If there is no such substring, return the empty string ""
+// Given two strings s and t of lengths m and n respectively, return the minimum window of s such
+// that every character in t (including duplicates) is included in the window. If there is no such
+// substring, return the empty string ""
 #include <climits>
 #include <iostream>
 #include <string>
@@ -20,7 +21,8 @@ pair<int, int> brute(string str, string t) {
         for (int k = 0; k < m; k++)
             mpp[t[k]]++;
         for (int j = i; j < n; j++) {
-            if (mpp[str[j]] > 0) count++;
+            if (mpp[str[j]] > 0)
+                count++;
             mpp[str[j]]--;
             if (count == m) {
                 if ((j - i + 1) < minCount) {
@@ -48,7 +50,8 @@ pair<int, int> TwoPointer(string str, string t) {
         mpp[t[k]]++;
 
     while (right < n) {
-        if (mpp[str[right]] > 0) count += 1;
+        if (mpp[str[right]] > 0)
+            count += 1;
         mpp[str[right]]--;
         while (count == m) {
             if ((right - left + 1) < minCount) {
@@ -56,7 +59,8 @@ pair<int, int> TwoPointer(string str, string t) {
                 startIndex = left;
             }
             mpp[str[left]]++;
-            if (mpp[str[left]] > 0) count -= 1;
+            if (mpp[str[left]] > 0)
+                count -= 1;
             left += 1;
         }
         right += 1;
