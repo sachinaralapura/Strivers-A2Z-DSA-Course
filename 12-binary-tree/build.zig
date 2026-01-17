@@ -29,9 +29,10 @@ pub fn build(b: *std.Build) void {
     // multiple modules and consumers will need to be able to specify which
     // module they want to access.
 
-    const mod = b.addModule("binarytree", .{
+    const mod = b.addModule("core", .{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
+        .optimize = optimize,
     });
 
     // Here we define an executable. An executable needs to have a root module
@@ -66,7 +67,7 @@ pub fn build(b: *std.Build) void {
             // List of modules available for import in source files part of the
             // root module.
             .imports = &.{
-                .{ .name = "binarytree", .module = mod },
+                .{ .name = "core", .module = mod },
             },
         }),
     });

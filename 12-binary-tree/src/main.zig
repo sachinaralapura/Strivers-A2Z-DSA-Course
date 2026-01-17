@@ -1,8 +1,10 @@
 const std = @import("std");
-const root = @import("binarytree");
+const root = @import("core");
+
 const Allocator = std.mem.Allocator;
 const BinaryTree = root.BinaryTree;
 const Node = root.Node;
+
 const BTT = usize;
 const TraversalContext = root.TraversalContext;
 const ZigZagContext = TraversalContext(struct { data: BTT, level: usize });
@@ -18,13 +20,11 @@ pub fn main() !void {
     var binaryTreeTwo = BinaryTree(BTT).init(allocator);
     defer binaryTreeTwo.deinit();
 
-    // for (1..16) |i| try binaryTree.insert(i);
+    for (1..32) |i| try binaryTree.insert(i);
     // for (1..16) |i| try binaryTreeTwo.insert(i);
 
     // 1 2 2 3 4 4 3
-    for ([_]BTT{ 1, 2, 2, 3, 4, 4, 3, 5 }) |value| try binaryTree.insert(value);
-
-    //  1 2 2 0 3 0 3
+    // for ([_]BTT{ 1 2 2 3 4 4 3 }) |value| try binaryTree.insert(value);
 
     // height of the binary tree;
     // std.debug.print("height of tree : {d}\n", .{binaryTree.height()});
@@ -33,10 +33,12 @@ pub fn main() !void {
     //
     // std.debug.print("{}\n", .{binaryTree.maxDiameter()});
     // std.debug.prin var queue = try Deque(struct { node: *NodeT, x: i32 }).initCapacity(self.allocator, 0);
-    if (binaryTree.identical(&binaryTreeTwo))
-        std.debug.print("Two tree are identical\n", .{})
-    else
-        std.debug.print("Two tree are not identical\n", .{});
+
+    // check if identical
+    // if (binaryTree.identical(&binaryTreeTwo))
+    //     std.debug.print("Two tree are identical\n", .{})
+    // else
+    //     std.debug.print("Two tree are not identical\n", .{});
 
     // zig zag with context
     // var zigZagCtx = try ZigZagContext.init(allocator);
@@ -60,16 +62,35 @@ pub fn main() !void {
     // std.debug.print("\n\nSide View Traversal\n", .{});
     // try binaryTree.sideView({}, sideViewTraversalCtx, .LEFT);
 
-    std.debug.print("\nSymmetrical Tree\n", .{});
-    const symmetrical = binaryTree.symmetrical();
-    if (symmetrical)
-        std.debug.print("Tree is Symmetrical", .{})
-    else
-        std.debug.print("Tree is not Symmetrical", .{});
+    // std.debug.print("\nSymmetrical Tree\n", .{});
+    // const symmetrical = binaryTree.symmetrical();
+    // if (symmetrical)
+    //     std.debug.print("Tree is Symmetrical", .{})
+    // else
+    //     std.debug.print("Tree is not Symmetrical", .{});
+
+    // root to node path
+    // try binaryTree.rootToNode({}, boundaryVisit, 16);
+
+    // const lca = binaryTree.LowestCommonAncestor(10, 15);
+    // std.debug.print("\nLCA : {d}\n", .{lca.?});
+
+    // const maxWidth = try binaryTree.MaxWidth();
+    // std.debug.print("\nMax Widht : {d}\n", .{maxWidth});
+
+    // binaryTree.ChildrenSum();
+    // try binaryTree.levelOrder(levelOrderVisit);
+
+    // try binaryTree.DistanceK({}, boundaryVisit, 5, 3);
+    const time = try binaryTree.BurnTreeTime(1);
+    std.debug.print("{d}\n", .{time});
+
+    const count = binaryTree.CountTree();
+    std.debug.print("Number of nodes : {d}\n", .{count});
 }
 
-fn zigZagVisit(data: BTT, level: usize) void {
-    std.debug.print("{d}:{d}\t | ", .{ data, level });
+fn levelOrderVisit(data: BTT, level: usize) void {
+    std.debug.print("({d},{d}), ", .{ data, level });
 }
 
 fn zigZagVisitCtx(ctx: *ZigZagContext, data: BTT, level: usize) !void {
@@ -77,7 +98,7 @@ fn zigZagVisitCtx(ctx: *ZigZagContext, data: BTT, level: usize) !void {
 }
 
 fn boundaryVisit(_: void, data: BTT) !void {
-    std.debug.print("{d} ", .{data});
+    std.debug.print("{d} -> ", .{data});
 }
 
 fn verticalTraversalCtx(_: void, data: BTT, vertical: i32, level: usize) !void {

@@ -61,6 +61,7 @@ pub fn BinaryTree(comptime T: type) type {
         pub fn deinit(self: *Self) void {
             if (self.root) |r| r.deinit(self.allocator);
         }
+
         pub fn insert(self: *Self, data: T) !void {
             const new_node = try NodeT.init(self.allocator, data);
 
@@ -106,7 +107,10 @@ pub fn BinaryTree(comptime T: type) type {
                 }
             }
         }
-        pub fn preOrderIter(self: *Self, visit: fn (data: T) void) !void {
+        pub fn preOrderIter(
+            self: *Self,
+            visit: fn (data: T) void,
+        ) !void {
             if (self.root == null) return;
             var stack = try ArrayList(*NodeT).initCapacity(self.allocator, 0);
             defer stack.deinit(self.allocator);
@@ -122,7 +126,10 @@ pub fn BinaryTree(comptime T: type) type {
                 }
             }
         }
-        pub fn preOrderRecursive(self: *Self, visit: fn (data: T) void) void {
+        pub fn preOrderRecursive(
+            self: *Self,
+            visit: fn (data: T) void,
+        ) void {
             preorderNode(self.root, visit);
         }
         fn preorderNode(node: ?*NodeT, visit: fn (data: T) void) void {
@@ -153,7 +160,10 @@ pub fn BinaryTree(comptime T: type) type {
                 }
             }
         }
-        pub fn inOrderIter(self: *Self, visit: fn (data: T) void) !void {
+        pub fn inOrderIter(
+            self: *Self,
+            visit: fn (data: T) void,
+        ) !void {
             var stack = try ArrayList(*NodeT).initCapacity(self.allocator, 0);
             defer stack.deinit(self.allocator);
             var current = self.root;
@@ -169,18 +179,29 @@ pub fn BinaryTree(comptime T: type) type {
                 }
             }
         }
-        pub fn inOrder(self: *Self, visit: fn (data: T) void) void {
-            inOrderTree(self.root, visit);
+        pub fn inOrder(
+            self: *Self,
+            ctx: anytype,
+            comptime visit: fn (@TypeOf(ctx), data: T) void,
+        ) void {
+            inOrderTree(self.root, ctx, visit);
         }
-        fn inOrderTree(node: ?*NodeT, visit: fn (data: T) void) void {
+        fn inOrderTree(
+            node: ?*NodeT,
+            ctx: anytype,
+            comptime visit: fn (@TypeOf(ctx), data: T) void,
+        ) void {
             if (node) |n| {
-                inOrderTree(n.left, visit);
-                visit(n.data);
-                inOrderTree(n.right, visit);
+                inOrderTree(n.left, ctx, visit);
+                visit(ctx, n.data);
+                inOrderTree(n.right, ctx, visit);
             } else return;
         }
 
-        pub fn postOrderIter(self: *Self, visit: fn (data: T) void) !void {
+        pub fn postOrderIter(
+            self: *Self,
+            visit: fn (data: T) void,
+        ) !void {
             if (self.root == null) return;
             var stack_one = try ArrayList(*NodeT).initCapacity(self.allocator, 0);
             var stack_two = try ArrayList(*NodeT).initCapacity(self.allocator, 0);
@@ -218,7 +239,10 @@ pub fn BinaryTree(comptime T: type) type {
             }
             while (stack_two.pop()) |node| visit(ctx, node.data);
         }
-        pub fn postOrderRecursive(self: *Self, visit: fn (data: T) void) void {
+        pub fn postOrderRecursive(
+            self: *Self,
+            visit: fn (data: T) void,
+        ) void {
             postOrderNode(self.root, visit);
         }
         fn postOrderNode(node: ?*NodeT, visit: fn (data: T) void) void {
@@ -300,10 +324,15 @@ pub fn BinaryTree(comptime T: type) type {
             try queue.pushBack(self.allocator, self.root.?);
             var level: usize = 0;
             while (queue.len > 0) : (level += 1) {
-                const current = queue.popFront();
-                visit(current.data, level);
-                if (current.left) |l| try queue.append(self.allocator, l);
-                if (current.right) |r| try queue.append(self.allocator, r);
+                const size = queue.len;
+                for (0..size) |_| {
+                    const current = queue.popFront();
+                    if (current) |cur| {
+                        visit(cur.data, level);
+                        if (cur.left) |l| try queue.pushBack(self.allocator, l);
+                        if (cur.right) |r| try queue.pushBack(self.allocator, r);
+                    }
+                }
             }
         }
 
@@ -643,7 +672,7 @@ pub fn BinaryTree(comptime T: type) type {
         pub fn sideView(
             self: *Self,
             ctx: anytype,
-            visit: fn (@TypeOf(ctx), data: T, level: usize) anyerror!void,
+            comptime visit: fn (@TypeOf(ctx), data: T, level: usize) anyerror!void,
             side: enum(u8) { RIGHT, LEFT },
         ) !void {
             if (self.root == null) return;
@@ -687,10 +716,13 @@ pub fn BinaryTree(comptime T: type) type {
             if (node.?.right) |r| try leftViewTree(r, ctx, visit, level + 1, maxlevel);
         }
 
+        /// Given a Binary Tree, determine whether the given tree is symmetric or not.
+        /// A Binary Tree would be Symmetric, when its mirror image is exactly the same
+        /// as the original tree. If we were to draw a vertical line through the centre of the tree,
+        /// the nodes on the left and right side would be mirror images of each other.
         pub fn symmetrical(self: *Self) bool {
             if (self.root) |root| return symmetricalTree(root.left, root.right) else return true;
         }
-
         fn symmetricalTree(a: ?*NodeT, b: ?*NodeT) bool {
             if (a == null and b == null) return true;
             if (a == null or b == null) return false;
@@ -700,14 +732,302 @@ pub fn BinaryTree(comptime T: type) type {
             return l and r;
         }
 
-        // Given a Binary Tree and a reference to a root belonging to it.
-        // Return the path from the root node to the given leaf node.
-        // pub fn rootToNode(
-        //     self: *Self,
-        //     ctx: anytype,
-        //     visit: fn (@TypeOf(ctx), data: T, level: usize) anyerror!void,
-        //     x: T,
-        // ) !void {}
+        /// Given a Binary Tree and a reference to a root belonging to it.
+        /// Return the path from the root node to the given leaf node.
+        pub fn rootToNode(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), data: T) anyerror!void,
+            x: T,
+        ) !void {
+            if (self.root == null) return;
+
+            var list = try ArrayList(T).initCapacity(self.allocator, 0);
+            defer list.deinit(self.allocator);
+
+            _ = try rootToNodePath(self.root, &list, x, self.allocator);
+            for (list.items) |it| try visit(ctx, it);
+        }
+        fn rootToNodePath(
+            node: ?*NodeT,
+            list: *ArrayList(T),
+            x: T,
+            a: Allocator,
+        ) !bool {
+            if (node) |n| {
+                _ = try list.append(a, n.data);
+                if (n.data == x) return true;
+
+                const left = try rootToNodePath(n.left, list, x, a);
+                if (left) return true;
+
+                const right = try rootToNodePath(n.right, list, x, a);
+                if (right) return true;
+
+                _ = list.pop();
+                return false;
+            } else return false;
+        }
+
+        /// Given a root of binary tree, find the lowest common ancestor (LCA)
+        /// of two given nodes (p, q) in the tree.
+        /// The lowest common ancestor is defined between two nodes p and q
+        /// as the lowest node in T that has both p and q as descendants
+        /// (where we allow a node to be a descendant of itself).
+        pub fn LowestCommonAncestor(self: *Self, a: T, b: T) ?T {
+            if (self.root == null) return null;
+            return lca(self.root, a, b);
+        }
+        fn lca(node: ?*NodeT, a: T, b: T) ?T {
+            if (node) |n| {
+                if (n.data == a) return a;
+                if (n.data == b) return b;
+
+                const left = lca(n.left, a, b);
+                const right = lca(n.right, a, b);
+
+                if (left != null and right != null) return n.data;
+                if (left) |l| return l;
+                if (right) |r| return r;
+
+                return null;
+            } else return null;
+        }
+
+        /// Given a Binary Tree, return its maximum width.
+        /// The maximum width of a Binary Tree is the maximum diameter among all its levels.
+        /// The width or diameter of a level is the number of nodes between the leftmost and rightmost nodes.
+        pub fn MaxWidth(self: *Self) !usize {
+            if (self.root == null) return 0;
+            var queue = try Deque(struct { node: *NodeT, min: usize }).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.pushBack(self.allocator, .{ .node = self.root.?, .min = 0 });
+            var maxWidth: usize = 0;
+            while (queue.len > 0) {
+                const size = queue.len;
+                const mmin = queue.front().?.min;
+                var first: usize = 0;
+                var last: usize = 0;
+                for (0..size) |i| {
+                    const cur_id = queue.front().?.min - mmin;
+                    const node = queue.front().?.node;
+                    _ = queue.popFront();
+                    if (i == 0) first = cur_id;
+                    if (i == size - 1) last = cur_id;
+
+                    if (node.left) |l| try queue.pushBack(self.allocator, .{ .node = l, .min = cur_id * 2 + 1 });
+                    if (node.right) |r| try queue.pushBack(self.allocator, .{ .node = r, .min = cur_id * 2 + 2 });
+                }
+                maxWidth = @max(maxWidth, last - first + 1);
+            }
+            return maxWidth;
+        }
+
+        /// Given a Binary Tree, convert the value of its nodes to follow the Children Sum Property. The Children Sum Property in a binary tree states that for every node, the sum of its children's values (if they exist) should be equal to the node's value. If a child is missing, it is considered as having a value of 0.
+        /// ### Note:
+        ///   -  The node values can be increased by any positive integer any number of times, but decrementing any node value is not allowed.
+        ///   -  A value for a NULL node can be assumed as 0.
+        ///   -  We cannot change the structure of the given binary tree.
+        pub fn ChildrenSum(self: *Self) void {
+            if (self.root == null) return;
+            comptime if (!IsNumber(T)) @compileError("Node type should be number\n");
+            childrenSumNode(self.root);
+        }
+        fn childrenSumNode(node: ?*NodeT) void {
+            if (node) |n| {
+                var child: T = 0;
+                if (n.left) |l| child += l.data;
+                if (n.right) |r| child += r.data;
+
+                if (child >= n.data) n.data = child else {
+                    if (n.left) |l| l.data = n.data;
+                    if (n.right) |r| r.data = n.data;
+                }
+
+                childrenSumNode(n.left);
+                childrenSumNode(n.right);
+
+                var total: T = 0;
+                if (n.left) |l| total += l.data;
+                if (n.right) |r| total += r.data;
+                if (n.left != null or n.right != null) n.data = total; // if not leaf;
+            }
+        }
+
+        /// Given the root of a binary tree, the value of a target node target,
+        /// and an integer k. Return an array of the values of all nodes that
+        /// have a distance k from the target node. The answer can be returned in any order (N represents null).
+        pub fn DistanceK(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), data: T) anyerror!void,
+            x: T,
+            k: usize,
+        ) !void {
+            if (self.root == null) return;
+            var parentMap = HashMap(*NodeT, *NodeT).init(self.allocator);
+            defer parentMap.deinit();
+
+            try self.buildParentMap(&parentMap);
+
+            const node = try self.findNode(x, self.root);
+            if (node == null) return;
+
+            var queue = try Deque(*NodeT).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.pushBack(self.allocator, node.?);
+
+            var visited = HashMap(*NodeT, void).init(self.allocator);
+            defer visited.deinit();
+            try visited.put(node.?, {});
+
+            var distance: usize = 0;
+
+            while (queue.len > 0) {
+                const size = queue.len;
+                if (distance == k) break;
+                distance += 1;
+
+                for (0..size) |_| {
+                    const current = queue.popFront();
+                    if (current) |curr| {
+                        if (curr.left) |l| {
+                            if (!visited.contains(l)) {
+                                try visited.put(l, {});
+                                try queue.pushBack(self.allocator, l);
+                            }
+                        }
+
+                        if (curr.right) |r| {
+                            if (!visited.contains(r)) {
+                                try visited.put(r, {});
+                                try queue.pushBack(self.allocator, r);
+                            }
+                        }
+
+                        if (parentMap.get(curr)) |n| {
+                            if (!visited.contains(n)) {
+                                try visited.put(n, {});
+                                try queue.pushBack(self.allocator, n);
+                            }
+                        }
+                    }
+                }
+            }
+            while (queue.popBack()) |n| try visit(ctx, n.data);
+        }
+        fn buildParentMap(
+            self: *Self,
+            parentMap: *HashMap(*NodeT, *NodeT),
+        ) !void {
+            if (self.root == null) return;
+            var queue = try Deque(*NodeT).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.pushBack(self.allocator, self.root.?);
+
+            while (queue.len > 0) {
+                const size = queue.len;
+                for (0..size) |_| {
+                    const current = queue.popFront();
+                    if (current) |cur| {
+                        if (cur.left) |l| {
+                            try parentMap.put(l, cur);
+                            try queue.pushBack(self.allocator, l);
+                        }
+                        if (cur.right) |r| {
+                            try parentMap.put(r, cur);
+                            try queue.pushBack(self.allocator, r);
+                        }
+                    }
+                }
+            }
+        }
+        fn findNode(
+            self: *Self,
+            x: T,
+            node: ?*NodeT,
+        ) !?*NodeT {
+            if (node) |n| {
+                if (n.data == x) return n;
+
+                const left = try self.findNode(x, n.left);
+                if (left) |l| return l;
+
+                const right = try self.findNode(x, n.right);
+                if (right) |r| return r;
+
+                return null;
+            } else return null;
+        }
+
+        /// Given a target node data and a root of binary tree. If the target is set on fire,
+        /// determine the shortest amount of time needed to burn the entire binary tree.
+        /// It is known that in 1 second all nodes connected to a given node get burned.
+        /// That is its left child, right child, and parent.
+        pub fn BurnTreeTime(self: *Self, x: T) !usize {
+            if (self.root == null) return 0;
+            var parentMap = HashMap(*NodeT, *NodeT).init(self.allocator);
+            defer parentMap.deinit();
+
+            try self.buildParentMap(&parentMap);
+
+            const node = try self.findNode(x, self.root);
+            if (node == null) return 0;
+
+            var queue = try Deque(*NodeT).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.pushBack(self.allocator, node.?);
+
+            var visited = HashMap(*NodeT, void).init(self.allocator);
+            defer visited.deinit();
+            try visited.put(node.?, {});
+
+            var time: usize = 0;
+
+            while (queue.len > 0) {
+                const size = queue.len;
+                for (0..size) |_| {
+                    const current = queue.popFront();
+                    if (current) |curr| {
+                        if (curr.left) |l| {
+                            if (!visited.contains(l)) {
+                                try visited.put(l, {});
+                                try queue.pushBack(self.allocator, l);
+                            }
+                        }
+
+                        if (curr.right) |r| {
+                            if (!visited.contains(r)) {
+                                try visited.put(r, {});
+                                try queue.pushBack(self.allocator, r);
+                            }
+                        }
+
+                        if (parentMap.get(curr)) |n| {
+                            if (!visited.contains(n)) {
+                                try visited.put(n, {});
+                                try queue.pushBack(self.allocator, n);
+                            }
+                        }
+                    }
+                }
+                time += 1;
+            }
+            return time;
+        }
+
+        // Given a Complete Binary Tree, count and return the number of nodes in the given tree.
+        // A Complete Binary Tree is a binary tree in which all levels are completely filled,
+        // except possibly for the last level, and all nodes are as left as possible.
+        pub fn CountTree(self: *Self) usize {
+            if (self.root == null) return 0;
+            var count: usize = 0;
+            inOrderTree(self.root.?, &count, countTreeContext);
+            return count;
+        }
+        fn countTreeContext(ctx: *usize, _: T) void {
+            ctx.* = ctx.* + 1;
+        }
     };
 }
 
