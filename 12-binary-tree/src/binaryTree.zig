@@ -5,7 +5,14 @@ pub const Allocator = std.mem.Allocator;
 pub const ArrayList = std.ArrayList;
 pub const Deque = std.Deque;
 pub const HashMap = std.AutoHashMap;
+
+pub const assert = std.debug.assert;
+const Fmt = std.fmt;
+const Type = std.builtin.Type;
+
 pub const Writer = std.Io.Writer;
+pub const Reader = std.Io.Reader;
+
 pub const OrderT = enum(u8) { In, Pre, Post };
 pub const IsNumber = common.isNumber;
 
@@ -45,46 +52,125 @@ pub fn BinaryTree(comptime T: type) type {
 
         root: ?*NodeT,
         allocator: Allocator,
+        insert_queue: Deque(*NodeT),
 
-        pub fn init(allocator: Allocator) Self {
+        pub fn init(allocator: Allocator) !Self {
             return .{
                 .root = null,
                 .allocator = allocator,
+                .insert_queue = try Deque(*NodeT).initCapacity(allocator, 0),
             };
         }
         pub fn initRoot(allocator: Allocator, root: ?*NodeT) Self {
             return .{
                 .root = root,
                 .allocator = allocator,
+                .insert_queue = try Deque(*NodeT).initCapacity(allocator, 0),
             };
         }
         pub fn deinit(self: *Self) void {
+            self.insert_queue.deinit(self.allocator);
             if (self.root) |r| r.deinit(self.allocator);
+        }
+
+        pub fn insertQueue(self: *Self, data: T) !void {
+            const new_node = try NodeT.init(self.allocator, data);
+            // first node
+            if (self.root == null) {
+                self.root = new_node;
+                try self.insert_queue.pushBack(self.allocator, new_node);
+                return;
+            }
+            const parent = self.insert_queue.front();
+            if (parent) |par| {
+                if (par.left == null)
+                    par.left = new_node
+                else if (par.right == null) {
+                    par.right = new_node;
+                    _ = self.insert_queue.popFront();
+                }
+            }
+            try self.insert_queue.pushBack(self.allocator, new_node);
         }
 
         pub fn insert(self: *Self, data: T) !void {
             const new_node = try NodeT.init(self.allocator, data);
-
             if (self.root == null) {
                 self.root = new_node;
                 return;
             }
-            var queue = try ArrayList(*NodeT).initCapacity(self.allocator, 0);
+            var queue = try Deque(*NodeT).initCapacity(self.allocator, 0);
             defer queue.deinit(self.allocator);
-            try queue.append(self.allocator, self.root.?);
+            try queue.pushBack(self.allocator, self.root.?);
 
-            while (queue.items.len > 0) {
-                const current = queue.orderedRemove(0);
-                if (current.left) |l| try queue.append(self.allocator, l) else {
-                    current.left = new_node;
-                    return;
-                }
+            while (queue.len > 0) {
+                const current = queue.popFront();
+                if (current) |curr| {
+                    if (curr.left) |l| try queue.pushBack(self.allocator, l) else {
+                        curr.left = new_node;
+                        return;
+                    }
 
-                if (current.right) |r| try queue.append(self.allocator, r) else {
-                    current.right = new_node;
+                    if (curr.right) |r| try queue.pushBack(self.allocator, r) else {
+                        curr.right = new_node;
+                    }
                     return;
                 }
             }
+        }
+
+        pub fn ConstructPreorderInorder(
+            self: *Self,
+            inorder: []const T,
+            preorder: []const T,
+        ) !void {
+            var inorder_hash = HashMap(T, usize).init(self.allocator);
+            defer inorder_hash.deinit();
+            for (inorder, 0..) |item, i| try inorder_hash.put(item, i);
+            self.root = try self.constructPreInTree(&inorder_hash, inorder, 0, inorder.len - 1, preorder, 0, preorder.len - 1);
+        }
+        fn constructPreInTree(
+            self: *Self,
+            inorder_hash: *HashMap(T, usize),
+            // inorder
+            inorder: []const T,
+            inStart: usize,
+            inEnd: usize,
+            // preorder
+            preorder: []const T,
+            preStart: usize,
+            preEnd: usize,
+        ) !?*NodeT {
+            if ((inStart > inEnd) or (preStart > preEnd)) return null;
+            const root = try NodeT.init(self.allocator, preorder[preStart]);
+            const in_root = inorder_hash.get(root.data).?;
+            const nums_left = in_root - inStart;
+
+            // in_root - 1 causes integer underflow , since in_root is usize
+            const root_left = if (in_root != 0) try self.constructPreInTree(
+                inorder_hash,
+                inorder,
+                inStart,
+                in_root - 1,
+                preorder,
+                preStart + 1,
+                preStart + nums_left,
+            ) else null;
+
+            const root_right = try self.constructPreInTree(
+                inorder_hash,
+                inorder,
+                in_root + 1,
+                inEnd,
+                preorder,
+                preStart + nums_left + 1,
+                preEnd,
+            );
+
+            root.left = root_left;
+            root.right = root_right;
+
+            return root;
         }
 
         pub fn preOrderIterCtx(
@@ -334,6 +420,133 @@ pub fn BinaryTree(comptime T: type) type {
                     }
                 }
             }
+        }
+
+        pub fn MorisInorder(
+            self: *Self,
+            ctx: anytype,
+            comptime visit: fn (@TypeOf(ctx), data: T) anyerror!void,
+        ) !void {
+            if (self.root == null) return;
+            try morisTraversal(self.root, ctx, visit, .In);
+        }
+
+        /// Given a Binary Tree, implement Morris Preorder Traversal
+        /// and return the array containing its preorder sequence.
+        pub fn MorisPreorder(
+            self: *Self,
+            ctx: anytype,
+            comptime visit: fn (@TypeOf(ctx), data: T) anyerror!void,
+        ) !void {
+            if (self.root == null) return;
+            try morisTraversal(self.root, ctx, visit, .Pre);
+        }
+
+        /// Given a Binary Tree, implement Morris Inorder Traversal
+        /// and return the array containing its inorder sequence.
+        fn morisTraversal(
+            root: ?*NodeT,
+            ctx: anytype,
+            comptime visit: fn (@TypeOf(ctx), data: T) anyerror!void,
+            order: OrderT,
+        ) !void {
+            var current = root;
+            while (current) |curr| {
+                if (curr.left) |l| {
+                    var temp: ?*NodeT = l;
+                    while (temp.?.right != null and temp.?.right != curr)
+                        temp = temp.?.right;
+
+                    if (temp.?.right == null) {
+                        temp.?.right = curr;
+                        if (order == .Pre)
+                            try visit(ctx, curr.data);
+                        current = curr.left;
+                    } else {
+                        temp.?.right = null;
+                        if (order == .In)
+                            try visit(ctx, curr.data);
+                        current = curr.right;
+                    }
+                } else {
+                    try visit(ctx, curr.data);
+                    current = curr.right;
+                }
+            }
+        }
+
+        pub fn serialize(self: *Self, writer: *Writer) !void {
+            const t = @typeInfo(T);
+            assert((t == .int) or (t == .float));
+            if (self.root == null) return;
+            var queue = try Deque(?*NodeT).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+            try queue.pushBack(self.allocator, self.root);
+
+            while (queue.len > 0) {
+                const current = queue.popFront();
+                if (current) |curr| {
+                    if (curr == null) try writer.print("#,", .{}) else try writer.print("{},", .{curr.?.data});
+                    if (curr) |c| {
+                        try queue.pushBack(self.allocator, c.left);
+                        try queue.pushBack(self.allocator, c.right);
+                    }
+                }
+            }
+            try writer.flush();
+        }
+
+        pub fn deserialize(self: *Self, reader: *Reader) !void {
+            const t = @typeInfo(T);
+            assert((t == .int) or (t == .float));
+
+            var queue = try Deque(*NodeT).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+
+            // read first token( root )
+            const root_node = try self.nextNode(reader, ',');
+            if (root_node) |r| self.root = r else return;
+            try queue.pushBack(self.allocator, self.root.?);
+
+            while (queue.len > 0) {
+                const node = queue.popFront();
+                if (node) |n| {
+                    const left_token = try self.nextNode(reader, ',');
+                    if (left_token) |l| {
+                        n.left = left_token;
+                        try queue.pushBack(self.allocator, l);
+                    }
+
+                    const right_token = try self.nextNode(reader, ',');
+                    if (right_token) |r| {
+                        n.right = right_token;
+                        try queue.pushBack(self.allocator, r);
+                    }
+                }
+            }
+        }
+
+        fn castToT(P: Type, str: []const u8) !T {
+            return switch (P) {
+                .int => try Fmt.parseInt(T, str, 10),
+                .float => try Fmt.parseFloat(T, str),
+                else => return,
+            };
+        }
+
+        fn parse(self: *Self, token: []const u8) !*NodeT {
+            const data = try castToT(@typeInfo(T), token);
+            const new_node = try NodeT.init(self.allocator, data);
+            return new_node;
+        }
+
+        fn nextNode(self: *Self, reader: *Reader, delemiter: u8) !?*NodeT {
+            const token = try reader.takeDelimiter(delemiter);
+            if (token) |str| {
+                if (std.mem.eql(u8, str, "#")) return null;
+                return try self.parse(str);
+            }
+            return null;
         }
 
         /// Given the root of a Binary Tree, return the height of the tree.
@@ -1016,7 +1229,7 @@ pub fn BinaryTree(comptime T: type) type {
             return time;
         }
 
-        // Given a Complete Binary Tree, count and return the number of nodes in the given tree.
+        // Given a Binary Tree, count and return the number of nodes in the given tree.
         // A Complete Binary Tree is a binary tree in which all levels are completely filled,
         // except possibly for the last level, and all nodes are as left as possible.
         pub fn CountTree(self: *Self) usize {
@@ -1027,6 +1240,62 @@ pub fn BinaryTree(comptime T: type) type {
         }
         fn countTreeContext(ctx: *usize, _: T) void {
             ctx.* = ctx.* + 1;
+        }
+
+        // Given a Complete Binary Tree, count and return the number of nodes in the given tree.
+        // A Complete Binary Tree is a binary tree in which all levels are completely filled,
+        // except possibly for the last level, and all nodes are as left as possible.
+        pub fn CountCompleteTree(self: *Self) usize {
+            if (self.root == null) return 0;
+            return countCompleteTree(self.root);
+        }
+        fn countCompleteTree(node: ?*NodeT) usize {
+            if (node) |n| {
+                var left_height: usize = 0;
+                var right_height: usize = 0;
+
+                var temp = node;
+                while (temp) |t| {
+                    temp = t.left;
+                    left_height += 1;
+                }
+                temp = node;
+                while (temp) |t| {
+                    right_height += 1;
+                    temp = t.right;
+                }
+                if (left_height == right_height) {
+                    // return std.math.powi(usize, 2, left_height) - 1;
+                    return (@as(usize, 1) << @as(u6, @intCast(left_height))) - 1;
+                }
+                const left_count = countCompleteTree(n.left);
+                const right_count = countCompleteTree(n.right);
+                return 1 + left_count + right_count;
+            } else return 0;
+        }
+
+        /// Given a Binary Tree, convert it to a Linked List where the linked list nodes follow the
+        /// same order as the pre-order traversal of the binary tree.
+        /// Use the right pointer of the Binary Tree as the ‘next’
+        /// pointer for the linked list and set the left pointer to null.
+        /// Do this in place and do not create extra nodes.
+        pub fn Flatten(self: *Self) !void {
+            if (self.root == null) return;
+            var prev: ?*NodeT = null;
+            try flattenTree(self.root, &prev);
+        }
+
+        fn flattenTree(
+            node: ?*NodeT,
+            prev: *?*NodeT,
+        ) !void {
+            if (node) |n| {
+                try flattenTree(n.right, prev);
+                try flattenTree(n.left, prev);
+                n.right = prev.*;
+                n.left = null;
+                prev.* = node;
+            }
         }
     };
 }

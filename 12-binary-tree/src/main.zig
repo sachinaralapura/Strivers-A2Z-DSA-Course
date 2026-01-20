@@ -14,13 +14,10 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator: Allocator = gpa.allocator();
 
-    var binaryTree = BinaryTree(BTT).init(allocator);
+    var binaryTree = try BinaryTree(BTT).init(allocator);
     defer binaryTree.deinit();
 
-    var binaryTreeTwo = BinaryTree(BTT).init(allocator);
-    defer binaryTreeTwo.deinit();
-
-    for (1..32) |i| try binaryTree.insert(i);
+    for (1..16) |i| try binaryTree.insertQueue(i);
     // for (1..16) |i| try binaryTreeTwo.insert(i);
 
     // 1 2 2 3 4 4 3
@@ -82,11 +79,36 @@ pub fn main() !void {
     // try binaryTree.levelOrder(levelOrderVisit);
 
     // try binaryTree.DistanceK({}, boundaryVisit, 5, 3);
-    const time = try binaryTree.BurnTreeTime(1);
-    std.debug.print("{d}\n", .{time});
+    // const time = try binaryTree.BurnTreeTime(1);
+    // std.debug.print("{d}\n", .{time});
 
-    const count = binaryTree.CountTree();
-    std.debug.print("Number of nodes : {d}\n", .{count});
+    // const count = binaryTree.CountTree();
+    // std.debug.print("Number of nodes : {d}\n", .{count});
+    // std.debug.print("start counting\n", .{});
+    // const countComplete = binaryTree.CountCompleteTree();
+    // std.debug.print("Number of nodes : {d}\n", .{countComplete});
+    // -----------------------------0  1   2   3  4
+    // const inorder = [_]BTT{ 9, 3, 15, 20, 7 };
+    // ------------------------------0  1   2   3  4
+    // const preorder = [_]BTT{ 3, 9, 20, 15, 7 };
+
+    // var binaryTreeThree = try BinaryTree(BTT).init(allocator);
+    // defer binaryTreeThree.deinit();
+
+    // try binaryTreeThree.ConstructPreorderInorder(inorder[0..], preorder[0..]);
+    // try binaryTreeThree.levelOrder(levelOrderVisit);
+
+    // try serialize(allocator);
+    // try deserialize(allocator);
+
+    // try binaryTree.MorisInorder({}, boundaryVisit);
+    // std.debug.print("\n", .{});
+    // try binaryTree.MorisPreorder({}, boundaryVisit);
+
+    try binaryTree.Flatten();
+
+    var node = binaryTree.root;
+    while (node) |n| : (node = n.right) std.debug.print("{d} -> ", .{n.data});
 }
 
 fn levelOrderVisit(data: BTT, level: usize) void {
@@ -111,4 +133,43 @@ fn topViewTraversalCtx(_: void, data: BTT, vertical: i32) !void {
 
 fn sideViewTraversalCtx(_: void, data: BTT, level: usize) !void {
     std.debug.print("Node : {d} , level: {d}\n", .{ data, level });
+}
+fn serialize(allocator: Allocator) !void {
+    const SerializeBTT = usize;
+
+    var buffer: [4096]u8 = undefined;
+    const w_file = try std.fs.openFileAbsolute("/home/sachinaralapura/development/c_cpp/tuf/12-binary-tree/pp", .{
+        .mode = .read_write,
+    });
+    defer w_file.close();
+
+    var file_writer = w_file.writer(&buffer);
+    const writer = &file_writer.interface;
+
+    var binaryTreeThree = try BinaryTree(SerializeBTT).init(allocator);
+    defer binaryTreeThree.deinit();
+
+    const values = [_]SerializeBTT{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+    for (values) |value| try binaryTreeThree.insertQueue(value);
+
+    try binaryTreeThree.serialize(writer);
+}
+fn deserialize(allocator: Allocator) !void {
+    var buffer: [4096]u8 = undefined;
+    var threaded = std.Io.Threaded.init(allocator);
+    defer threaded.deinit();
+
+    const io = threaded.io();
+
+    const r_file = try std.fs.openFileAbsolute("/home/sachinaralapura/development/c_cpp/tuf/12-binary-tree/pp", .{ .mode = .read_write });
+    defer r_file.close();
+
+    var file_reader = r_file.reader(io, &buffer);
+    const reader = &file_reader.interface;
+
+    var binaryTreeThree = try BinaryTree(BTT).init(allocator);
+    defer binaryTreeThree.deinit();
+
+    try binaryTreeThree.deserialize(reader);
+    try binaryTreeThree.levelOrder(levelOrderVisit);
 }
