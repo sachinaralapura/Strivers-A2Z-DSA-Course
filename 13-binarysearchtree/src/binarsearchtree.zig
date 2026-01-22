@@ -1,5 +1,6 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
+const Deque = std.Deque;
 
 const Writer = std.Io.Writer;
 const Reader = std.Io.Reader;
@@ -87,6 +88,55 @@ pub fn BinarySearchTree(comptime T: type, lessThanFn: ?fn (a: T, b: T) i8) type 
         const Self = @This();
         const NodeT = Node(T, lessThanFn);
         const Range = struct { left: T, right: T };
+
+        const Iterator = struct {
+            const Order = enum(u8) { ASC, DESC };
+
+            allocator: Allocator,
+            stack: Deque(*NodeT),
+            bst: *BinarySearchTree(T, lessThanFn),
+            /// don't change
+            order: Order,
+
+            pub fn init(
+                allocator: Allocator,
+                bst: *BinarySearchTree(T, lessThanFn),
+                order: Order,
+            ) !@This() {
+                var iter: @This() = .{
+                    .allocator = allocator,
+                    .stack = try .initCapacity(allocator, 0),
+                    .bst = bst,
+                    .order = order,
+                };
+                try iter.pushAll(bst.root);
+                return iter;
+            }
+
+            pub fn deinit(self: *@This()) void {
+                self.stack.deinit(self.allocator);
+            }
+
+            pub fn next(self: *@This()) !?T {
+                const top = self.stack.popBack();
+                if (top) |t| {
+                    if (self.order == .ASC) try self.pushAll(t.right) else try self.pushAll(t.left);
+                    return t.data;
+                }
+                return null;
+            }
+
+            fn pushAll(
+                self: *@This(),
+                root: ?*NodeT,
+            ) !void {
+                var node: ?*NodeT = root;
+                while (node) |n| {
+                    try self.stack.pushBack(self.allocator, n);
+                    if (self.order == .ASC) node = n.left else node = n.right;
+                }
+            }
+        };
 
         root: ?*NodeT = null,
         allocator: Allocator,
@@ -356,6 +406,70 @@ pub fn BinarySearchTree(comptime T: type, lessThanFn: ?fn (a: T, b: T) i8) type 
                 } else return false;
             } else return true;
         }
+
+        /// returns lowest common ancestor of a and b
+        pub fn lowestCommonAncestor(self: *Self, a: T, b: T) ?T {
+            if (self.root == null) return null;
+            return lca(self.root, a, b);
+        }
+        fn lca(node: ?*NodeT, a: T, b: T) ?T {
+            if (node) |n| {
+                if (n.ltd(a) and n.ltd(b))
+                    return lca(n.right, a, b);
+                if (n.gtd(a) and n.gtd(b))
+                    return lca(n.left, a, b);
+                return n.data;
+            } else return null;
+        }
+
+        /// construct the binary search tree from preorder
+        pub fn ConstructBst(self: *Self, preorder: []const T, upperbound: ?T) !void {
+            var i: usize = 0;
+            const bound = if (upperbound) |ub| ub else getMax();
+            self.root = try constructTree(preorder, &i, bound, self.allocator);
+        }
+        fn constructTree(preorder: []const T, i: *usize, bound: T, allocator: Allocator) !?*NodeT {
+            if (i.* >= preorder.len or preorder[i.*] > bound) return null;
+            const root = try NodeT.init(allocator, preorder[i.*]);
+            i.* += 1;
+            root.left = try constructTree(preorder, i, root.data, allocator);
+            root.right = try constructTree(preorder, i, bound, allocator);
+            return root;
+        }
+
+        /// Given a Binary Search Tree and a ‘key’ value which represents the data data of a node in this tree.
+        /// Return the inorder predecessor and successor of the given node in the BST.
+        pub fn Successor(self: *Self, k: T) ?T {
+            var successor: ?*NodeT = null;
+            var temp: ?*NodeT = self.root;
+
+            while (temp) |n| {
+                if (n.ltd(k) or n.eqtd(k))
+                    temp = n.right
+                else {
+                    successor = n;
+                    temp = n.left;
+                }
+            }
+            return if (successor) |s| s.data else null;
+        }
+        pub fn Predecessor(self: *Self, k: T) ?T {
+            var predecessor: ?*NodeT = null;
+            var temp: ?*NodeT = self.root;
+
+            while (temp) |n| {
+                if (n.ltd(k)) {
+                    predecessor = n;
+                    temp = n.right;
+                } else temp = n.left;
+            }
+            return if (predecessor) |s| s.data else null;
+        }
+
+        pub fn iterator(self: *Self, order: Iterator.Order) !Iterator {
+            return try .init(self.allocator, self, order);
+        }
+
         fn getMin() T {
             const type_info = @typeInfo(T);
             return switch (type_info) {
