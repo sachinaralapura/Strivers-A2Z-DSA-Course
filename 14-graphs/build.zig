@@ -41,8 +41,6 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
 
-    // const binarytree = b.dependency("binarytree", .{});
-
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
     // to the module defined above, it's sometimes preferable to split business
@@ -60,7 +58,7 @@ pub fn build(b: *std.Build) void {
     // If neither case applies to you, feel free to delete the declaration you
     // don't need and to put everything under a single module.
     const exe = b.addExecutable(.{
-        .name = "binarysearchtree",
+        .name = "graphs",
         .root_module = b.createModule(.{
             // b.createModule defines a new module just like b.addModule but,
             // unlike b.addModule, it does not expose the module to consumers of
@@ -75,16 +73,12 @@ pub fn build(b: *std.Build) void {
             // List of modules available for import in source files part of the
             // root module.
             .imports = &.{
-                // Here "_13_binarysearchtree" is the name you will use in your source code to
-                // import this module (e.g. `@import("_13_binarysearchtree")`). The name is
+                // Here "_14_graphs" is the name you will use in your source code to
+                // import this module (e.g. `@import("_14_graphs")`). The name is
                 // repeated because you are allowed to rename your imports, which
                 // can be extremely useful in case of collisions (which can happen
                 // importing modules from different packages).
                 .{ .name = "core", .module = mod },
-                // .{
-                //     .name = "binarytree",
-                //     .module = binarytree.module("core"),
-                // },
             },
         }),
     });

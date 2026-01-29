@@ -321,7 +321,7 @@ pub fn BinarySearchTree(comptime T: type, lessThanFn: ?fn (a: T, b: T) i8) type 
         pub fn Inorder(
             self: *Self,
             ctx: anytype,
-            visit: fn (ctx: @TypeOf(ctx), data: T) anyerror!void,
+            visit: fn (ctx: @TypeOf(ctx), data: *const T) anyerror!void,
         ) !void {
             if (self.root == null) return;
             try inorderNode(self.root, ctx, visit);
@@ -329,11 +329,11 @@ pub fn BinarySearchTree(comptime T: type, lessThanFn: ?fn (a: T, b: T) i8) type 
         fn inorderNode(
             node: ?*NodeT,
             ctx: anytype,
-            visit: fn (ctx: @TypeOf(ctx), data: T) anyerror!void,
+            visit: fn (ctx: @TypeOf(ctx), data: *const T) anyerror!void,
         ) !void {
             if (node) |n| {
                 if (n.left) |l| try inorderNode(l, ctx, visit);
-                try visit(ctx, n.data);
+                try visit(ctx, &n.data);
                 if (n.right) |r| try inorderNode(r, ctx, visit);
             }
         }
@@ -468,6 +468,47 @@ pub fn BinarySearchTree(comptime T: type, lessThanFn: ?fn (a: T, b: T) i8) type 
 
         pub fn iterator(self: *Self, order: Iterator.Order) !Iterator {
             return try .init(self.allocator, self, order);
+        }
+
+        pub fn recoverBst(self: *Self) !void {
+            const gen = struct {
+                const context = struct {
+                    first: ?*NodeT,
+                    prev: ?*NodeT,
+                    middle: ?*NodeT,
+                    last: ?*NodeT,
+                };
+
+                fn Context(ctx: *context, data: *const T) !void {
+                    const root_ptr: *NodeT = @alignCast(@fieldParentPtr("data", @constCast(data)));
+                    if (ctx.prev != null and (root_ptr.data < ctx.prev.?.data)) {
+                        if (ctx.first) |_| ctx.last = root_ptr else {
+                            ctx.first = ctx.prev;
+                            ctx.middle = root_ptr;
+                        }
+                    }
+                    ctx.prev = root_ptr;
+                }
+
+                fn swap(a: *NodeT, b: *NodeT) void {
+                    const temp = a.data;
+                    a.data = b.data;
+                    b.data = temp;
+                }
+            };
+
+            var ctx = gen.context{
+                .first = null,
+                .last = null,
+                .middle = null,
+                .prev = null,
+            };
+            try self.Inorder(&ctx, gen.Context);
+            if (ctx.first != null and ctx.last != null) {
+                gen.swap(ctx.first.?, ctx.last.?);
+            } else if (ctx.first != null and ctx.middle != null) {
+                gen.swap(ctx.first.?, ctx.middle.?);
+            }
         }
 
         fn getMin() T {
