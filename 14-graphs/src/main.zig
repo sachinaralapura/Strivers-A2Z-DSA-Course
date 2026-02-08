@@ -22,5 +22,5 @@ pub fn main() !void {
     try core.CreateGraph(&graph, &data_list, allocator);
 
     var testbed: TestBed = .init(allocator, &graph, &data_list);
-    try testbed.TestDetectCycleUndirected();
+    try testbed.TestWordLadder();
 }

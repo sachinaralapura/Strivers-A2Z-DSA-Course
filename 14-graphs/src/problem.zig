@@ -40,6 +40,8 @@ fn addEdges(graph: *Graph, datalist: *List(Data)) !void {
     const g = &(datalist.items[6].node);
     const h = &(datalist.items[7].node);
     const i = &(datalist.items[8].node);
+    // const j = &(datalist.items[9].node);
+
     // a - b
     try graph.addEdge(a, b, 1);
     // a - c
@@ -56,6 +58,10 @@ fn addEdges(graph: *Graph, datalist: *List(Data)) !void {
     try graph.addEdge(e, g, 1);
     // h - i
     try graph.addEdge(h, i, 1);
+    // i - j
+    // try graph.addEdge(i, j, 1);
+    // h - j
+    // try graph.addEdge(j, h, 1);
 }
 
 pub const TestBed = struct {
@@ -98,7 +104,12 @@ pub const TestBed = struct {
     }
 
     pub fn TestDetectCycleUndirected(self: *Self) !void {
-        const res = try  self.graph.DetectCycleUndirected() ;
+        const res = try self.graph.DetectCycleUndirected();
+        std.debug.print("{}\n", .{res});
+    }
+
+    pub fn TestDetectCycleUndirectedDfs(self: *Self) !void {
+        const res = try self.graph.DetectCycleUndirectedDfs();
         std.debug.print("{}\n", .{res});
     }
 
@@ -136,6 +147,87 @@ pub const TestBed = struct {
         };
         try core.FloodFill(self.allocator, matrix[0..], 3, .{ .row = 2, .col = 0 });
         for (0..matrix.len) |i| std.debug.print("{any}\n", .{matrix[i]});
+    }
+
+    pub fn TestOneDistance(self: *Self) !void {
+        // matrix
+        var rows = [_][3]u8{
+            .{ 0, 0, 0 },
+            .{ 0, 1, 0 },
+            .{ 1, 0, 1 },
+        };
+
+        var matrix = [_][]u8{
+            rows[0][0..],
+            rows[1][0..],
+            rows[2][0..],
+        };
+
+        // result
+        var result: [][]usize = try self.allocator.alloc([]usize, matrix.len);
+        for (result, 0..) |*row, i| {
+            row.* = try self.allocator.alloc(usize, matrix[i].len);
+            @memset(row.*, 0);
+        }
+        defer self.allocator.free(result);
+        defer for (0..result.len) |i| self.allocator.free(result[i]);
+
+        try core.OneDistance(self.allocator, matrix[0..], result);
+
+        for (0..result.len) |i| {
+            for (0..result[i].len) |j| std.debug.print("{d},", .{result[i][j]});
+            std.debug.print("\n", .{});
+        }
+    }
+
+    pub fn TestSurroundRegions(self: *Self) !void {
+        const X: u8 = 'X';
+        const O: u8 = 'O';
+        var rows = [_][4]u8{
+            .{ X, X, X, X },
+            .{ X, O, O, X },
+            .{ X, O, X, X },
+            .{ X, O, X, X },
+            .{ X, X, O, O },
+        };
+
+        var matrix = [_][]u8{
+            rows[0][0..],
+            rows[1][0..],
+            rows[2][0..],
+            rows[3][0..],
+            rows[4][0..],
+        };
+
+        var result: [][]u8 = try self.allocator.alloc([]u8, matrix.len);
+        for (result, 0..) |*row, i| {
+            row.* = try self.allocator.alloc(u8, matrix[i].len);
+            @memset(row.*, 0);
+        }
+        defer self.allocator.free(result);
+        defer for (0..result.len) |i| self.allocator.free(result[i]);
+
+        for (0..matrix.len) |i| {
+            for (0..matrix[i].len) |j| std.debug.print("{c},", .{matrix[i][j]});
+            std.debug.print("\n", .{});
+        }
+
+        std.debug.print("\n", .{});
+
+        try core.SurroundedRegions(self.allocator, matrix[0..], result);
+
+        for (0..result.len) |i| {
+            for (0..result[i].len) |j| std.debug.print("{c},", .{result[i][j]});
+            std.debug.print("\n", .{});
+        }
+    }
+
+    pub fn TestWordLadder(self: *Self) !void {
+        var words = [_][]const u8{ "des", "der", "dfr", "dgt", "dfs" };
+        const source = "der";
+        const dist = "dfs";
+        const res = try core.WordLadder(self.allocator, &words, source, dist);
+        std.debug.print("{d}\n", .{res});
     }
 
     fn visit(_: void, node: *Graph.Node) !void {
