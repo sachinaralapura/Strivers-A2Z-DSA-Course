@@ -366,3 +366,24 @@ test "WordLadder" {
     const res = try core.WordLadder(allocator, &words, source, dist);
     try expect(3 == res);
 }
+
+test "NumberOfIsland" {
+    const allocator = std.testing.allocator;
+
+    var rows = [_][5]u8{
+        .{ 1, 1, 0, 1, 1 },
+        .{ 1, 0, 0, 0, 0 },
+        .{ 0, 0, 0, 0, 1 },
+        .{ 1, 1, 0, 1, 1 },
+    };
+
+    var matrix = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+    };
+
+    const expected = try core.NumberOfIsland(allocator, matrix[0..]);
+    try expect(4 == expected);
+}

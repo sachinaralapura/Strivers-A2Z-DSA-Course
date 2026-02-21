@@ -617,3 +617,58 @@ pub fn WordLadder(
     }
     return 0;
 }
+
+/// Given a boolean 2D matrix grid of size N x M. You have to find the number of distinct islands where
+/// a group of connected 1s (horizontally or vertically) forms an island. Two islands are considered
+/// to be distinct if and only if one island
+/// is equal to another (not rotated or reflected).
+pub fn NumberOfIsland(
+    alloc: Allocator,
+    islands: [][]u8,
+) !usize {
+    var number_of_island: usize = 0;
+    // no of rows
+    const n = islands.len;
+    // no of columns
+    const m = islands[0].len;
+
+    var visited: [][]bool = try alloc.alloc([]bool, n);
+    defer alloc.free(visited);
+    defer for (0..visited.len) |i| alloc.free(visited[i]);
+    for (0..n) |i| {
+        visited[i] = try alloc.alloc(bool, islands[i].len);
+        @memset(visited[i], false);
+    }
+
+    for (0..n) |row| {
+        for (0..m) |col| {
+            if (islands[row][col] == 1 and !visited[row][col]) {
+                number_of_island += 1;
+                var queue = try Deque(Point).initCapacity(alloc, 0);
+                defer queue.deinit(alloc);
+                try queue.pushBack(alloc, .{ .row = @intCast(row), .col = @intCast(col) });
+                visited[row][col] = true;
+                while (queue.len > 0) {
+                    const front = queue.popBack();
+                    if (front) |curr| {
+                        for (0..4) |i| {
+                            const nrow = curr.row + drow[i];
+                            const ncol = curr.col + dcol[i];
+                            if (nrow >= 0 and
+                                nrow < n and
+                                ncol >= 0 and
+                                ncol < m and
+                                !visited[@intCast(nrow)][@intCast(ncol)] and
+                                islands[@intCast(nrow)][@intCast(ncol)] == 1)
+                            {
+                                visited[@intCast(nrow)][@intCast(ncol)] = true;
+                                try queue.pushBack(alloc, .{ .row = @intCast(nrow), .col = @intCast(ncol) });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return number_of_island;
+}
