@@ -387,3 +387,14 @@ test "NumberOfIsland" {
     const expected = try core.NumberOfIsland(allocator, matrix[0..]);
     try expect(4 == expected);
 }
+
+test "IsBipartite" {
+    const allocator = std.testing.allocator;
+    var self: Self = try .init(allocator, false);
+    defer self.deinit();
+
+    try self.insertTograph();
+    try self.addEdges();
+    // _ = try self.graph.IsBipartiteGraph();
+    try expect(false == try self.graph.IsBipartiteGraph());
+}

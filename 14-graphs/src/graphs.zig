@@ -261,7 +261,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                             if (!visited[dest_index]) {
                                 visited[dest_index] = true;
                                 try queue.pushBack(self.allocator, .{ .curr = edge.destination, .prev = n.curr });
-                            } else if (prev_index != dest_index) {
+                            } else if (dest_index != prev_index) {
                                 return true;
                             }
                         }
@@ -295,6 +295,28 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                     return true;
             }
             return false;
+        }
+
+        pub fn IsBipartiteGraph(self: *Self) !bool {
+            var visited: []u8 = try self.allocator.alloc(u8, self.vertices.items.len);
+            defer self.allocator.free(visited);
+            @memset(visited, 0);
+            for (self.vertices.items) |vertex| {
+                if (visited[vertex.index.?] == 0) {
+                    if (self.bipartiteDFS(0, vertex, visited) == false) return false;
+                }
+            }
+            return true;
+        }
+        fn bipartiteDFS(self: *Self, color: u8, vertex: *Node, visited: []u8) bool {
+            const opp: u8 = if (color == 1) 2 else 1;
+            visited[vertex.index.?] = color;
+            for (self.adj.items[vertex.index.?].items) |edge| {
+                if (visited[edge.destination.index.?] == 0) {
+                    if (self.bipartiteDFS(opp, edge.destination, visited) == false) return false;
+                } else if (visited[edge.destination.index.?] == color) return false;
+            }
+            return true;
         }
     };
 }

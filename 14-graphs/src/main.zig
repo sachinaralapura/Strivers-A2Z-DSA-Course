@@ -23,4 +23,5 @@ pub fn main() !void {
 
     var testbed: TestBed = .init(allocator, &graph, &data_list);
     try testbed.TestWordLadder();
+    try testbed.TestBipartiteGraph();
 }

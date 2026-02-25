@@ -239,4 +239,9 @@ pub const TestBed = struct {
         const data: *Data = @fieldParentPtr("node", @constCast(node));
         std.debug.print("A to {c} : {d}\n", .{ data.data, distance });
     }
+
+    pub fn TestBipartiteGraph(self: *Self) !void {
+        const res = try self.graph.IsBipartiteGraph();
+        std.debug.print("{}\n", .{res});
+    }
 };
