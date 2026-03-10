@@ -318,6 +318,44 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             }
             return true;
         }
+
+        pub fn DetectCycleDirected(self: *Self) !bool {
+            var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            defer self.allocator.free(visited);
+            @memset(visited, false);
+
+            const pathVisited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            defer self.allocator.free(pathVisited);
+            @memset(pathVisited, false);
+
+            for (self.vertices.items) |node| {
+                const node_index = node.index.?;
+                if (!visited[node_index]) {
+                    if (try self.detectCycleDirectedDfs(node, visited, pathVisited)) return true;
+                }
+            }
+            return false;
+        }
+        fn detectCycleDirectedDfs(
+            self: *Self,
+            vertex: *Node,
+            visited: []bool,
+            pathVisited: []bool,
+        ) !bool {
+            const vertex_index = vertex.index.?;
+            visited[vertex_index] = true;
+            pathVisited[vertex_index] = true;
+
+            for (self.adj.items[vertex_index].items) |edge| {
+                const dest_index = edge.destination.index.?;
+                if (!visited[dest_index]) {
+                    if (try self.detectCycleDirectedDfs(edge.destination, visited, pathVisited)) return true;
+                } else if (pathVisited[dest_index]) return true;
+            }
+
+            pathVisited[vertex_index] = false;
+            return false;
+        }
     };
 }
 

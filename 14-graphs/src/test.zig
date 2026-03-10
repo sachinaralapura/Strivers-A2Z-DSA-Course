@@ -56,7 +56,7 @@ fn addEdges(self: *Self) !void {
     // a - b
     try self.graph.addEdge(a, b, 1);
     // a - c
-    try self.graph.addEdge(a, e, 1);
+    try self.graph.addEdge(e, a, 1);
     // b - c
     try self.graph.addEdge(b, c, 1);
     // b - d
@@ -397,4 +397,15 @@ test "IsBipartite" {
     try self.addEdges();
     // _ = try self.graph.IsBipartiteGraph();
     try expect(false == try self.graph.IsBipartiteGraph());
+}
+
+test "Detect cycle directed" {
+    const allocator = std.testing.allocator;
+    var self: Self = try Self.init(allocator, true);
+    defer self.deinit();
+
+    try self.insertTograph();
+    try self.addEdges();
+
+    try expect(true == try self.graph.DetectCycleDirected());
 }
