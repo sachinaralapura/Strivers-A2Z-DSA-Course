@@ -1,0 +1,149 @@
+const std = @import("std");
+const problems = @import("problems.zig");
+
+const expect = std.testing.expect;
+
+test "Rotten Oranges" {
+    const allocator = std.testing.allocator;
+    var rows = [_][3]u8{
+        .{ 0, 1, 2 },
+        .{ 0, 1, 1 },
+        .{ 2, 1, 1 },
+    };
+    var matrix = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+    };
+    const expected: usize = 2;
+    const actual = try problems.RottenOranges(allocator, matrix[0..]);
+    try expect(expected == actual);
+}
+
+test "FloodFill" {
+    const allocator = std.testing.allocator;
+    var rows = [_][3]u8{ .{ 1, 2, 2 }, .{ 2, 2, 1 }, .{ 2, 1, 2 } };
+    var matrix = [_][]u8{ rows[0][0..], rows[1][0..], rows[2][0..] };
+
+    var expected = [_][3]u8{ .{ 1, 3, 3 }, .{ 3, 3, 1 }, .{ 3, 1, 2 } };
+
+    try problems.FloodFill(
+        allocator,
+        matrix[0..],
+        3,
+        .{ .row = 2, .col = 0 },
+    );
+
+    for (0..matrix.len) |i|
+        for (0..matrix.len) |j|
+            try expect(matrix[i][j] == expected[i][j]);
+}
+
+test "OneDistance" {
+    const allocator = std.testing.allocator;
+
+    var rows = [_][3]u8{
+        .{ 0, 0, 0 },
+        .{ 0, 1, 0 },
+        .{ 1, 0, 1 },
+    };
+    var matrix = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+    };
+
+    // result
+    var result: [][]usize = try allocator.alloc([]usize, matrix.len);
+    for (result, 0..) |*row, i| {
+        row.* = try allocator.alloc(usize, matrix[i].len);
+        @memset(row.*, 0);
+    }
+    defer allocator.free(result);
+    defer for (0..result.len) |i| allocator.free(result[i]);
+
+    var expected = [_][3]u8{
+        .{ 2, 1, 2 },
+        .{ 1, 0, 1 },
+        .{ 0, 1, 0 },
+    };
+    try problems.OneDistance(allocator, matrix[0..], result);
+
+    for (0..result.len) |i|
+        for (0..result.len) |j|
+            try expect(result[i][j] == expected[i][j]);
+}
+
+test "SurroundRegions" {
+    const allocator = std.testing.allocator;
+
+    const X: u8 = 'X';
+    const O: u8 = 'O';
+    var rows = [_][4]u8{
+        .{ X, X, X, X },
+        .{ X, O, O, X },
+        .{ X, O, X, X },
+        .{ X, O, X, X },
+        .{ X, X, O, O },
+    };
+
+    var matrix = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+        rows[4][0..],
+    };
+
+    var result: [][]u8 = try allocator.alloc([]u8, matrix.len);
+    for (result, 0..) |*row, i| {
+        row.* = try allocator.alloc(u8, matrix[i].len);
+        @memset(row.*, 0);
+    }
+    defer allocator.free(result);
+    defer for (0..result.len) |i| allocator.free(result[i]);
+
+    try problems.SurroundedRegions(allocator, matrix[0..], result);
+
+    var expected = [_][4]u8{
+        .{ X, X, X, X },
+        .{ X, X, X, X },
+        .{ X, X, X, X },
+        .{ X, X, X, X },
+        .{ X, X, O, O },
+    };
+
+    for (0..result.len) |i|
+        for (0..result[i].len) |j|
+            try expect(result[i][j] == expected[i][j]);
+}
+
+test "WordLadder" {
+    const allocator = std.testing.allocator;
+    var words = [_][]const u8{ "des", "der", "dfr", "dgt", "dfs" };
+    const source = "der";
+    const dist = "dfs";
+    const res = try problems.WordLadder(allocator, &words, source, dist);
+    try expect(3 == res);
+}
+
+test "NumberOfIsland" {
+    const allocator = std.testing.allocator;
+
+    var rows = [_][5]u8{
+        .{ 1, 1, 0, 1, 1 },
+        .{ 1, 0, 0, 0, 0 },
+        .{ 0, 0, 0, 0, 1 },
+        .{ 1, 1, 0, 1, 1 },
+    };
+
+    var matrix = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+    };
+
+    const expected = try problems.NumberOfIsland(allocator, matrix[0..]);
+    try expect(4 == expected);
+}
