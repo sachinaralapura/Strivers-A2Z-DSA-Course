@@ -254,11 +254,11 @@ test "IsBipartite" {
     try expect(false == try self.graph.IsBipartiteGraph());
 }
 
-//  g.    a        h
-//    \ ./  \.       \.
-//     e.---b---c    i
-//   ./   ./
-//   f    d        j
+//  g.    .a        h
+//    \  /  \.       \.
+//     e.---b---.c    i
+//   ./    /.
+//   f     d        j
 fn createCyclicEdges(self: *Self) !void {
     const a = &(self.data_list.items[0].node);
     const b = &(self.data_list.items[1].node);
@@ -418,5 +418,36 @@ test "Topological Sort BFS" {
     };
 
     try self.graph.TopologicalSortBfs({}, gen.visit);
+    for (expected, 0..) |expected_value, i| try expect(expected_value == gen.actual[i]);
+}
+
+test "Eventual safe nodes" {
+    const allocator = std.testing.allocator;
+    var self: Self = try Self.init(allocator, true);
+    defer self.deinit();
+
+    try self.insertTograph();
+    try self.createCyclicEdges();
+
+    const expected = [7]*Graph.Node{
+        self.graph.vertices.items[2], // C
+        self.graph.vertices.items[3], // D
+        self.graph.vertices.items[5], // F
+        self.graph.vertices.items[6], // G
+        self.graph.vertices.items[8], // I
+        self.graph.vertices.items[9], // J
+        self.graph.vertices.items[7], // H
+    };
+    const gen = struct {
+        var i: usize = 0;
+        var actual: [7]*Graph.Node = undefined;
+        fn visit(_: void, node: *Graph.Node) !void {
+            actual[i] = node;
+            i += 1;
+            // const data: *Data = @fieldParentPtr("node", @constCast(node));
+            // std.debug.print("{c}\n", .{data.data});
+        }
+    };
+    try self.graph.EventualSafeNodes({}, gen.visit);
     for (expected, 0..) |expected_value, i| try expect(expected_value == gen.actual[i]);
 }

@@ -66,6 +66,22 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             return false;
         }
 
+        fn reversedEgdeGraph(self: *Self, graph: *Self) !void {
+            for (self.vertices.items) |node| {
+                try graph.vertices.append(self.allocator, node);
+                const edge_list = try List(Edge).initCapacity(self.allocator, 0);
+                try graph.adj.append(self.allocator, edge_list);
+            }
+            for (0..self.adj.items.len) |i| {
+                for (self.adj.items[i].items) |edge| {
+                    const dest_index = edge.destination.index.?;
+                    try graph.adj.items[dest_index].append(self.allocator, .{
+                        .destination = self.vertices.items[i],
+                        .weight = edge.weight,
+                    });
+                }
+            }
+        }
         /// create a edge from source to destination
         /// if isDirected is true create an edge from destination and source
         pub fn addEdge(
@@ -103,6 +119,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             if (self.vertices.items.len == 0) return;
             var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
 
             var queue = try Deque(*Node).initCapacity(self.allocator, 0);
             defer queue.deinit(self.allocator);
@@ -134,6 +151,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         ) !void {
             const visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
             for (self.vertices.items) |vertex| {
                 const vertex_index = vertex.index.?;
                 if (!visited[vertex_index]) {
@@ -178,6 +196,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
 
             var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
 
             var dist: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
             defer self.allocator.free(dist);
@@ -223,6 +242,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         pub fn NumberOfProvinces(self: *Self) !usize {
             var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
             const gen = struct {
                 fn visit(_: void, _: *Node) !void {}
             };
@@ -242,6 +262,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             if (self.is_directed) return Error.IsDirected;
             var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
 
             var queue = try Deque(struct { curr: *Node, prev: *Node }).initCapacity(self.allocator, 0);
             defer queue.deinit(self.allocator);
@@ -279,6 +300,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             if (self.is_directed) return Error.IsDirected;
             var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
+            @memset(visited, false);
 
             for (self.vertices.items) |vertex| {
                 const vertex_index = vertex.index.?;
@@ -488,6 +510,45 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                 }
             }
             for (toposort.items) |node| try visit(ctx, node);
+        }
+
+        pub fn EventualSafeNodes(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node) anyerror!void,
+        ) !void {
+            if (!self.is_directed) return Error.IsNotDirected;
+            var reversedGraph: Self = try .init(self.allocator);
+            defer reversedGraph.deinit();
+            try self.reversedEgdeGraph(&reversedGraph);
+
+            var indegree: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
+            defer self.allocator.free(indegree);
+            @memset(indegree, 0);
+
+            var queue = try Deque(*Node).initCapacity(self.allocator, 0);
+            defer queue.deinit(self.allocator);
+
+            for (self.vertices.items, 0..) |node, i| {
+                const node_index = node.index.?;
+                indegree[node_index] = self.adj.items[node_index].items.len;
+                if (indegree[node_index] == 0) {
+                    try queue.pushBack(self.allocator, reversedGraph.vertices.items[i]);
+                }
+            }
+
+            while (queue.len > 0) {
+                const front = queue.popFront();
+                if (front) |node| {
+                    const node_index = node.index.?;
+                    try visit(ctx, node);
+                    for (reversedGraph.adj.items[node_index].items) |edge| {
+                        const dest_index = edge.destination.index.?;
+                        indegree[dest_index] -= 1;
+                        if (indegree[dest_index] == 0) try queue.pushBack(self.allocator, edge.destination);
+                    }
+                }
+            }
         }
     };
 }
