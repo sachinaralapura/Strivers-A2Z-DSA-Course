@@ -2,6 +2,8 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
+const List = std.ArrayList;
+const Grpah = @import("graphs.zig").Graph;
 
 pub const Point = struct {
     row: i32,
@@ -43,9 +45,9 @@ pub fn RottenOranges(
         }
     }
 
-    var time: usize = 0;
+    var days: usize = 0;
 
-    while (queue.len > 0) : (time += 1) {
+    while (queue.len > 0) : (days += 1) {
         const count = queue.len;
         for (0..count) |_| {
             const orange = queue.popFront();
@@ -70,7 +72,7 @@ pub fn RottenOranges(
             if (visited[i][j] == false and matrix[i][j] == 1)
                 return null;
 
-    return time - 1;
+    return days - 1;
 }
 
 /// An image is represented by a 2-D array of integers, each integer representing the pixel value of the image.
@@ -375,4 +377,59 @@ pub fn NumberOfIsland(
         }
     }
     return number_of_island;
+}
+
+pub fn AlienDictionary(
+    alloc: Allocator,
+    dict: *(List([]const u8)),
+    ctx: anytype,
+    visit: fn (@TypeOf(ctx), ch: u8) anyerror!void,
+) !void {
+    const GraphType = Grpah(u8, true);
+    const Node = struct {
+        data: u8,
+        node: GraphType.Node,
+    };
+    const AlphabetHashMap = std.AutoHashMap(u8, Node);
+
+    var alphabet: AlphabetHashMap = .init(alloc);
+    defer alphabet.deinit();
+
+    var graph = try GraphType.init(alloc);
+    defer graph.deinit();
+
+    for (0..dict.items.len - 1) |i| {
+        for (0..dict.items[i].len) |j| {
+            if (alphabet.get(dict.items[i][j])) |_| continue;
+            try alphabet.put(dict.items[i][j], .{ .data = @intCast(dict.items[i][j]), .node = .{ .index = null } });
+        }
+    }
+
+    var iter = alphabet.iterator();
+    while (iter.next()) |entry| {
+        try graph.insert(&(entry.value_ptr.node));
+    }
+
+    for (0..dict.items.len - 1) |i| {
+        const str1 = dict.items[i];
+        const str2 = dict.items[i + 1];
+        const len: usize = @min(str1.len, str2.len);
+        for (0..len) |j| {
+            if (str1[j] != str2[j]) {
+                try graph.addEdge(&(alphabet.getPtr(str1[j]).?.node), &(alphabet.getPtr(str2[j]).?.node), 0);
+                break;
+            }
+        }
+    }
+
+    var result: List(u8) = try .initCapacity(alloc, 0);
+    defer result.deinit(alloc);
+
+    const gen = struct {
+        fn visit_Z(_: void, node: *GraphType.Node) !void {
+            const data: *Node = @fieldParentPtr("node", @constCast(node));
+            try visit(ctx, data.data);
+        }
+    };
+    try graph.TopologicalSortBfs({}, gen.visit_Z);
 }

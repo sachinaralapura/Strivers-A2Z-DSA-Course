@@ -1,14 +1,19 @@
 const std = @import("std");
 const problems = @import("problems.zig");
-
+const List = std.ArrayList;
 const expect = std.testing.expect;
 
 test "Rotten Oranges" {
     const allocator = std.testing.allocator;
+    // var rows = [_][3]u8{
+    //     .{ 0, 1, 2 },
+    //     .{ 0, 1, 1 },
+    //     .{ 2, 1, 1 },
+    // };
     var rows = [_][3]u8{
-        .{ 0, 1, 2 },
-        .{ 0, 1, 1 },
         .{ 2, 1, 1 },
+        .{ 1, 2, 1 },
+        .{ 0, 0, 0 },
     };
     var matrix = [_][]u8{
         rows[0][0..],
@@ -146,4 +151,24 @@ test "NumberOfIsland" {
 
     const expected = try problems.NumberOfIsland(allocator, matrix[0..]);
     try expect(4 == expected);
+}
+
+test "Alien Dictionary" {
+    const allocator = std.testing.allocator;
+    var dict: List([]const u8) = try .initCapacity(allocator, 0);
+    defer dict.deinit(allocator);
+
+    const gen = struct {
+        fn visit(_: void, ch: u8) !void {
+            std.debug.print("{c}\n", .{ch});
+        }
+    };
+
+    // const wordszero = [5][]const u8{ "kaa", "akcd", "akca", "cak", "cad" };
+    // const wordsOne = [5][]const u8{ "baa", "abcd", "abca", "cab", "cad" };
+    // const wordsTwo = [5][]const u8{ "wrt", "wrf", "er", "ett", "rftt" };
+    const wordsThree = [3][]const u8{ "z", "x", "z" };
+
+    for (wordsThree) |word| try dict.append(allocator, word);
+    try problems.AlienDictionary(allocator, &dict, {}, gen.visit);
 }

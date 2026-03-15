@@ -51,7 +51,8 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         }
 
         pub fn insert(self: *Self, node: *Node) !void {
-            if (node.index) |_| return Error.NodeExists;
+            // if (node.index) |_| return Error.NodeExists;
+            if (node.index) |_| return;
             try self.vertices.append(self.allocator, node);
             const edge_list = try List(Edge).initCapacity(self.allocator, 0);
             try self.adj.append(self.allocator, edge_list);
@@ -82,6 +83,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                 }
             }
         }
+
         /// create a edge from source to destination
         /// if isDirected is true create an edge from destination and source
         pub fn addEdge(
@@ -451,9 +453,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                     try self.topologicalSortDfs(node, visited, &stk);
                 }
             }
-            while (stk.popBack()) |node| {
-                try visit(ctx, node);
-            }
+            while (stk.popBack()) |node| try visit(ctx, node);
         }
         fn topologicalSortDfs(self: *Self, vertex: *Node, visited: []bool, stk: *Deque(*Node)) !void {
             const vertex_index = vertex.index.?;
