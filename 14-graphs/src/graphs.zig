@@ -222,17 +222,17 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
 
                     // traverse all the adjacent nodes
                     for (self.adj.items[index].items) |edge| {
-                        const edge_index = edge.destination.index.?;
+                        const dest_index = edge.destination.index.?;
 
                         // push to queue if not visited
-                        if (!visited[edge_index]) {
+                        if (!visited[dest_index]) {
                             const distance = n.dist + 1;
-                            if (distance < dist[edge_index])
+                            if (distance < dist[dest_index])
                                 try queue.pushBack(self.allocator, .{
                                     .node = edge.destination,
                                     .dist = distance,
                                 });
-                            visited[edge_index] = true;
+                            visited[dest_index] = true;
                         }
                     }
                     visited[index] = true;
@@ -510,6 +510,33 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                 }
             }
             for (toposort.items) |node| try visit(ctx, node);
+        }
+
+        pub fn ShortestPathInDAG(self: *Self, ctx: anytype, visit: fn (@TypeOf(ctx), *Node, usize) anyerror!void) !void {
+            var topoSortList: Deque(*Node) = try .initCapacity(self.allocator, 0);
+            defer topoSortList.deinit(self.allocator);
+            const gen = struct {
+                const Gen = @This();
+                var distance: []usize = undefined;
+                var adj_items: []List(Edge) = undefined;
+                fn topoVisit(_: void, n: *Node) !void {
+                    const current_index = n.index.?;
+                    for (Gen.adj_items[current_index].items) |edge| {
+                        const dest_index = edge.destination.index.?;
+                        if (Gen.distance[current_index] + edge.weight < Gen.distance[dest_index]) {
+                            Gen.distance[dest_index] = Gen.distance[current_index] + edge.weight;
+                        }
+                    }
+                }
+            };
+            gen.adj_items = self.adj.items;
+            gen.distance = try self.allocator.alloc(usize, self.vertices.items.len);
+            defer self.allocator.free(gen.distance);
+            @memset(gen.distance, std.math.maxInt(usize));
+            gen.distance[self.vertices.items[0].index.?] = 0;
+
+            try self.TopologicalSortBfs({}, gen.topoVisit);
+            for (0..gen.distance.len) |i| try visit(ctx, self.vertices.items[i], gen.distance[i]);
         }
 
         pub fn EventualSafeNodes(

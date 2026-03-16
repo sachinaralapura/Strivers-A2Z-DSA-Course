@@ -312,40 +312,40 @@ test "Detect cycle directed BFS" {
 }
 
 fn createDAGEdges(self: *Self) !void {
-    const a = &(self.data_list.items[0].node);
-    const b = &(self.data_list.items[1].node);
-    const c = &(self.data_list.items[2].node);
-    const d = &(self.data_list.items[3].node);
-    const e = &(self.data_list.items[4].node);
-    const f = &(self.data_list.items[5].node);
-    const g = &(self.data_list.items[6].node);
-    const h = &(self.data_list.items[7].node);
-    const i = &(self.data_list.items[8].node);
-    const j = &(self.data_list.items[9].node);
+    const a = &(self.data_list.items[0].node); // 0
+    const b = &(self.data_list.items[1].node); // 4
+    const c = &(self.data_list.items[2].node); // 2
+    const d = &(self.data_list.items[3].node); // 5
+    const e = &(self.data_list.items[4].node); // 8
+    const f = &(self.data_list.items[5].node); // 6
+    const g = &(self.data_list.items[6].node); // 8
+    const h = &(self.data_list.items[7].node); // 15
+    const i = &(self.data_list.items[8].node); // 11
+    const j = &(self.data_list.items[9].node); // 12
 
-    try self.graph.addEdge(a, b, 1);
-    try self.graph.addEdge(a, e, 1);
-    try self.graph.addEdge(a, d, 1);
+    try self.graph.addEdge(a, b, 4);
+    try self.graph.addEdge(a, c, 2);
+    try self.graph.addEdge(a, d, 7);
 
     try self.graph.addEdge(b, c, 1);
-    try self.graph.addEdge(b, e, 1);
+    try self.graph.addEdge(b, e, 5);
 
-    try self.graph.addEdge(c, d, 1);
-    try self.graph.addEdge(c, e, 1);
-    try self.graph.addEdge(c, f, 1);
+    try self.graph.addEdge(c, d, 3);
+    try self.graph.addEdge(c, e, 6);
+    try self.graph.addEdge(c, f, 4);
 
-    try self.graph.addEdge(d, f, 1);
-    try self.graph.addEdge(d, g, 1);
+    try self.graph.addEdge(d, f, 2);
+    try self.graph.addEdge(d, g, 8);
 
     try self.graph.addEdge(e, f, 1);
-    try self.graph.addEdge(e, h, 1);
+    try self.graph.addEdge(e, h, 7);
 
-    try self.graph.addEdge(f, g, 1);
+    try self.graph.addEdge(f, g, 2);
 
-    try self.graph.addEdge(g, i, 1);
+    try self.graph.addEdge(g, i, 3);
 
-    try self.graph.addEdge(h, i, 1);
-    try self.graph.addEdge(h, j, 1);
+    try self.graph.addEdge(h, i, 4);
+    try self.graph.addEdge(h, j, 6);
 
     try self.graph.addEdge(i, j, 1);
 }
@@ -450,4 +450,28 @@ test "Eventual safe nodes" {
     };
     try self.graph.EventualSafeNodes({}, gen.visit);
     for (expected, 0..) |expected_value, i| try expect(expected_value == gen.actual[i]);
+}
+
+test "Shortest Distance in DAG" {
+    const alloc = std.testing.allocator;
+    var self: Self = try .init(alloc, true);
+    defer self.deinit();
+
+    try self.insertTograph();
+    try self.createDAGEdges();
+
+    const gen = struct {
+        // var i: usize = 0;
+        // var actual: [10]*Graph.Node = undefined;
+        fn visit(_: void, node: *Graph.Node, dist: usize) !void {
+            // actual[i] = node;
+            // i += 1;
+            const data: *Data = @fieldParentPtr("node", @constCast(node));
+            std.debug.print("{c} : {d}\n", .{ data.data, dist });
+        }
+    };
+
+    try self.graph.ShortestPathInDAG({}, gen.visit);
+    // for (expected, 0..) |expected_value, i| try expect(expected_value == gen.actual[i]);
+
 }
