@@ -1,11 +1,11 @@
 const std = @import("std");
-
-const List = std.ArrayList;
-const MultiList = std.MultiArrayList;
-
 const Allocator = std.mem.Allocator;
+
+const Order = std.math.Order;
+const List = std.ArrayList;
 const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
+const PriorityQueue = std.PriorityQueue;
 
 pub fn Graph(comptime W: type, comptime isDirected: bool) type {
     return struct {
@@ -66,7 +66,6 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             if (self.vertices.items[index] == node) return true;
             return false;
         }
-
         fn reversedEgdeGraph(self: *Self, graph: *Self) !void {
             for (self.vertices.items) |node| {
                 try graph.vertices.append(self.allocator, node);
@@ -202,7 +201,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
 
             var dist: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
             defer self.allocator.free(dist);
-            @memset(dist, std.math.maxInt(usize));
+            @memset(dist, std.math.maxInt(W));
 
             var queue = try Deque(struct {
                 node: *Node,
@@ -512,7 +511,12 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             for (toposort.items) |node| try visit(ctx, node);
         }
 
-        pub fn ShortestPathInDAG(self: *Self, ctx: anytype, visit: fn (@TypeOf(ctx), *Node, usize) anyerror!void) !void {
+        pub fn ShortestPathInDAG(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node, usize) anyerror!void,
+        ) !void {
+            if (!self.is_directed) return Error.IsNotDirected;
             var topoSortList: Deque(*Node) = try .initCapacity(self.allocator, 0);
             defer topoSortList.deinit(self.allocator);
             const gen = struct {
@@ -532,7 +536,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             gen.adj_items = self.adj.items;
             gen.distance = try self.allocator.alloc(usize, self.vertices.items.len);
             defer self.allocator.free(gen.distance);
-            @memset(gen.distance, std.math.maxInt(usize));
+            @memset(gen.distance, std.math.maxInt(W));
             gen.distance[self.vertices.items[0].index.?] = 0;
 
             try self.TopologicalSortBfs({}, gen.topoVisit);
@@ -577,5 +581,69 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                 }
             }
         }
+
+        const DistNode = struct { dist: usize, node: *Node };
+        /// Problem Statement: Given a weighted, undirected, and connected graph.
+        /// You are given the source vertex S and You have to Find the shortest distance of all the vertex from the source vertex S.
+        /// You have to return a list of integers denoting the shortest distance between each node and Source vertex S.
+        /// Note: The Graph doesn’t contain any negative weight cycle
+        pub fn DijkstraUndirected(
+            self: *Self,
+            source: *Node,
+            dest: *Node,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node) anyerror!void,
+        ) !void {
+            const Gen = struct {
+                fn lessThan(context: void, a: DistNode, b: DistNode) Order {
+                    _ = context;
+                    return std.math.order(a.dist, b.dist);
+                }
+            };
+            const MinHeap = PriorityQueue(DistNode, void, Gen.lessThan);
+            var pq: MinHeap = .empty;
+            defer pq.deinit(self.allocator);
+
+            var distance = try self.allocator.alloc(W, self.vertices.items.len);
+            defer self.allocator.free(distance);
+            @memset(distance, std.math.maxInt(W));
+            distance[source.index.?] = 0;
+            try pq.push(self.allocator, .{ .node = source, .dist = 0 });
+
+            var parent = try self.allocator.alloc(*Node, self.vertices.items.len);
+            defer self.allocator.free(parent);
+            for (0..parent.len) |i| parent[i] = self.vertices.items[i];
+
+            while (pq.count() > 0) {
+                const front_dist_node = pq.pop();
+                if (front_dist_node) |fdn| {
+                    const curr_node = fdn.node;
+                    const curr_node_index = curr_node.index.?;
+                    const curr_node_weight = fdn.dist;
+
+                    for (self.adj.items[curr_node_index].items) |edge| {
+                        const dest_index = edge.destination.index.?;
+                        if (curr_node_weight + edge.weight < distance[dest_index]) {
+                            distance[dest_index] = curr_node_weight + edge.weight;
+                            parent[dest_index] = curr_node;
+                            try pq.push(self.allocator, .{ .node = edge.destination, .dist = distance[dest_index] });
+                        }
+                    }
+                }
+            }
+            if (distance[dest.index.?] == std.math.maxInt(W)) return;
+            var node_index = dest.index.?;
+
+            var path: Deque(*Node) = try .initCapacity(self.allocator, 0);
+            defer path.deinit(self.allocator);
+            try path.pushBack(self.allocator, dest);
+
+            while (node_index != parent[node_index].index.?) {
+                try path.pushBack(self.allocator, parent[node_index]);
+                node_index = parent[node_index].index.?;
+            }
+            while (path.popBack()) |node| try visit(ctx, node);
+        }
     };
 }
+pub const Graphusize = Graph(usize, false);

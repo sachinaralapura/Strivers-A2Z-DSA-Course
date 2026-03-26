@@ -172,3 +172,95 @@ test "Alien Dictionary" {
     for (wordsThree) |word| try dict.append(allocator, word);
     try problems.AlienDictionary(allocator, &dict, {}, gen.visit);
 }
+
+test "Shortest Distance from source to destination" {
+    const allocator = std.testing.allocator;
+    var rows = [_][4]u8{
+        .{ 1, 1, 1, 1 },
+        .{ 1, 1, 0, 1 },
+        .{ 1, 1, 1, 1 },
+        .{ 1, 1, 0, 0 },
+        .{ 1, 0, 0, 1 },
+    };
+    var grid = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+        rows[4][0..],
+    };
+    var res = try problems.ShortestSourceDestination(
+        allocator,
+        grid[0..],
+        .{ .row = 0, .col = 1 },
+        .{ .row = 4, .col = 3 },
+    );
+    try expect(null == res);
+
+    res = try problems.ShortestSourceDestination(
+        allocator,
+        grid[0..],
+        .{ .row = 0, .col = 1 },
+        .{ .row = 4, .col = 0 },
+    );
+    try expect(5 == res);
+
+    res = try problems.ShortestSourceDestination(
+        allocator,
+        grid[0..],
+        .{ .row = 0, .col = 1 },
+        .{ .row = 2, .col = 2 },
+    );
+    try expect(3 == res);
+
+    res = try problems.ShortestSourceDestination(
+        allocator,
+        grid[0..],
+        .{ .row = 0, .col = 1 },
+        .{ .row = 2, .col = 3 },
+    );
+    try expect(4 == res);
+}
+
+test "Minimum Effort" {
+    const allocator = std.testing.allocator;
+    var rows = [_][5]i32{
+        .{ 1, 2, 1, 1, 1 },
+        .{ 1, 2, 1, 2, 1 },
+        .{ 1, 2, 1, 2, 1 },
+        .{ 1, 1, 1, 2, 1 },
+    };
+    var grid = [_][]i32{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+    };
+
+    var res = try problems.MinimunEffort(
+        allocator,
+        grid[0..],
+        .{ .row = 0, .col = 0 },
+        .{ .row = 3, .col = 4 },
+    );
+    if (res) |r| try expect(0 == r);
+
+    var rows1 = [_][3]i32{
+        .{ 1, 2, 2 },
+        .{ 3, 8, 2 },
+        .{ 5, 3, 5 },
+    };
+    var grid1 = [_][]i32{
+        rows1[0][0..],
+        rows1[1][0..],
+        rows1[2][0..],
+    };
+
+    res = try problems.MinimunEffort(
+        allocator,
+        grid1[0..],
+        .{ .row = 0, .col = 0 },
+        .{ .row = 2, .col = 2 },
+    );
+    if (res) |r| try expect(2 == r);
+}

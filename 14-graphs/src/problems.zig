@@ -3,11 +3,31 @@ const Allocator = std.mem.Allocator;
 const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
 const List = std.ArrayList;
-const Grpah = @import("graphs.zig").Graph;
+const Graph = @import("graphs.zig");
+const PriorityQueue = std.PriorityQueue;
+const Order = std.math.Order;
 
 pub const Point = struct {
+    const Self = @This();
     row: i32,
     col: i32,
+    pub fn Equal(self: Self, p: Self) bool {
+        if (self.col == p.col and self.row == p.row) return true;
+        return false;
+    }
+    pub fn Adjacent(self: Self) [4]Self {
+        return [_]Self{
+            Self{ .row = self.row - 1, .col = self.col },
+            Self{ .row = self.row, .col = self.col + 1 },
+            Self{ .row = self.row + 1, .col = self.col },
+            Self{ .row = self.row, .col = self.col - 1 },
+        };
+    }
+
+    pub fn ValidPoint(p: Self, n: usize, m: usize) bool {
+        if (p.row >= 0 and p.row < n and p.col >= 0 and p.col < m) return true;
+        return false;
+    }
 };
 const drow = [_]i32{ -1, 0, 1, 0 };
 const dcol = [_]i32{ 0, 1, 0, -1 };
@@ -385,7 +405,7 @@ pub fn AlienDictionary(
     ctx: anytype,
     visit: fn (@TypeOf(ctx), ch: u8) anyerror!void,
 ) !void {
-    const GraphType = Grpah(u8, true);
+    const GraphType = Graph.Graph(u8, true);
     const Node = struct {
         data: u8,
         node: GraphType.Node,
@@ -432,4 +452,184 @@ pub fn AlienDictionary(
         }
     };
     try graph.TopologicalSortBfs({}, gen.visit_Z);
+}
+
+/// Problem Statement: Given an n * m matrix grid where each element can either be 0 or 1.
+/// You need to find the shortest distance between a given source cell to a destination cell.
+/// The path can only be created out of a cell if its value is 1.
+/// If the path is not possible between the source cell and the destination cell, then return -1.
+/// Note: You can move into an adjacent cell if that adjacent cell is filled with element 1.
+/// Two cells are adjacent if they share a side.
+/// In other words, you can move in one of four directions, Up, Down, Left, and Right.
+pub fn ShortestSourceDestination(
+    alloc: Allocator,
+    grid: [][]u8,
+    source: Point,
+    dest: Point,
+) !?usize {
+    const DistPoint = struct {
+        dist: usize,
+        point: Point,
+    };
+    // no of rows
+    const n = grid.len;
+    // no of columns
+    const m = grid[0].len;
+
+    var distance: [][]usize = try alloc.alloc([]usize, n);
+    defer alloc.free(distance);
+    defer for (0..distance.len) |i| alloc.free(distance[i]);
+    for (0..n) |i| {
+        distance[i] = try alloc.alloc(usize, grid[i].len);
+        @memset(distance[i], std.math.maxInt(usize));
+    }
+    distance[@intCast(source.row)][@intCast(source.col)] = 0;
+
+    var queue = try Deque(DistPoint).initCapacity(alloc, 0);
+    defer queue.deinit(alloc);
+    try queue.pushBack(
+        alloc,
+        .{ .dist = 0, .point = source },
+    );
+
+    while (queue.len > 0) {
+        const top = queue.popFront();
+        if (top) |dist_point| {
+            const dist = dist_point.dist;
+            for (dist_point.point.Adjacent()) |p| {
+                if (!p.ValidPoint(n, m)) continue;
+                const r: usize = @intCast(p.row);
+                const c: usize = @intCast(p.col);
+                if (grid[r][c] == 1 and dist + 1 < distance[r][c]) {
+                    distance[r][c] = dist + 1;
+                    if (r == dest.row and c == dest.col) return 1 + dist;
+                    try queue.pushBack(alloc, .{ .dist = dist + 1, .point = p });
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/// Problem Statement: You are a hiker preparing for an upcoming hike.
+/// You are given heights, a 2D array of size rows x columns, where heights[row][col] represents the height of the cell (row, col).
+/// You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e.,0-indexed).
+/// You can move up, down, left, or right, and you wish to find a route that requires the minimum effort.
+///
+/// A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.
+pub fn MinimunEffort(
+    alloc: Allocator,
+    grid: [][]i32,
+    source: Point,
+    dest: Point,
+) !?usize {
+    const DiffPoint = struct {
+        diff: usize,
+        point: Point,
+    };
+    // no of rows
+    const n = grid.len;
+    // no of columns
+    const m = grid[0].len;
+
+    var effort: [][]usize = try alloc.alloc([]usize, n);
+    defer alloc.free(effort);
+    defer for (0..effort.len) |i| alloc.free(effort[i]);
+    for (0..n) |i| {
+        effort[i] = try alloc.alloc(usize, grid[i].len);
+        @memset(effort[i], std.math.maxInt(usize));
+    }
+    effort[@intCast(source.row)][@intCast(source.col)] = 0;
+
+    const Gen = struct {
+        fn lessThan(context: void, a: DiffPoint, b: DiffPoint) Order {
+            _ = context;
+            return std.math.order(a.diff, b.diff);
+        }
+    };
+    const MinHeap = PriorityQueue(DiffPoint, void, Gen.lessThan);
+    var pq: MinHeap = .empty;
+    defer pq.deinit(alloc);
+    try pq.push(
+        alloc,
+        .{ .diff = 0, .point = source },
+    );
+
+    while (pq.items.len > 0) {
+        const top = pq.pop();
+        if (top) |diff_point| {
+            const diff = diff_point.diff;
+            const curr_r: usize = @intCast(diff_point.point.row);
+            const curr_c: usize = @intCast(diff_point.point.col);
+            if (curr_r == dest.row and curr_c == dest.col) return diff;
+            for (diff_point.point.Adjacent()) |p| {
+                if (!p.ValidPoint(n, m)) continue;
+                const r: usize = @intCast(p.row);
+                const c: usize = @intCast(p.col);
+                const effort_needed = @max(diff, @abs(grid[curr_r][curr_c] - grid[r][c]));
+                if (effort_needed < effort[r][c]) {
+                    effort[r][c] = effort_needed;
+                    try pq.push(
+                        alloc,
+                        .{ .diff = effort_needed, .point = p },
+                    );
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/// Problem Statement: There are n cities and m edges connected by some number of flights.
+/// You are given an array of flights where flights[i] = [ fromi, toi, pricei] indicates
+/// that there is a flight from city fromi to city toi with cost price.
+/// You have also given three integers src, dst, and k, and return the cheapest price from src to dst with at most k stops.
+/// If there is no such route, return -1.
+pub fn CheapestFlight(
+    alloc: Allocator,
+    graph: *const Graph.Graphusize,
+    K: usize, // stops
+    src: *const Graph.Graphusize.Node,
+    dest: *const Graph.Graphusize.Node,
+) !?usize {
+    const StopNodeDist = struct {
+        stops: usize,
+        node: *const Graph.Graphusize.Node,
+        dist: usize,
+    };
+
+    const n = graph.vertices.items.len;
+
+    var distance: []usize = try alloc.alloc(usize, n);
+    defer alloc.free(distance);
+    distance[src.index.?] = 0;
+
+    var queue: Deque(StopNodeDist) = try .initCapacity(alloc, 0);
+    defer queue.deinit(alloc);
+    try queue.pushBack(alloc, .{ .stops = 0, .node = src, .dist = 0 });
+
+    while (queue.len > 0) {
+        const front = queue.popFront();
+        if (front) |stopnodedist| {
+            const stops = stopnodedist.stops;
+            const node = stopnodedist.node;
+            const dist = stopnodedist.dist;
+            const node_index = node.index.?;
+
+            if (stops > K) continue;
+            for (graph.adj.items[node_index].items) |edge| {
+                const dest_index = edge.destination.index.?;
+                if (dist + edge.weight < distance[dest_index] and stops <= K) {
+                    distance[dest_index] = dist + edge.weight;
+                    try queue.pushBack(alloc, .{
+                        .stops = stops + 1,
+                        .node = edge.destination,
+                        .dist = dist + edge.weight,
+                    });
+                }
+            }
+        }
+    }
+    if (distance[dest.index.?] == std.math.maxInt(usize)) return null;
+    return distance[dest.index.?];
 }
