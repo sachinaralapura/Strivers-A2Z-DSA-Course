@@ -30,7 +30,7 @@ test "FloodFill" {
     var rows = [_][3]u8{ .{ 1, 2, 2 }, .{ 2, 2, 1 }, .{ 2, 1, 2 } };
     var matrix = [_][]u8{ rows[0][0..], rows[1][0..], rows[2][0..] };
 
-    var expected = [_][3]u8{ .{ 1, 3, 3 }, .{ 3, 3, 1 }, .{ 3, 1, 2 } };
+    const expected = [_][3]u8{ .{ 1, 3, 3 }, .{ 3, 3, 1 }, .{ 3, 1, 2 } };
 
     try problems.FloodFill(
         allocator,
@@ -59,7 +59,7 @@ test "OneDistance" {
     };
 
     // result
-    var result: [][]usize = try allocator.alloc([]usize, matrix.len);
+    const result: [][]usize = try allocator.alloc([]usize, matrix.len);
     for (result, 0..) |*row, i| {
         row.* = try allocator.alloc(usize, matrix[i].len);
         @memset(row.*, 0);
@@ -67,7 +67,7 @@ test "OneDistance" {
     defer allocator.free(result);
     defer for (0..result.len) |i| allocator.free(result[i]);
 
-    var expected = [_][3]u8{
+    const expected = [_][3]u8{
         .{ 2, 1, 2 },
         .{ 1, 0, 1 },
         .{ 0, 1, 0 },
@@ -100,7 +100,7 @@ test "SurroundRegions" {
         rows[4][0..],
     };
 
-    var result: [][]u8 = try allocator.alloc([]u8, matrix.len);
+    const result: [][]u8 = try allocator.alloc([]u8, matrix.len);
     for (result, 0..) |*row, i| {
         row.* = try allocator.alloc(u8, matrix[i].len);
         @memset(row.*, 0);
@@ -110,7 +110,7 @@ test "SurroundRegions" {
 
     try problems.SurroundedRegions(allocator, matrix[0..], result);
 
-    var expected = [_][4]u8{
+    const expected = [_][4]u8{
         .{ X, X, X, X },
         .{ X, X, X, X },
         .{ X, X, X, X },

@@ -585,6 +585,7 @@ fn CreateCheapestFlightGraph(self: *Self) !void {
     try self.graph.addEdge(d, b, 2);
     try self.graph.addEdge(e, c, 1);
 }
+
 test "Cheapest flight" {
     const alloc = std.testing.allocator;
     var self: Self = try .init(alloc, true);

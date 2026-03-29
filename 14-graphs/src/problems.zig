@@ -103,7 +103,7 @@ pub fn FloodFill(
     fillColor: u8,
     initialPoint: Point,
 ) !void {
-    var visited: [][]bool = try alloc.alloc([]bool, matrix.len);
+    const visited: [][]bool = try alloc.alloc([]bool, matrix.len);
     defer alloc.free(visited);
     defer for (0..visited.len) |i| alloc.free(visited[i]);
     for (visited, 0..) |*row, i| {

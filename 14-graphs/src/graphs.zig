@@ -199,7 +199,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             defer self.allocator.free(visited);
             @memset(visited, false);
 
-            var dist: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
+            const dist: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
             defer self.allocator.free(dist);
             @memset(dist, std.math.maxInt(W));
 
@@ -241,7 +241,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         }
 
         pub fn NumberOfProvinces(self: *Self) !usize {
-            var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            const visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
             @memset(visited, false);
             const gen = struct {
@@ -299,7 +299,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
 
         pub fn DetectCycleUndirectedDfs(self: *Self) !bool {
             if (self.is_directed) return Error.IsDirected;
-            var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            const visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
             @memset(visited, false);
 
@@ -325,7 +325,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         }
 
         pub fn IsBipartiteGraph(self: *Self) !bool {
-            var visited: []u8 = try self.allocator.alloc(u8, self.vertices.items.len);
+            const visited: []u8 = try self.allocator.alloc(u8, self.vertices.items.len);
             defer self.allocator.free(visited);
             @memset(visited, 0);
             for (self.vertices.items) |vertex| {
@@ -347,7 +347,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         }
 
         pub fn DetectCycleDirectedDfs(self: *Self) !bool {
-            var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            const visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
             @memset(visited, false);
 
@@ -432,14 +432,14 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         /// Problem Statement: Given a Directed Acyclic Graph (DAG) with V vertices labeled from 0 to V-1.
         /// The graph is represented using an adjacency list where adj[i] lists all nodes connected to node.
         /// Find any Topological Sorting of that Graph.
-        // In topological sorting, node u will always appear before node v if there is a directed edge from node u towards node v(u -> v).
-        // The Output will be True if your topological sort is correct otherwise it will be False.
+        /// In topological sorting, node u will always appear before node v if there is a directed edge from node u towards node v(u -> v).
+        /// The Output will be True if your topological sort is correct otherwise it will be False.
         pub fn TopologicalSortDfs(
             self: *Self,
             ctx: anytype,
             visit: fn (@TypeOf(ctx), *Node) anyerror!void,
         ) !void {
-            var visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
+            const visited: []bool = try self.allocator.alloc(bool, self.vertices.items.len);
             defer self.allocator.free(visited);
             @memset(visited, false);
 
