@@ -264,3 +264,13 @@ test "Minimum Effort" {
     );
     if (res) |r| try expect(2 == r);
 }
+
+test "Minimum Multiplication" {
+    const alloc = std.testing.allocator;
+    const arr = [3]usize{3, 4, 65};
+    const start: usize = 7;
+    const end: usize = 66175;
+
+    const res = try problems.MinMultiplication(alloc, start, end, arr[0..]);
+    if (res) |r| try expect(4 == r);
+}

@@ -494,28 +494,6 @@ test "Shortest Distance in DAG" {
     for (expected, 0..) |expected_value, i| try expect(expected_value.dist == gen.actual[i].dist);
 }
 
-/// adj
-/// a: [(b,6), (d,2)]
-/// b: [(c,4), (e,7)]
-/// c: [(d,3), (e,4), (f,4)]
-/// d: [(f,5), (g,5)]
-/// e: [(f,1), (h,5)]
-/// f: [(g,2)]
-/// g: [(i,3), (j,4)]
-/// h: [(i,4), (j,8)]
-/// i: [(j,6)]
-/// j: []
-/// paths
-/// a : 0         path: a
-/// b : 6         path: a → b
-/// c : 5         path: a → d → c
-/// d : 2         path: a → d
-/// e : 9         path: a → d → c → e
-/// f : 7         path: a → d → f
-/// g : 7         path: a → d → g
-/// h : 13        path: a → d → f → e → h
-/// i : 10        path: a → d → g → i
-/// j : 11        path: a → d → g → j
 fn createDijkstraEdges(self: *Self) !void {
     const a = &(self.data_list.items[0].node); // 0
     const b = &(self.data_list.items[1].node); // 4
@@ -603,4 +581,114 @@ test "Cheapest flight" {
 
     try expect(null != res);
     if (res) |r| try expect(7 == r);
+}
+
+fn createNumberOfWaysToArrive(self: *Self) !void {
+    const a = &(self.data_list.items[0].node); // 0
+    const b = &(self.data_list.items[1].node); // 1
+    const c = &(self.data_list.items[2].node); // 2
+    const d = &(self.data_list.items[3].node); // 3
+    const e = &(self.data_list.items[4].node); // 4
+    const f = &(self.data_list.items[5].node); // 5
+    const g = &(self.data_list.items[6].node); // 6
+    const h = &(self.data_list.items[7].node); // 7
+    const i = &(self.data_list.items[8].node); // 8
+    // const j = &(self.data_list.items[9].node); // 12
+
+    try self.graph.addEdge(a, b, 1);
+    try self.graph.addEdge(a, c, 2);
+    try self.graph.addEdge(a, d, 1);
+    try self.graph.addEdge(a, e, 2);
+
+    try self.graph.addEdge(b, f, 2);
+
+    try self.graph.addEdge(c, f, 1);
+
+    try self.graph.addEdge(d, f, 2);
+    try self.graph.addEdge(d, h, 3);
+    try self.graph.addEdge(d, g, 2);
+
+    try self.graph.addEdge(e, g, 1);
+
+    try self.graph.addEdge(f, i, 1);
+
+    try self.graph.addEdge(g, i, 1);
+
+    try self.graph.addEdge(h, i, 1);
+}
+
+test "Number of ways to arrive" {
+    const alloc = std.testing.allocator;
+    var self: Self = try .init(alloc, true);
+    defer self.deinit();
+    try self.insertTograph();
+    try self.createNumberOfWaysToArrive();
+
+    const a = &(self.data_list.items[0].node); // 0
+    const i = &(self.data_list.items[8].node); // 8
+    const res = try self.graph.NumberOfWaysToArrive(a, i);
+    try expect(5 == res);
+}
+
+test "Bellmanford" {
+    const alloc = std.testing.allocator;
+    const GraphBellmanFord = core.Graph(i64, true);
+    var graph = try GraphBellmanFord.init(alloc);
+    defer graph.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..6) |ch|
+        try data_list.append(alloc, .{ .data = @intCast(ch), .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try graph.insert(&(data_list.items[i].node));
+
+    const zero = &(data_list.items[0].node); // 0
+    const one = &(data_list.items[1].node); // 1
+    const two = &(data_list.items[2].node); // 2
+    const three = &(data_list.items[3].node); // 3
+    const four = &(data_list.items[4].node); // 4
+    const five = &(data_list.items[5].node); // 5
+
+    try graph.addEdge(zero, one, 5);
+
+    try graph.addEdge(one, five, -3);
+
+    try graph.addEdge(one, two, -2);
+
+    try graph.addEdge(five, three, 1);
+
+    try graph.addEdge(three, two, 6);
+
+    try graph.addEdge(two, four, 3);
+
+    try graph.addEdge(three, four, -2);
+    const NodeDist = struct {
+        node: *GraphBellmanFord.Node,
+        dist: i64,
+    };
+    const expected = [6]NodeDist{
+        .{ .node = zero, .dist = 0 },
+        .{ .node = one, .dist = 5 },
+        .{ .node = two, .dist = 3 },
+        .{ .node = three, .dist = 3 },
+        .{ .node = four, .dist = 1 },
+        .{ .node = five, .dist = 2 },
+    };
+    const gen = struct {
+        var i: usize = 0;
+        var actual: [6]NodeDist = undefined;
+        fn visit(_: void, node: *Graph.Node, dist: i64) !void {
+            actual[i] = .{ .node = node, .dist = dist };
+            i += 1;
+            // const data: *Data = @fieldParentPtr("node", @constCast(node));
+            // std.debug.print("{c} : {d}\n", .{ data.data, dist });
+        }
+    };
+
+    try expect(graph.Bellmanford(zero, {}, gen.visit) != GraphBellmanFord.Error.NegativeCycle);
+    for (expected, 0..) |nd, i| {
+        try expect(nd.node == gen.actual[i].node);
+        try expect(nd.dist == gen.actual[i].dist);
+    }
 }

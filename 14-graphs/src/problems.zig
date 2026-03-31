@@ -633,3 +633,35 @@ pub fn CheapestFlight(
     if (distance[dest.index.?] == std.math.maxInt(usize)) return null;
     return distance[dest.index.?];
 }
+
+pub fn MinMultiplication(alloc: Allocator, start: usize, end: usize, arr: []const usize) !?usize {
+    const StepNode = struct {
+        step: usize,
+        node: usize,
+    };
+    var distance: []usize = try alloc.alloc(usize, 100000);
+    defer alloc.free(distance);
+    @memset(distance, std.math.maxInt(usize));
+    distance[start] = 0;
+
+    var queue: Deque(StepNode) = try .initCapacity(alloc, 0);
+    defer queue.deinit(alloc);
+    try queue.pushBack(alloc, .{ .step = 0, .node = start });
+
+    while (queue.len > 0) {
+        const front = queue.popFront();
+        if (front) |stepNode| {
+            const step = stepNode.step;
+            const node = stepNode.node;
+            for (arr) |num| {
+                const n = (num * node) % 100000;
+                if (step + 1 < distance[n]) {
+                    distance[n] = step + 1;
+                    if (n == end) return step + 1;
+                    try queue.pushBack(alloc, .{ .node = n, .step = step + 1 });
+                }
+            }
+        }
+    }
+    return null;
+}

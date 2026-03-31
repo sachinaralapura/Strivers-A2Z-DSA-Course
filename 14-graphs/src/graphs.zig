@@ -6,11 +6,11 @@ const List = std.ArrayList;
 const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
 const PriorityQueue = std.PriorityQueue;
-
+const assert = std.debug.assert;
 pub fn Graph(comptime W: type, comptime isDirected: bool) type {
     return struct {
         const Self = @This();
-        pub const Error = error{ NodeExists, IsDirected, IsNotDirected };
+        pub const Error = error{ NodeExists, IsDirected, IsNotDirected, NegativeCycle };
         pub const Node = struct {
             index: ?usize,
         };
@@ -48,6 +48,10 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             for (0..self.adj.items.len) |i|
                 self.adj.items[i].deinit(self.allocator);
             self.adj.deinit(self.allocator);
+        }
+
+        pub fn verticesCount(self: *Self) usize {
+            return self.vertices.items.len;
         }
 
         pub fn insert(self: *Self, node: *Node) !void {
@@ -643,6 +647,96 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                 node_index = parent[node_index].index.?;
             }
             while (path.popBack()) |node| try visit(ctx, node);
+        }
+
+        /// You are in a city that consists of n intersections numbered from 0 to n - 1 with bi-directional roads between some intersections.
+        /// The inputs are generated such that you can reach any intersection from any other intersection and that there is at most one road between any two intersections.
+        /// You are given an integer n and a 2D integer array ‘roads’ where roads[i] = [ui, vi, timei] means that there is a road between intersections ui and vi that takes timei minutes to travel.
+        /// You want to know in how many ways you can travel from intersection 0 to intersection n - 1 in the shortest amount of time.
+        /// Return the number of ways you can arrive at your destination in the shortest amount of time.
+        pub fn NumberOfWaysToArrive(self: *Self, source: *Node, dest: *Node) !usize {
+            const Gen = struct {
+                fn lessThan(context: void, a: DistNode, b: DistNode) Order {
+                    _ = context;
+                    return std.math.order(a.dist, b.dist);
+                }
+            };
+
+            var distance = try self.allocator.alloc(W, self.vertices.items.len);
+            defer self.allocator.free(distance);
+            @memset(distance, std.math.maxInt(W));
+            distance[source.index.?] = 0;
+
+            var ways = try self.allocator.alloc(usize, self.vertices.items.len);
+            defer self.allocator.free(ways);
+            @memset(ways, 0);
+            ways[source.index.?] = 1;
+
+            const MinHeap = PriorityQueue(DistNode, void, Gen.lessThan);
+            var pq: MinHeap = .empty;
+            defer pq.deinit(self.allocator);
+            try pq.push(self.allocator, .{ .node = source, .dist = 0 });
+
+            while (pq.items.len > 0) {
+                const front_dist_node = pq.pop();
+                if (front_dist_node) |fdn| {
+                    const curr_node = fdn.node;
+                    const curr_node_index = curr_node.index.?;
+                    const curr_node_weight = fdn.dist;
+
+                    for (self.adj.items[curr_node_index].items) |edge| {
+                        const dest_index = edge.destination.index.?;
+                        const new_dist = curr_node_weight + edge.weight;
+                        if (new_dist < distance[dest_index]) {
+                            distance[dest_index] = new_dist;
+                            try pq.push(self.allocator, .{ .node = edge.destination, .dist = new_dist });
+                            ways[dest_index] = ways[curr_node_index];
+                        } else if (new_dist == distance[dest_index]) ways[dest_index] += ways[curr_node_index];
+                    }
+                }
+            }
+            return ways[dest.index.?];
+        }
+        /// Problem Statement: Given a weighted, directed and connected graph of V vertices and E edges, Find the shortest distance of all the vertices from the source vertex S. Note: If the Graph contains a negative cycle then return an array consisting of only -1.
+        pub fn Bellmanford(
+            self: *Self,
+            source: *Node,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node, i64) anyerror!void,
+        ) !void {
+            assert(self.is_directed);
+            var distance = try self.allocator.alloc(W, self.verticesCount());
+            defer self.allocator.free(distance);
+            @memset(distance, std.math.maxInt(W));
+            distance[source.index.?] = 0;
+
+            // relax all the edges for all the edges
+            for (0..self.verticesCount()) |_| {
+                for (self.vertices.items) |vertex| {
+                    const index = vertex.index.?;
+                    for (self.adj.items[index].items) |edge| {
+                        const u_index = index;
+                        const v_index = edge.destination.index.?;
+                        const wt = edge.weight;
+                        if (distance[u_index] != std.math.maxInt(W) and (distance[u_index] + wt) < distance[v_index]) {
+                            distance[v_index] = distance[u_index] + wt;
+                        }
+                    }
+                }
+            }
+            // check for negative cycles
+            for (self.vertices.items) |vertex| {
+                const index = vertex.index.?;
+                for (self.adj.items[index].items) |edge| {
+                    const u_index = index;
+                    const v_index = edge.destination.index.?;
+                    const wt = edge.weight;
+                    if (distance[u_index] != std.math.maxInt(W) and (distance[u_index] + wt) < distance[v_index])
+                        return Error.NegativeCycle;
+                }
+            }
+            
+            for (distance, 0..) |dist, i| try visit(ctx, self.vertices.items[i], dist);
         }
     };
 }
