@@ -681,14 +681,75 @@ test "Bellmanford" {
         fn visit(_: void, node: *Graph.Node, dist: i64) !void {
             actual[i] = .{ .node = node, .dist = dist };
             i += 1;
-            // const data: *Data = @fieldParentPtr("node", @constCast(node));
-            // std.debug.print("{c} : {d}\n", .{ data.data, dist });
         }
     };
-
     try expect(graph.Bellmanford(zero, {}, gen.visit) != GraphBellmanFord.Error.NegativeCycle);
     for (expected, 0..) |nd, i| {
         try expect(nd.node == gen.actual[i].node);
         try expect(nd.dist == gen.actual[i].dist);
     }
+}
+
+test "FloydWarshell Algorithm" {
+    const alloc = std.testing.allocator;
+    const W = i64;
+    const GraphFloyd = core.Graph(W, true);
+    var graph = try GraphFloyd.init(alloc);
+    defer graph.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..5) |ch|
+        try data_list.append(alloc, .{ .data = @intCast(ch), .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try graph.insert(&(data_list.items[i].node));
+
+    const zero = &(data_list.items[0].node); // 0
+    const one = &(data_list.items[1].node); // 1
+    const two = &(data_list.items[2].node); // 2
+    const three = &(data_list.items[3].node); // 3
+    const four = &(data_list.items[4].node); // 4
+
+    try graph.addEdge(zero, one, 4);
+    try graph.addEdge(zero, three, 5);
+
+    try graph.addEdge(one, four, 6);
+    try graph.addEdge(one, two, 1);
+
+    try graph.addEdge(two, zero, 2);
+    try graph.addEdge(two, three, 3);
+
+    try graph.addEdge(three, two, 1);
+    try graph.addEdge(three, four, 2);
+
+    try graph.addEdge(four, three, 4);
+    try graph.addEdge(four, zero, 1);
+
+    const adjacenyMatrix = try alloc.alloc([]W, graph.vertices.items.len);
+    defer alloc.free(adjacenyMatrix);
+    defer for (0..adjacenyMatrix.len) |i| alloc.free(adjacenyMatrix[i]);
+    for (adjacenyMatrix, 0..) |*row, i| {
+        row.* = try alloc.alloc(W, graph.vertices.items.len);
+        @memset(row.*, std.math.maxInt(W));
+        row.*[i] = 0;
+    }
+    const expected = [5][5]W{
+        .{ 0, 4, 5, 5, 7 },
+        .{ 3, 0, 1, 4, 6 },
+        .{ 2, 6, 0, 3, 5 },
+        .{ 3, 7, 1, 0, 2 },
+        .{ 1, 5, 5, 4, 0 },
+    };
+    for (0..expected.len) |i| {
+        for (0..expected.len) |j| {
+            adjacenyMatrix[i][j] = expected[i][j];
+        }
+    }
+    const Ctx = struct { expected: [][]W };
+    const gen = struct {
+        fn visit(ctx: Ctx, source: *GraphFloyd.Node, dest: *GraphFloyd.Node, dist: W) !void {
+            try expect(ctx.expected[source.index.?][dest.index.?] == dist);
+        }
+    };
+    try graph.FloydWarshallAlgorithm(Ctx{ .expected = adjacenyMatrix }, gen.visit);
 }

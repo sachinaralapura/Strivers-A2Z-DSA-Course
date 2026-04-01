@@ -50,7 +50,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             self.adj.deinit(self.allocator);
         }
 
-        pub fn verticesCount(self: *Self) usize {
+        fn verticesCount(self: *Self) usize {
             return self.vertices.items.len;
         }
 
@@ -735,8 +735,58 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                         return Error.NegativeCycle;
                 }
             }
-            
+
             for (distance, 0..) |dist, i| try visit(ctx, self.vertices.items[i], dist);
+        }
+
+        pub fn FloydWarshallAlgorithm(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node, *Node, W) anyerror!void,
+        ) !void {
+            const adjacenyMatrix = try self.allocator.alloc([]W, self.verticesCount());
+            defer self.allocator.free(adjacenyMatrix);
+            defer for (0..adjacenyMatrix.len) |i| self.allocator.free(adjacenyMatrix[i]);
+            for (adjacenyMatrix, 0..) |*row, i| {
+                row.* = try self.allocator.alloc(W, self.verticesCount());
+                @memset(row.*, std.math.maxInt(W));
+                row.*[i] = 0;
+            }
+            for (self.vertices.items) |node| {
+                const index = node.index.?;
+                for (self.adj.items[index].items) |edge| {
+                    const dest_index = edge.destination.index.?;
+                    adjacenyMatrix[index][dest_index] = edge.weight;
+                }
+            }
+
+            for (0..self.vertices.items.len) |through| {
+                for (0..adjacenyMatrix.len) |i| {
+                    for (0..adjacenyMatrix.len) |j| {
+                        if (adjacenyMatrix[i][through] == std.math.maxInt(W)) continue;
+                        if (adjacenyMatrix[through][j] == std.math.maxInt(W)) continue;
+                        const res: W = adjacenyMatrix[i][through] + adjacenyMatrix[through][j];
+                        if (res < adjacenyMatrix[i][j]) adjacenyMatrix[i][j] = res;
+                    }
+                }
+            }
+
+            for (0..adjacenyMatrix.len) |i| {
+                for (0..adjacenyMatrix.len) |j| {
+                    const source = self.vertices.items[i];
+                    const destination = self.vertices.items[j];
+                    try visit(ctx, source, destination, adjacenyMatrix[i][j]);
+                }
+            }
+            // for (0..adjacenyMatrix.len) |i| {
+            //     for (0..adjacenyMatrix.len) |j| {
+            //         if (adjacenyMatrix[i][j] == std.math.maxInt(W))
+            //             std.debug.print("∞ \t", .{})
+            //         else
+            //             std.debug.print("{d}\t", .{adjacenyMatrix[i][j]});
+            //     }
+            //     std.debug.print("\n", .{});
+            // }
         }
     };
 }
