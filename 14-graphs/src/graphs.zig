@@ -6,6 +6,7 @@ const List = std.ArrayList;
 const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
 const PriorityQueue = std.PriorityQueue;
+
 const assert = std.debug.assert;
 pub fn Graph(comptime W: type, comptime isDirected: bool) type {
     return struct {
@@ -55,8 +56,8 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         }
 
         pub fn insert(self: *Self, node: *Node) !void {
-            // if (node.index) |_| return Error.NodeExists;
-            if (node.index) |_| return;
+            if (node.index) |_| return Error.NodeExists;
+            // if (node.index) |_| return;
             try self.vertices.append(self.allocator, node);
             const edge_list = try List(Edge).initCapacity(self.allocator, 0);
             try self.adj.append(self.allocator, edge_list);
@@ -97,10 +98,11 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
         ) !void {
             if (source.index == null or destination.index == null) return;
             const no_vertices = self.vertices.items.len;
-            if (source.index.? > no_vertices or destination.index.? > no_vertices) return;
+            if (source.index.? >= no_vertices or destination.index.? >= no_vertices) return;
 
             const source_index = source.index.?;
             // add the edge in adjacent list from source to destination
+            // need to check if edge already exist
             try self.adj.items[source_index].append(self.allocator, .{
                 .destination = destination,
                 .weight = weight,
@@ -203,7 +205,7 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
             defer self.allocator.free(visited);
             @memset(visited, false);
 
-            const dist: []usize = try self.allocator.alloc(usize, self.vertices.items.len);
+            const dist = try self.allocator.alloc(W, self.vertices.items.len);
             defer self.allocator.free(dist);
             @memset(dist, std.math.maxInt(W));
 
@@ -738,7 +740,11 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
 
             for (distance, 0..) |dist, i| try visit(ctx, self.vertices.items[i], dist);
         }
-
+        /// Given a graph of V vertices numbered from 0 to V-1.
+        /// Find the shortest distances between every pair of vertices in a given edge-weighted directed graph.
+        /// The graph is represented as an adjacency matrix of size n x n.
+        /// Matrix[i][j] denotes the weight of the edge from i to j.
+        /// If matrix[i][j]=-1, it means there is no edge from i to j.
         pub fn FloydWarshallAlgorithm(
             self: *Self,
             ctx: anytype,
@@ -778,15 +784,120 @@ pub fn Graph(comptime W: type, comptime isDirected: bool) type {
                     try visit(ctx, source, destination, adjacenyMatrix[i][j]);
                 }
             }
-            // for (0..adjacenyMatrix.len) |i| {
-            //     for (0..adjacenyMatrix.len) |j| {
-            //         if (adjacenyMatrix[i][j] == std.math.maxInt(W))
-            //             std.debug.print("∞ \t", .{})
-            //         else
-            //             std.debug.print("{d}\t", .{adjacenyMatrix[i][j]});
-            //     }
-            //     std.debug.print("\n", .{});
-            // }
+        }
+
+        ///Given a weighted, undirected, and connected graph of V vertices and E edges.
+        /// The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
+        pub fn MSTWeightSum(self: *Self) !W {
+            var sum: W = 0;
+            const DistNodeParent = struct {
+                dist: W,
+                node: *Node,
+                parent: ?*Node,
+            };
+
+            const Gen = struct {
+                fn lessThan(context: void, a: DistNodeParent, b: DistNodeParent) Order {
+                    _ = context;
+                    return std.math.order(a.dist, b.dist);
+                }
+            };
+            const MinHeap = PriorityQueue(DistNodeParent, void, Gen.lessThan);
+            var pq: MinHeap = .empty;
+            defer pq.deinit(self.allocator);
+            try pq.push(self.allocator, .{
+                .dist = 0,
+                .node = self.vertices.items[0],
+                .parent = null,
+            });
+
+            var visited = try self.allocator.alloc(bool, self.vertices.items.len);
+            defer self.allocator.free(visited);
+            @memset(visited, false);
+
+            while (pq.items.len > 0) {
+                const front = pq.pop();
+                if (front) |fnt| {
+                    const curr_node = fnt.node;
+                    const curr_node_index = curr_node.index.?;
+                    const weigth = fnt.dist;
+                    // if visited continue;
+                    if (visited[curr_node_index]) continue;
+                    visited[curr_node_index] = true;
+                    sum += weigth;
+
+                    for (self.adj.items[curr_node_index].items) |edge| {
+                        const adjNode = edge.destination;
+                        const adjNode_index = adjNode.index.?;
+                        const edw = edge.weight;
+                        if (!visited[adjNode_index]) {
+                            try pq.push(self.allocator, .{
+                                .dist = edw,
+                                .node = adjNode,
+                                .parent = curr_node,
+                            });
+                        }
+                    }
+                }
+            }
+            return sum;
+        }
+
+        pub fn MST(
+            self: *Self,
+            ctx: anytype,
+            visit: fn (@TypeOf(ctx), *Node, *Node, W) anyerror!void,
+        ) !void {
+            const DistNodeParent = struct {
+                dist: W,
+                node: *Node,
+                parent: ?*Node,
+            };
+
+            const Gen = struct {
+                fn lessThan(context: void, a: DistNodeParent, b: DistNodeParent) Order {
+                    _ = context;
+                    return std.math.order(a.dist, b.dist);
+                }
+            };
+            const MinHeap = PriorityQueue(DistNodeParent, void, Gen.lessThan);
+            var pq: MinHeap = .empty;
+            defer pq.deinit(self.allocator);
+            try pq.push(self.allocator, .{
+                .dist = 0,
+                .node = self.vertices.items[0],
+                .parent = null,
+            });
+
+            var visited = try self.allocator.alloc(bool, self.vertices.items.len);
+            defer self.allocator.free(visited);
+            @memset(visited, false);
+
+            while (pq.items.len > 0) {
+                const front = pq.pop();
+                if (front) |fnt| {
+                    const curr_node = fnt.node;
+                    const curr_node_index = curr_node.index.?;
+                    const weigth = fnt.dist;
+                    // if visited continue;
+                    if (visited[curr_node_index]) continue;
+                    visited[curr_node_index] = true;
+                    if (fnt.parent) |prnt| try visit(ctx, curr_node, prnt, weigth);
+
+                    for (self.adj.items[curr_node_index].items) |edge| {
+                        const adjNode = edge.destination;
+                        const adjNode_index = adjNode.index.?;
+                        const edw = edge.weight;
+                        if (!visited[adjNode_index]) {
+                            try pq.push(self.allocator, .{
+                                .dist = edw,
+                                .node = adjNode,
+                                .parent = curr_node,
+                            });
+                        }
+                    }
+                }
+            }
         }
     };
 }

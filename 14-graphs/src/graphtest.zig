@@ -2,6 +2,7 @@ const std = @import("std");
 const List = std.ArrayList;
 const Allocator = std.mem.Allocator;
 const core = @import("graphs.zig");
+const disjoint = @import("disjoint.zig");
 const expect = std.testing.expect;
 const problems = @import("problems.zig");
 
@@ -752,4 +753,120 @@ test "FloydWarshell Algorithm" {
         }
     };
     try graph.FloydWarshallAlgorithm(Ctx{ .expected = adjacenyMatrix }, gen.visit);
+}
+
+test "Sum of Weight MST and MST" {
+    const alloc = std.testing.allocator;
+    const W = i64;
+    const GraphFloyd = core.Graph(W, false);
+    var graph = try GraphFloyd.init(alloc);
+    defer graph.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..5) |ch|
+        try data_list.append(alloc, .{ .data = @intCast(ch), .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try graph.insert(&(data_list.items[i].node));
+
+    const zero = &(data_list.items[0].node); // 0
+    const one = &(data_list.items[1].node); // 1
+    const two = &(data_list.items[2].node); // 2
+    const three = &(data_list.items[3].node); // 3
+    const four = &(data_list.items[4].node); // 4
+
+    try graph.addEdge(zero, one, 2);
+    try graph.addEdge(zero, three, 6);
+
+    try graph.addEdge(one, two, 3);
+    try graph.addEdge(one, three, 8);
+    try graph.addEdge(one, four, 5);
+
+    try graph.addEdge(two, four, 7);
+
+    const res = try graph.MSTWeightSum();
+    const gen = struct {
+        fn visit(_: void, node: *GraphFloyd.Node, parent: *GraphFloyd.Node, weight: W) !void {
+            _ = weight;
+            const n: *Data = @fieldParentPtr("node", @constCast(node));
+            const p: *Data = @fieldParentPtr("node", @constCast(parent));
+            _ = n;
+            _ = p;
+            // std.debug.print("From {d} to {d} -> {d}\n", .{ n.data, p.data, weight });
+        }
+    };
+    try graph.MST({}, gen.visit);
+    std.debug.print("{d}\n", .{res});
+}
+
+test "Disjoint set" {
+    const alloc = std.testing.allocator;
+    const W = u8;
+    const Disjoint = disjoint.Disjoint(W, false);
+    var disjoint_ds = try Disjoint.init(alloc);
+    defer disjoint_ds.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..8) |ch|
+        try data_list.append(alloc, .{ .data = @intCast(ch), .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try disjoint_ds.insert(&(data_list.items[i].node));
+
+    // const zero = &(data_list.items[0].node); // 0
+    const one = &(data_list.items[1].node); // 1
+    const two = &(data_list.items[2].node); // 2
+    const three = &(data_list.items[3].node); // 3
+    const four = &(data_list.items[4].node); // 4
+    const five = &(data_list.items[5].node); // 5
+    const six = &(data_list.items[6].node); // 6
+    const seven = &(data_list.items[7].node); // 7
+
+    try disjoint_ds.Union(one, two, 1);
+    try disjoint_ds.Union(two, three, 1);
+    try disjoint_ds.Union(four, five, 1);
+    try disjoint_ds.Union(six, seven, 1);
+    try disjoint_ds.Union(five, six, 1);
+
+    try expect(disjoint_ds.findParent(three).index.? != disjoint_ds.findParent(seven).index.?);
+    try disjoint_ds.Union(three, seven, 1);
+    try expect(disjoint_ds.findParent(three).index.? == disjoint_ds.findParent(seven).index.?);
+}
+
+test "Number of Operation to make network connect" {
+    const alloc = std.testing.allocator;
+    const W = u8;
+    const Disjoint = disjoint.Disjoint(W, false);
+    var disjoint_ds = try Disjoint.init(alloc);
+    defer disjoint_ds.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..9) |ch|
+        try data_list.append(alloc, .{ .data = @intCast(ch), .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try disjoint_ds.insert(&(data_list.items[i].node));
+
+    const zero = &(data_list.items[0].node); // 0
+    const one = &(data_list.items[1].node); // 1
+    const two = &(data_list.items[2].node); // 2
+    const three = &(data_list.items[3].node); // 3
+    const four = &(data_list.items[4].node); // 4
+    const five = &(data_list.items[5].node); // 5
+    const six = &(data_list.items[6].node); // 6
+    const seven = &(data_list.items[7].node); // 7
+    const eight = &(data_list.items[8].node); // 8
+
+    try disjoint_ds.Union(zero, one, 1);
+    try disjoint_ds.Union(zero, two, 1);
+    try disjoint_ds.Union(zero, three, 1);
+    try disjoint_ds.Union(one, two, 1);
+    try disjoint_ds.Union(two, three, 1);
+
+    try disjoint_ds.Union(four, five, 1);
+    try disjoint_ds.Union(five, six, 1);
+
+    try disjoint_ds.Union(seven, eight, 1);
+
+    try expect(try disjoint_ds.NoOperationToConnect() == 2);
 }
