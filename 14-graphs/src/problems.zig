@@ -4,6 +4,7 @@ const Deque = std.Deque;
 const StringHashMap = std.StringHashMap;
 const List = std.ArrayList;
 const Graph = @import("graphs.zig");
+const disjoint = @import("disjoint.zig");
 const PriorityQueue = std.PriorityQueue;
 const Order = std.math.Order;
 
@@ -664,4 +665,76 @@ pub fn MinMultiplication(alloc: Allocator, start: usize, end: usize, arr: []cons
         }
     }
     return null;
+}
+
+pub const Data = struct {
+    data: usize,
+    node: Graph.Graphusize.Node,
+};
+
+/// There are n stones at some integer coordinate points on a 2D plane.
+/// Each coordinate point may have at most one stone. You need to remove some stones.
+/// A stone can be removed if it shares either the same row or the same column as another stone that has not been removed.
+/// Given an array of stones of length n where stones[i] = [xi, yi] represents the location of the ith stone,
+/// return the maximum possible number of stones that you can remove.
+pub fn MostStonesRemoved(alloc: Allocator, grid: [][]u8) !usize {
+    // no of rows
+    const n = grid.len;
+    if (n == 0) return 0;
+    // no of columns
+    const m = grid[0].len;
+    if (m == 0) return 0;
+
+    const total_nodes = n + m;
+
+    const Disjoint = disjoint.Disjoint(usize, false);
+    var disjoint_ds = try Disjoint.init(alloc);
+    defer disjoint_ds.deinit();
+
+    var data_list: List(Data) = try .initCapacity(alloc, 0);
+    defer data_list.deinit(alloc);
+
+    for (0..total_nodes) |ch|
+        try data_list.append(alloc, .{ .data = ch, .node = .{ .index = null } });
+    for (0..data_list.items.len) |i| try disjoint_ds.insert(&(data_list.items[i].node));
+
+    var used_nodes = try alloc.alloc(bool, total_nodes);
+    defer alloc.free(used_nodes);
+    @memset(used_nodes, false);
+
+    var stones: usize = 0;
+    for (0..n) |row| {
+        for (0..m) |col| {
+            if (grid[row][col] != 1) continue;
+
+            const row_node = row;
+            const col_node = n + col;
+            try disjoint_ds.Union(
+                &(data_list.items[row_node].node),
+                &(data_list.items[col_node].node),
+                1,
+            );
+            used_nodes[row_node] = true;
+            used_nodes[col_node] = true;
+            stones += 1;
+        }
+    }
+
+    var seen_parents = try alloc.alloc(bool, total_nodes);
+    defer alloc.free(seen_parents);
+    @memset(seen_parents, false);
+
+    var connected_components: usize = 0;
+    for (0..total_nodes) |node_index| {
+        if (!used_nodes[node_index]) continue;
+
+        const parent = disjoint_ds.findParent(&(data_list.items[node_index].node));
+        const parent_index = parent.index.?;
+        if (!seen_parents[parent_index]) {
+            seen_parents[parent_index] = true;
+            connected_components += 1;
+        }
+    }
+
+    return stones - connected_components;
 }

@@ -10,8 +10,10 @@ CyberNetyx
 hash.cpp
 build.sh
 build
-include
+# include
 .zig-cache
 zig-out
 pp
 CyberNetyx
+bin
+

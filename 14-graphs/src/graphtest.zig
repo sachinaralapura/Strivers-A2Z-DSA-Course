@@ -870,3 +870,24 @@ test "Number of Operation to make network connect" {
 
     try expect(try disjoint_ds.NoOperationToConnect() == 2);
 }
+
+test "Most Stones Removed" {
+    const allocator = std.testing.allocator;
+    var rows = [_][4]u8{
+        .{ 1, 0, 1, 0 },
+        .{ 0, 0, 0, 1 },
+        .{ 0, 0, 0, 0 },
+        .{ 1, 0, 1, 0 },
+        .{ 0, 0, 0, 1 },
+    };
+    var grid = [_][]u8{
+        rows[0][0..],
+        rows[1][0..],
+        rows[2][0..],
+        rows[3][0..],
+        rows[4][0..],
+    };
+
+    const res = try problems.MostStonesRemoved(allocator, grid[0..]);
+    try expect(4 == res);
+}

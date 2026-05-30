@@ -114,5 +114,15 @@ pub fn Disjoint(comptime W: type, comptime isDirected: bool) type {
             if (self.extraEdgeCount >= (countConnectedComp - 1)) return countConnectedComp - 1;
             return null;
         }
+
+        pub fn NoOfComponents(self: Self) usize {
+            var countConnectedComp: usize = 0;
+            for (self.graph.vertices.items) |node| {
+                const parent = self.findParent(node);
+                if (parent.index.? == node.index.?)
+                    countConnectedComp += 1;
+            }
+            return countConnectedComp;
+        }
     };
 }
