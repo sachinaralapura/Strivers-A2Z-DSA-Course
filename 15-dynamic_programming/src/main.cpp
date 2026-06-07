@@ -3,7 +3,8 @@
 using namespace std;
 int main()
 {
-	vector<int> height = {2, 1, 3, 5, 4};
-	int res = frog_jump_tabulation(height);
+	vector<int> arr = {2, 1, 4, 9};
+	int res = max_sum_tabulated(arr , true);
 	cout << res << endl;
+	return 0;
 }
