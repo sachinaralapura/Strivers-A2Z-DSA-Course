@@ -1,3 +1,6 @@
+#ifndef ONE_DIMENSION
+#define ONE_DIMENSION
+
 #include <cstddef>
 #include <cstdlib>
 #include <unordered_map>
@@ -43,3 +46,12 @@ int frog_jum_K(std::vector<int>&, int);
 // in the array.
 int max_sum_non_adjacent(std::vector<int>&);
 int max_sum_tabulated(std::vector<int>&, bool);
+
+// A thief needs to rob money in a street. The houses in the street are arranged in a circular
+// manner. Therefore the first and the last house are adjacent to each other. The security system
+// in the street is such that if adjacent houses are robbed, the police will get notified.
+// Given an array of integers “Arr'' which represents money at each house, 	we need to return the
+// maximum amount of money that the thief can rob without alerting the police.
+int house_robber(std::vector<int>&);
+
+#endif
