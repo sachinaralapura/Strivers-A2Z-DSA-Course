@@ -1,5 +1,5 @@
 #include "twod.hpp"
 int main()
 {
-	test();
+	GridUniquePath::test(T_USED::TABULATION);
 }

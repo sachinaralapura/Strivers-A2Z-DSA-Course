@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+using namespace NinjaTraining;
 
 int ninja_recursive_memoization(int index, int prev, DailyTasks& dailytasks, Dp& dp)
 {
@@ -35,18 +36,18 @@ int ninja_recursive(int index, int prev, DailyTasks& dailytasks)
 	return maxi;
 }
 
-int ninja_training_recursion(DailyTasks& dailyTasks)
+int NinjaTraining::recursion(DailyTasks& dailyTasks)
 {
 	return ninja_recursive(dailyTasks.size() - 1, 3, dailyTasks);
 }
 
-int ninja_training_recursion_memo(DailyTasks& dailyTasks)
+int NinjaTraining::memoization(DailyTasks& dailyTasks)
 {
 	Dp dp;
 	return ninja_recursive_memoization(dailyTasks.size() - 1, 3, dailyTasks, dp);
 }
 
-int ninja_training_tab(DailyTasks& dailyTasks)
+int NinjaTraining::tabulation(DailyTasks& dailyTasks)
 {
 	int n = dailyTasks.size() - 1;
 	Dp dp;
@@ -71,14 +72,25 @@ int ninja_training_tab(DailyTasks& dailyTasks)
 	return dp[n].data[3];
 }
 
-int test()
+void test(T_USED t_used)
 {
 	DailyTasks dailytask = {
 		{{10, 40, 70}},
 		{{20, 50, 80}},
 		{{30, 60, 90}},
 	};
-	int res = ninja_training_tab(dailytask);
+	int res = 0;
+	switch (t_used) {
+	case T_USED::RECURSION:
+		res = NinjaTraining::recursion(dailytask);
+		break;
+
+	case T_USED::RECURSION_MEMO:
+		res = NinjaTraining::memoization(dailytask);
+		break;
+	case T_USED::TABULATION:
+		res = NinjaTraining::tabulation(dailytask);
+		break;
+	}
 	std::cout << "RESULT : " << res << std::endl;
-	return 0;
 }
