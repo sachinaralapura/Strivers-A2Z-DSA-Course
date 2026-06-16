@@ -5,6 +5,7 @@
 #include <array>
 #include <cstddef>
 #include <unordered_map>
+#include <utility>
 
 // Ninja is planing this ‘N’ days-long training schedule. Each day, he can perform any one of
 // these three activities. (Running, Fighting Practice or Learning New Moves). Each activity has
@@ -49,5 +50,22 @@ namespace GridUniquePath
 	int tabulation(int, int);
 	void test(T_USED);
 } // namespace GridUniquePath
+
+namespace GridUniquePathTwo
+{
+	int recursion(int, int, std::pair<int, int>& deadcell);
+	int memoization(int, int, std::pair<int, int>& deadcell);
+	int tabulation(int, int, std::pair<int, int>& deadcell);
+	void test(T_USED);
+} // namespace GridUniquePathTwo
+
+// Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right,
+// which minimizes the sum of all numbers along its path.
+// Note : You can only move either down or right at any point in time.
+namespace GridMinPathSum
+{
+	int memoization(Vecvec& grid);
+	void test(T_USED);
+} // namespace GridMinPathSum
 
 #endif

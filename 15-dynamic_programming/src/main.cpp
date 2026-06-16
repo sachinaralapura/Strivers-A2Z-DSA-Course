@@ -1,5 +1,5 @@
 #include "twod.hpp"
 int main()
 {
-	GridUniquePath::test(T_USED::TABULATION);
+    GridMinPathSum::test(T_USED::RECURSION_MEMO);
 }

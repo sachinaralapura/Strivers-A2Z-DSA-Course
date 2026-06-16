@@ -1,6 +1,5 @@
 #ifndef DP_UTILS
 #define DP_UTILS
-#include <iomanip> // For pretty formatting alignment
 #include <iostream>
 #include <vector>
 enum class T_USED { RECURSION, RECURSION_MEMO, TABULATION };
@@ -26,18 +25,21 @@ inline std::ostream& operator<<(std::ostream& os, const Vecvec& matrix)
 		os << "[ ] (Empty Matrix)\n";
 		return os;
 	}
+	std::streamsize user_width = os.width();
+	if (user_width == 0)
+		user_width = 4;
 
-	os << "[\n";
+	// os << "[\n";
 	for (const auto& row : matrix) {
-		os << "  [ ";
+		os << "[ ";
 		for (const auto& element : row) {
-			// std::setw(4) ensures columns line up beautifully if numbers have different digits
-			os << std::setw(6) << element << " ";
+			// 2. Explicitly apply the captured width to every element
+			os.width(user_width);
+			os << element << " ";
 		}
 		os << "]\n";
 	}
-	os << "]\n";
-
+	// os << "]\n";
 	return os;
 }
 
