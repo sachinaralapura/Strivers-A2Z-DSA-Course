@@ -64,8 +64,21 @@ namespace GridUniquePathTwo
 // Note : You can only move either down or right at any point in time.
 namespace GridMinPathSum
 {
+	int recursion(Vecvec& grid);
 	int memoization(Vecvec& grid);
+	int tabulation(Vecvec& grid);
 	void test(T_USED);
 } // namespace GridMinPathSum
 
+// Given a 2D integer array named triangle with n rows. Its first row has 1 element and each
+// succeeding row has one more element in it than the row above it. Return the minimum falling path
+// sum from the first row to the last. Movement is allowed only to the bottom or bottom - right cell
+// from the current cell.
+namespace TriangleMinPathSum
+{
+	int recursion(Vecvec& grid);
+	// int memoization(Vecvec& grid);
+	// int tabulation(Vecvec& grid);
+	void test(T_USED);
+} // namespace TriangleMinPathSum
 #endif
