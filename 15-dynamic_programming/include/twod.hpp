@@ -77,8 +77,8 @@ namespace GridMinPathSum
 namespace TriangleMinPathSum
 {
 	int recursion(Vecvec& grid);
-	// int memoization(Vecvec& grid);
-	// int tabulation(Vecvec& grid);
+	int memoization(Vecvec& grid);
+	int tabulation(Vecvec& grid);
 	void test(T_USED);
 } // namespace TriangleMinPathSum
 #endif

@@ -1,5 +1,5 @@
 #include "twod.hpp"
 int main()
 {
-    TriangleMinPathSum::test(T_USED::RECURSION);
+    TriangleMinPathSum::test(T_USED::TABULATION);
 }
