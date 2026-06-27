@@ -1,5 +1,5 @@
-#include "twod.hpp"
+#include "sub_seq.hpp"
 int main()
 {
-    TriangleMinPathSum::test(T_USED::TABULATION);
+	SubsetKSum::test(T_USED::RECURSION);
 }

@@ -2,6 +2,12 @@
 #define DP_UTILS
 #include <iostream>
 #include <vector>
+
+struct Point {
+	int x; // row
+	int y; // col
+};
+
 enum class T_USED { RECURSION, RECURSION_MEMO, TABULATION };
 inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 {
@@ -42,5 +48,5 @@ inline std::ostream& operator<<(std::ostream& os, const Vecvec& matrix)
 	// os << "]\n";
 	return os;
 }
-
+using cube = std::vector<std::vector<std::vector<int>>>;
 #endif
