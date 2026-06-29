@@ -3,7 +3,7 @@
 #include <climits>
 #include <iomanip>
 
-int tri_recursion(int row, int col, Vecvec& triangle)
+int tri_recursion(int row, int col, Vecvec<int>& triangle)
 {
 	if (row == triangle.size() - 1)
 		return triangle[row][col];
@@ -14,7 +14,7 @@ int tri_recursion(int row, int col, Vecvec& triangle)
 	return triangle[row][col] + std::min(bottom, bottom_right);
 }
 
-int tri_recursion_memo(int row, int col, Vecvec& triangle, Vecvec& dp)
+int tri_recursion_memo(int row, int col, Vecvec<int>& triangle, Vecvec<int>& dp)
 {
 	if (row == triangle.size() - 1)
 		return triangle[row][col];
@@ -27,21 +27,21 @@ int tri_recursion_memo(int row, int col, Vecvec& triangle, Vecvec& dp)
 	return dp[row][col] = triangle[row][col] + std::min(bottom, bottom_right);
 }
 
-int TriangleMinPathSum::recursion(Vecvec& triangle)
+int TriangleMinPathSum::recursion(Vecvec<int>& triangle)
 {
 	return tri_recursion(0, 0, triangle);
 }
 
-int TriangleMinPathSum::memoization(Vecvec& triangle)
+int TriangleMinPathSum::memoization(Vecvec<int>& triangle)
 {
-	Vecvec dp(triangle.size(), std::vector<int>(triangle[triangle.size() - 1].size(), -1));
+	Vecvec<int> dp(triangle.size(), std::vector<int>(triangle[triangle.size() - 1].size(), -1));
 	return tri_recursion_memo(0, 0, triangle, dp);
 }
 
-int TriangleMinPathSum::tabulation(Vecvec& triangle)
+int TriangleMinPathSum::tabulation(Vecvec<int>& triangle)
 {
 	int n = triangle.size();
-	Vecvec dp(triangle.size(), std::vector<int>(triangle[triangle.size() - 1].size(), -1));
+	Vecvec<int> dp(triangle.size(), std::vector<int>(triangle[triangle.size() - 1].size(), -1));
 	for (int i = n - 1; i >= 0; i--) {
 		for (int j = 0; j < triangle[i].size(); j++) {
 			if (i == n - 1) {
@@ -58,8 +58,8 @@ int TriangleMinPathSum::tabulation(Vecvec& triangle)
 
 void TriangleMinPathSum::test(T_USED t_used)
 {
-	// Vecvec triangle = {{1}, {1, 2}, {1, 2, 4}};
-	Vecvec triangle = {{1}, {4, 7}, {4, 10, 50}, {-50, 5, 6, -100}};
+	// Vecvec<int> triangle = {{1}, {1, 2}, {1, 2, 4}};
+	Vecvec<int> triangle = {{1}, {4, 7}, {4, 10, 50}, {-50, 5, 6, -100}};
 	int res = 0;
 	std::cout << "Technique used : " << t_used << std::endl;
 	switch (t_used) {

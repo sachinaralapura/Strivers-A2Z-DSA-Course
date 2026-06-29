@@ -18,7 +18,7 @@ int recursive(int rows, int cols)
 	return up + left;
 }
 
-int recursion_memo(int rows, int cols, Vecvec& dp)
+int recursion_memo(int rows, int cols, Vecvec<int>& dp)
 {
 	if (rows == 0 && cols == 0)
 		return 1;
@@ -38,13 +38,13 @@ int GridUniquePath::recursion(int rows, int cols)
 
 int GridUniquePath::memoization(int rows, int cols)
 {
-	Vecvec dp(rows + 1, std::vector<int>(cols + 1, -1));
+	Vecvec<int> dp(rows + 1, std::vector<int>(cols + 1, -1));
 	return recursion_memo(rows - 1, cols - 1, dp);
 }
 
 int GridUniquePath::tabulation(int rows, int cols)
 {
-	Vecvec dp(rows, std::vector<int>(cols, 0));
+	Vecvec<int> dp(rows, std::vector<int>(cols, 0));
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (i == 0 && j == 0) {
@@ -110,7 +110,7 @@ int GridUniquePathTwo::recursion(int rows, int cols, std::pair<int, int>& deadce
 	return recursive(rows - 1, cols - 1);
 }
 
-int recursion_memo(int rows, int cols, std::pair<int, int>& deadcell, Vecvec& dp)
+int recursion_memo(int rows, int cols, std::pair<int, int>& deadcell, Vecvec<int>& dp)
 {
 	if (rows >= 0 && cols >= 0 && rows == deadcell.first && cols == deadcell.second) {
 		std::cout << deadcell.first << "," << deadcell.second << std::endl;
@@ -134,14 +134,14 @@ int GridUniquePathTwo::memoization(int rows, int cols, std::pair<int, int>& dead
 	if (deadcell.second > cols)
 		return -1;
 
-	Vecvec dp(rows + 1, std::vector<int>(cols + 1, -1));
+	Vecvec<int> dp(rows + 1, std::vector<int>(cols + 1, -1));
 	return recursion_memo(rows - 1, cols - 1, deadcell, dp);
 	return 0;
 }
 
 int GridUniquePathTwo::tabulation(int rows, int cols, std::pair<int, int>& deadcell)
 {
-	Vecvec dp(rows, std::vector<int>(cols, 0));
+	Vecvec<int> dp(rows, std::vector<int>(cols, 0));
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			if (i == deadcell.first and j == deadcell.second) {

@@ -64,9 +64,9 @@ namespace GridUniquePathTwo
 // Note : You can only move either down or right at any point in time.
 namespace GridMinPathSum
 {
-	int recursion(Vecvec& grid);
-	int memoization(Vecvec& grid);
-	int tabulation(Vecvec& grid);
+	int recursion(Vecvec<int>& grid);
+	int memoization(Vecvec<int>& grid);
+	int tabulation(Vecvec<int>& grid);
 	void test(T_USED);
 } // namespace GridMinPathSum
 
@@ -76,9 +76,9 @@ namespace GridMinPathSum
 // from the current cell.
 namespace TriangleMinPathSum
 {
-	int recursion(Vecvec& grid);
-	int memoization(Vecvec& grid);
-	int tabulation(Vecvec& grid);
+	int recursion(Vecvec<int>& grid);
+	int memoization(Vecvec<int>& grid);
+	int tabulation(Vecvec<int>& grid);
 	void test(T_USED);
 } // namespace TriangleMinPathSum
 
@@ -92,9 +92,9 @@ namespace TriangleMinPathSum
 // return the maximum number of chocolates that Bob and Alice can together collect.
 namespace CherryPicking
 {
-	int recursion(Vecvec& grid);
-	int memoization(Vecvec& grid);
-	// int tabulation(Vecvec& grid);
+	int recursion(Vecvec<int>& grid);
+	int memoization(Vecvec<int>& grid);
+	// int tabulation(Vecvec<int>& grid);
 	void test(T_USED);
 } // namespace CherryPicking
 #endif

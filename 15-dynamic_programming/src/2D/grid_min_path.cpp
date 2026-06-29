@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-int grid_min_recursion(int row, int col, Vecvec& grid)
+int grid_min_recursion(int row, int col, Vecvec<int>& grid)
 {
 	if (row == 0 && col == 0)
 		return grid[row][col];
@@ -15,7 +15,7 @@ int grid_min_recursion(int row, int col, Vecvec& grid)
 	return grid[row][col] + std::min(up, left);
 }
 
-int grid_min_memo(int row, int col, Vecvec& grid, Vecvec& dp)
+int grid_min_memo(int row, int col, Vecvec<int>& grid, Vecvec<int>& dp)
 {
 	if (row == 0 && col == 0)
 		return grid[row][col];
@@ -28,20 +28,20 @@ int grid_min_memo(int row, int col, Vecvec& grid, Vecvec& dp)
 	return dp[row][col] = grid[row][col] + std::min(up, left);
 }
 
-int GridMinPathSum::recursion(Vecvec& grid)
+int GridMinPathSum::recursion(Vecvec<int>& grid)
 {
 	return grid_min_recursion(grid.size(), grid[0].size(), grid);
 }
 
-int GridMinPathSum::memoization(Vecvec& grid)
+int GridMinPathSum::memoization(Vecvec<int>& grid)
 {
-	Vecvec dp(grid.size(), std::vector<int>(grid[0].size(), -1));
+    Vecvec<int> dp(grid.size(), std::vector<int>(grid[0].size(), -1));
 	return grid_min_memo(grid.size() - 1, grid[0].size() - 1, grid, dp);
 }
 
-int GridMinPathSum::tabulation(Vecvec& grid)
+int GridMinPathSum::tabulation(Vecvec<int>& grid)
 {
-	Vecvec dp(grid.size(), std::vector<int>(grid[0].size(), -1));
+    Vecvec<int> dp(grid.size(), std::vector<int>(grid[0].size(), -1));
 	for (int i = 0; i < grid.size(); i++) {
 		for (int j = 0; j < grid[0].size(); j++) {
 			if (i == 0 && j == 0) {
@@ -66,8 +66,8 @@ int GridMinPathSum::tabulation(Vecvec& grid)
 
 void GridMinPathSum::test(T_USED t_used)
 {
-	Vecvec grid = {{5, 9, 6}, {11, 5, 2}};
-	// Vecvec grid = {{1, 2, 3}, {4, 5, 6}};
+	Vecvec<int> grid = {{5, 9, 6}, {11, 5, 2}};
+	// Vecvec<int> grid = {{1, 2, 3}, {4, 5, 6}};
 	int res = 0;
 	std::cout << "Technique used : " << t_used << std::endl;
 	switch (t_used) {

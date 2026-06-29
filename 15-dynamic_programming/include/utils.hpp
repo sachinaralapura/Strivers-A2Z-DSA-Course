@@ -24,8 +24,8 @@ inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 	}
 	return os;
 }
-using Vecvec = std::vector<std::vector<int>>;
-inline std::ostream& operator<<(std::ostream& os, const Vecvec& matrix)
+template <typename T> using Vecvec = std::vector<std::vector<T>>;
+inline std::ostream& operator<<(std::ostream& os, const Vecvec<int>& matrix)
 {
 	if (matrix.empty()) {
 		os << "[ ] (Empty Matrix)\n";
