@@ -798,6 +798,7 @@ pub fn BinaryTree(comptime T: type) type {
         /// Given a Binary Tree, return the Vertical Order Traversal of it starting from the
         /// Leftmost level to the Rightmost level. If there are multiple nodes passing through a
         /// vertical line, then they should be printed as they appear in level order traversal of the tree.
+        /// https://takeuforward.org/data-structure/vertical-order-traversal-of-binary-tree
         pub fn verticalTraversal(
             self: *Self,
             ctx: anytype,

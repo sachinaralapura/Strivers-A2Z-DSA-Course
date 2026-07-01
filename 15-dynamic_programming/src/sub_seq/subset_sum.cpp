@@ -49,8 +49,8 @@ bool SubsetKSum::memoization(std::vector<int>& arr, int k)
 bool SubsetKSum::tabulation(std::vector<int>& arr, int k)
 {
 	int n = arr.size();
-	size_t rows = 1001; // 10^3 + 1
-	size_t cols = 1001; // 10^3 + 1
+	size_t rows = n + 1; // 10^3 + 1
+	size_t cols = k + 1; // 10^3 + 1
 	Dp dp(rows, std::vector<bool>(cols, false));
 	// base case
 	for (int i = 0; i < n; i++)

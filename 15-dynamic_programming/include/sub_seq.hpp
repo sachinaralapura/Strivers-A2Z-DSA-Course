@@ -24,3 +24,21 @@ namespace EqualSubsetSum
 	bool tabulation(std::vector<int>& arr);
 	void test(T_USED);
 } // namespace EqualSubsetSum
+
+// Given an array of n integers, partition the array into two
+// subsets such that the absolute difference between their sums is minimized.
+namespace MinSumDiffPartition
+{
+	// bool recursion(std::vector<int>& arr);
+	// bool memoization(std::vector<int>& arr);
+	long long tabulation(std::vector<int>& arr);
+	void test(T_USED);
+} // namespace MinSumDiffPartition
+
+namespace CountSubsetSumK
+{
+	int recursion(std::vector<int>& arr, int k);
+	int memoization(std::vector<int>& arr, int k);
+	int tabulation(std::vector<int>& arr, int k);
+	void test(T_USED);
+} // namespace CountSubsetSumK
