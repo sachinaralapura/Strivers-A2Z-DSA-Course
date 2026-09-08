@@ -42,3 +42,34 @@ namespace CountSubsetSumK
 	int tabulation(std::vector<int>& arr, int k);
 	void test(T_USED);
 } // namespace CountSubsetSumK
+
+// Given an array with N positive integers and an integer D, count the number of ways we can
+// partition the given array into two subsets, S1 and S2 such that S1 - S2 = D and S1 is always
+// greater than or equal to S2.
+namespace CountPartitionsDiff
+{
+	int recursion(std::vector<int>& arr, int k);
+	int memoization(std::vector<int>& arr, int k);
+	int tabulation(std::vector<int>& arr, int k);
+	void test(T_USED);
+} // namespace CountPartitionsDiff
+
+// Consider a scenario where a teacher wants to distribute cookies to students, with each student
+// receiving at most one cookie. Given two arrays, student and cookie, the ith value in the student
+// array describes the minimum size of cookie that the ith student can be assigned. The jth value in
+// the cookie array represents the size of the jth cookie. If cookie[j] >= student[i], the jth
+// cookie can be assigned to the ith student. Maximize the number of students assigned with cookies
+// and output the maximum number.
+namespace AssignCookie
+{
+	int optimal(std::vector<int>& students, std::vector<int>& cookie);
+} // namespace AssignCookie
+
+namespace MinimunCoins
+{
+	int recursion(std::vector<int>& arr, int k);
+	int memoization(std::vector<int>& arr, int k);
+	int tabulation(std::vector<int>& arr, int k);
+	void test(T_USED);
+
+} // namespace MinimunCoins
