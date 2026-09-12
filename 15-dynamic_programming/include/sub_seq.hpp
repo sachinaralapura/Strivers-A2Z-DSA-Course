@@ -35,6 +35,8 @@ namespace MinSumDiffPartition
 	void test(T_USED);
 } // namespace MinSumDiffPartition
 
+// Given an array arr of n integers and an integer K, count the number of subsets of the given array
+// that have a sum equal to K.
 namespace CountSubsetSumK
 {
 	int recursion(std::vector<int>& arr, int k);
@@ -73,3 +75,16 @@ namespace MinimunCoins
 	void test(T_USED);
 
 } // namespace MinimunCoins
+
+// We are given an array ‘ARR’ of size ‘N’ and a number ‘Target’. Our task is to build an expression
+// from the given array where we can place a ‘+’ or ‘-’ sign in front of an integer. We want to
+// place a sign in front of every integer of the array and get our required target. We need to count
+// the number of ways in which we can achieve our required target.
+namespace TargetSum
+{
+	int recursion(std::vector<int>& arr, int);
+	int memoization(std::vector<int>& arr, int);
+	int tabulation(std::vector<int>& arr, int);
+	void test(T_USED);
+
+} // namespace TargetSum

@@ -1,22 +1,34 @@
 #include "sub_seq.hpp"
 #include <numeric>
-
-int CountPartitionsDiff::recursion(std::vector<int>& arr, int d)
+int getK(std::vector<int>& arr, int d)
 {
 	int sum = std::reduce(arr.begin(), arr.end());
 	if ((sum + d) % 2 != 0 || d > sum)
 		return 0;
-	int k = (sum + d) / 2;
-	return CountSubsetSumK::recursion(arr, k);
+	return (sum + d) / 2;
+}
+
+int CountPartitionsDiff::recursion(std::vector<int>& arr, int d)
+{
+	int k = getK(arr, d);
+	if (k > 0)
+		return CountSubsetSumK::recursion(arr, k);
+	return 0;
 }
 
 int CountPartitionsDiff::memoization(std::vector<int>& arr, int d)
 {
+	int k = getK(arr, d);
+	if (k > 0)
+		return CountSubsetSumK::memoization(arr, k);
 	return 0;
 }
 
 int CountPartitionsDiff ::tabulation(std::vector<int>& arr, int d)
 {
+	int k = getK(arr, d);
+	if (k > 0)
+		return CountSubsetSumK::tabulation(arr, k);
 	return 0;
 }
 
