@@ -8,7 +8,13 @@ struct Point {
 	int y; // col
 };
 
-enum class T_USED { RECURSION, RECURSION_MEMO, TABULATION, SPACEOPTIMIZATION };
+enum class T_USED {
+	RECURSION,
+	RECURSION_MEMO,
+	TABULATION,
+	SPACEOPTIMIZATION,
+	ALL,
+};
 inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 {
 	switch (t_used) {

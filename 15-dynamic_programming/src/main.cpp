@@ -2,5 +2,5 @@
 #include "utils.hpp"
 int main()
 {
-	CoinChangeTwo::test(T_USED::TABULATION);
+	KnapsackUnbounded::test(T_USED::TABULATION);
 }

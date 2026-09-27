@@ -92,6 +92,14 @@ namespace TargetSum
 
 } // namespace TargetSum
 
+// Given two integer arrays, val and wt, each of size n, which represent the values and weights of n
+// items respectively, and an integer W representing the maximum capacity of a knapsack, determine
+// the maximum value achievable by selecting a subset of the items such that the total weight of the
+// selected items does not exceed the knapsack capacity W.
+
+// Each item can either be picked in its entirety or not picked at all(0 - 1 property) .The goal is
+// to maximize the sum of the values of the selected items while keeping the total weight within the
+// knapsack's capacity.
 namespace Knapsack01
 {
 	int recursion(std::vector<int>&, std::vector<int>&, int);
@@ -115,3 +123,20 @@ namespace CoinChangeTwo
 	void test(T_USED);
 
 } // namespace CoinChangeTwo
+
+// Given two integer arrays, val and wt, each of size N, representing the values and weights of N
+// items respectively, and an integer W, representing the maximum capacity of a knapsack, determine
+// the maximum value achievable by selecting a subset of the items such that the total weight of the
+// selected items does not exceed the knapsack capacity W. The goal is to maximize the sum of the
+// values of the selected items while keeping the total weight within the knapsack's capacity.
+// An infinite supply of each item can be assumed.
+namespace KnapsackUnbounded
+{
+	long recursion(std::vector<int>&, std::vector<int>&, int);
+	long memoization(std::vector<int>&, std::vector<int>&, int);
+	long tabulation(std::vector<int>&, std::vector<int>&, int);
+	long spaceOptimization(std::vector<int>&, std::vector<int>&, int);
+	long spaceOptimizationTwo(std::vector<int>& v, std::vector<int>& w, int k);
+	void test(T_USED);
+	void test(T_USED);
+} // namespace KnapsackUnbounded
