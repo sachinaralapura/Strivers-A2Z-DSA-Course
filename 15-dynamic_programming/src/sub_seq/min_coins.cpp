@@ -4,7 +4,7 @@
 #include <climits>
 #include <vector>
 
-using Dp = Vecvec<int>;
+using Dp = Vecvec<long>;
 int recursion(std::vector<int>& arr, int ind, int k)
 {
 	// base cases
@@ -51,14 +51,14 @@ int recursion_memo(std::vector<int>& arr, int ind, int k, Dp& dp)
 int MinimunCoins::memoization(std::vector<int>& arr, int k)
 {
 	int n = arr.size();
-	Dp dp(arr.size(), std::vector<int>(k + 1, -1));
+	Dp dp(arr.size(), std::vector<long>(k + 1, -1));
 	return recursion_memo(arr, n - 1, k, dp);
 }
 
 int MinimunCoins::tabulation(std::vector<int>& arr, int k)
 {
 	int n = arr.size();
-	Dp dp(arr.size(), std::vector<int>(k + 1, -1));
+	Dp dp(arr.size(), std::vector<long>(k + 1, -1));
 
 	for (int i = 0; i <= k; i++) {
 		if (k % arr[0] == 0)

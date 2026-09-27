@@ -8,7 +8,7 @@ struct Point {
 	int y; // col
 };
 
-enum class T_USED { RECURSION, RECURSION_MEMO, TABULATION };
+enum class T_USED { RECURSION, RECURSION_MEMO, TABULATION, SPACEOPTIMIZATION };
 inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 {
 	switch (t_used) {
@@ -21,10 +21,14 @@ inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 	case T_USED::TABULATION:
 		os << "Tabulation";
 		break;
+	case T_USED::SPACEOPTIMIZATION:
+		os << "Space Optimization";
 	}
 	return os;
 }
+
 template <typename T> using Vecvec = std::vector<std::vector<T>>;
+
 inline std::ostream& operator<<(std::ostream& os, const Vecvec<int>& matrix)
 {
 	if (matrix.empty()) {
@@ -49,4 +53,17 @@ inline std::ostream& operator<<(std::ostream& os, const Vecvec<int>& matrix)
 	return os;
 }
 using cube = std::vector<std::vector<std::vector<int>>>;
+
+// Template function to overload the << operator for vectors
+template <typename T> std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec)
+{
+	os << "[";
+	for (size_t i = 0; i < vec.size(); ++i) {
+		os << vec[i];
+		if (i != vec.size() - 1)
+			os << ", ";
+	}
+	os << "]";
+	return os;
+}
 #endif

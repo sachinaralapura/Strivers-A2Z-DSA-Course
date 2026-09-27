@@ -1,12 +1,402 @@
 [
-    {
-        "directory": "/home/sachin/Dev/tuf/15-dynamic_programming ",
-        "command": "clang++ -std=c++20 -Iinclude -c src/main.cpp",
-        "file": "src/main.cpp"
-    },
-    {
-        "directory": "/home/sachin/Dev/tuf/15-dynamic_programming ",
-        "command": "clang++ -std=c++20 -Iinclude -c src/basic.cpp",
-        "file": "src/basic.cpp"
-    }
+  {
+    "file": "src/1D/climbing_stairs.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/1D/climbing_stairs.cpp",
+      "-o",
+      "build/1D/climbing_stairs.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/1D/climbing_stairs.o"
+  },
+  {
+    "file": "src/1D/fib.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/1D/fib.cpp",
+      "-o",
+      "build/1D/fib.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/1D/fib.o"
+  },
+  {
+    "file": "src/1D/frog_jump.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/1D/frog_jump.cpp",
+      "-o",
+      "build/1D/frog_jump.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/1D/frog_jump.o"
+  },
+  {
+    "file": "src/1D/max_sum.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/1D/max_sum.cpp",
+      "-o",
+      "build/1D/max_sum.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/1D/max_sum.o"
+  },
+  {
+    "file": "src/1D/house_robber.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/1D/house_robber.cpp",
+      "-o",
+      "build/1D/house_robber.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/1D/house_robber.o"
+  },
+  {
+    "file": "src/2D/ninja_training.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/2D/ninja_training.cpp",
+      "-o",
+      "build/2D/ninja_training.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/2D/ninja_training.o"
+  },
+  {
+    "file": "src/2D/unique_path.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/2D/unique_path.cpp",
+      "-o",
+      "build/2D/unique_path.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/2D/unique_path.o"
+  },
+  {
+    "file": "src/2D/grid_min_path.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/2D/grid_min_path.cpp",
+      "-o",
+      "build/2D/grid_min_path.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/2D/grid_min_path.o"
+  },
+  {
+    "file": "src/2D/tri_min_path.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/2D/tri_min_path.cpp",
+      "-o",
+      "build/2D/tri_min_path.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/2D/tri_min_path.o"
+  },
+  {
+    "file": "src/2D/cherry_pick.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/2D/cherry_pick.cpp",
+      "-o",
+      "build/2D/cherry_pick.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/2D/cherry_pick.o"
+  },
+  {
+    "file": "src/sub_seq/subset_sum.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/subset_sum.cpp",
+      "-o",
+      "build/sub_seq/subset_sum.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/subset_sum.o"
+  },
+  {
+    "file": "src/sub_seq/equal_subset_sum.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/equal_subset_sum.cpp",
+      "-o",
+      "build/sub_seq/equal_subset_sum.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/equal_subset_sum.o"
+  },
+  {
+    "file": "src/sub_seq/min_sum_diff_part.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/min_sum_diff_part.cpp",
+      "-o",
+      "build/sub_seq/min_sum_diff_part.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/min_sum_diff_part.o"
+  },
+  {
+    "file": "src/sub_seq/count_subset_sumk.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/count_subset_sumk.cpp",
+      "-o",
+      "build/sub_seq/count_subset_sumk.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/count_subset_sumk.o"
+  },
+  {
+    "file": "src/sub_seq/count_part_diff.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/count_part_diff.cpp",
+      "-o",
+      "build/sub_seq/count_part_diff.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/count_part_diff.o"
+  },
+  {
+    "file": "src/sub_seq/assign_cookie.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/assign_cookie.cpp",
+      "-o",
+      "build/sub_seq/assign_cookie.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/assign_cookie.o"
+  },
+  {
+    "file": "src/sub_seq/min_coins.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/min_coins.cpp",
+      "-o",
+      "build/sub_seq/min_coins.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/min_coins.o"
+  },
+  {
+    "file": "src/sub_seq/target_sum..cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/target_sum..cpp",
+      "-o",
+      "build/sub_seq/target_sum..o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/target_sum..o"
+  },
+  {
+    "file": "src/sub_seq/knap_sack_01.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/sub_seq/knap_sack_01.cpp",
+      "-o",
+      "build/sub_seq/knap_sack_01.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/sub_seq/knap_sack_01.o"
+  },
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Wall",
+      "-Wextra",
+      "-Wshadow",
+      "-Wconversion",
+      "-pedantic",
+      "-Iinclude",
+      "-g",
+      "-c",
+      "src/main.cpp",
+      "-o",
+      "build/main.o"
+    ],
+    "directory": "/home/sachin/Dev/tuf/15-dynamic_programming",
+    "output": "build/main.o"
+  }
 ]

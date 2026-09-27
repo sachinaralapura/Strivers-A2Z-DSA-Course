@@ -1,6 +1,6 @@
 #include "sub_seq.hpp"
+#include "utils.hpp"
 int main()
 {
-    CountPartitionsDiff::test(T_USED::TABULATION);
-	// MinimunCoins::test(T_USED::TABULATION);
+	CoinChangeTwo::test(T_USED::TABULATION);
 }

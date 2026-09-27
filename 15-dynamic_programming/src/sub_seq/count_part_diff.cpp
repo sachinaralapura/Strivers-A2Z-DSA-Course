@@ -1,6 +1,7 @@
 #include "sub_seq.hpp"
 #include <numeric>
-int getK(std::vector<int>& arr, int d)
+
+static int getK(std::vector<int>& arr, int d)
 {
 	int sum = std::reduce(arr.begin(), arr.end());
 	if ((sum + d) % 2 != 0 || d > sum)

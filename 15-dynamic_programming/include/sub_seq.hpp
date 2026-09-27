@@ -1,6 +1,5 @@
 #include "utils.hpp"
 #include <vector>
-
 // We are given an array ‘ARR’ with N positive integers. We need to find if there is a subset in
 // “ARR” with a sum equal to K. If there is, return true else return false. A subset/subsequence is
 // a contiguous or non-contiguous part of an array, where elements appear in the same order as the
@@ -9,9 +8,9 @@
 // not in the same order as the original array.
 namespace SubsetKSum
 {
-	bool recursion(std::vector<int>& arr, int k);
-	bool memoization(std::vector<int>& arr, int k);
-	bool tabulation(std::vector<int>& arr, int k);
+	bool recursion(std::vector<int>&, int k);
+	bool memoization(std::vector<int>&, int k);
+	bool tabulation(std::vector<int>&, int k);
 	void test(T_USED);
 } // namespace SubsetKSum
 
@@ -19,9 +18,9 @@ namespace SubsetKSum
 // such that the sum of elements in both subsets is equal else return false.
 namespace EqualSubsetSum
 {
-	bool recursion(std::vector<int>& arr);
-	bool memoization(std::vector<int>& arr);
-	bool tabulation(std::vector<int>& arr);
+	bool recursion(std::vector<int>&);
+	bool memoization(std::vector<int>&);
+	bool tabulation(std::vector<int>&);
 	void test(T_USED);
 } // namespace EqualSubsetSum
 
@@ -29,9 +28,9 @@ namespace EqualSubsetSum
 // subsets such that the absolute difference between their sums is minimized.
 namespace MinSumDiffPartition
 {
-	// bool recursion(std::vector<int>& arr);
-	// bool memoization(std::vector<int>& arr);
-	long long tabulation(std::vector<int>& arr);
+	// bool recursion(std::vector<int>& );
+	// bool memoization(std::vector<int>& );
+	long long tabulation(std::vector<int>&);
 	void test(T_USED);
 } // namespace MinSumDiffPartition
 
@@ -39,9 +38,9 @@ namespace MinSumDiffPartition
 // that have a sum equal to K.
 namespace CountSubsetSumK
 {
-	int recursion(std::vector<int>& arr, int k);
-	int memoization(std::vector<int>& arr, int k);
-	int tabulation(std::vector<int>& arr, int k);
+	int recursion(std::vector<int>&, int k);
+	int memoization(std::vector<int>&, int k);
+	int tabulation(std::vector<int>&, int k);
 	void test(T_USED);
 } // namespace CountSubsetSumK
 
@@ -50,9 +49,9 @@ namespace CountSubsetSumK
 // greater than or equal to S2.
 namespace CountPartitionsDiff
 {
-	int recursion(std::vector<int>& arr, int k);
-	int memoization(std::vector<int>& arr, int k);
-	int tabulation(std::vector<int>& arr, int k);
+	int recursion(std::vector<int>&, int k);
+	int memoization(std::vector<int>&, int k);
+	int tabulation(std::vector<int>&, int k);
 	void test(T_USED);
 } // namespace CountPartitionsDiff
 
@@ -67,11 +66,15 @@ namespace AssignCookie
 	int optimal(std::vector<int>& students, std::vector<int>& cookie);
 } // namespace AssignCookie
 
+// Given an integer array of coins representing coins of different denominations and an integer
+// amount representing a total amount of money. Return the fewest number of coins that are needed to
+// make up that amount. If that amount of money cannot be made up by any combination of the coins,
+// return -1. There are infinite numbers of coins of each type
 namespace MinimunCoins
 {
-	int recursion(std::vector<int>& arr, int k);
-	int memoization(std::vector<int>& arr, int k);
-	int tabulation(std::vector<int>& arr, int k);
+	int recursion(std::vector<int>&, int k);
+	int memoization(std::vector<int>&, int k);
+	int tabulation(std::vector<int>&, int k);
 	void test(T_USED);
 
 } // namespace MinimunCoins
@@ -82,9 +85,33 @@ namespace MinimunCoins
 // the number of ways in which we can achieve our required target.
 namespace TargetSum
 {
-	int recursion(std::vector<int>& arr, int);
-	int memoization(std::vector<int>& arr, int);
-	int tabulation(std::vector<int>& arr, int);
+	int recursion(std::vector<int>&, int);
+	int memoization(std::vector<int>&, int);
+	int tabulation(std::vector<int>&, int);
 	void test(T_USED);
 
 } // namespace TargetSum
+
+namespace Knapsack01
+{
+	int recursion(std::vector<int>&, std::vector<int>&, int);
+	int memoization(std::vector<int>&, std::vector<int>&, int);
+	int tabulation(std::vector<int>&, std::vector<int>&, int);
+	int spaceOptimization(std::vector<int>&, std::vector<int>&, int);
+	int spaceOptimizationTwo(std::vector<int>& v, std::vector<int>& w, int k);
+	void test(T_USED);
+} // namespace Knapsack01
+
+// Give an array coins of n integers representing coin denominations. Your task is to find the
+// number of distinct combinations that sum up to a specified amount of money. If it's impossible to
+// achieve the exact amount with any combination of coins, return 0.
+namespace CoinChangeTwo
+{
+	long recursion(std::vector<int>&, int);
+	long memoization(std::vector<int>&, int);
+	long tabulation(std::vector<int>&, int);
+	long spaceOptimization(std::vector<int>&, int);
+	long spaceOptimizationTwo(std::vector<int>&, int);
+	void test(T_USED);
+
+} // namespace CoinChangeTwo
