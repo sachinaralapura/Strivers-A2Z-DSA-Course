@@ -2,5 +2,5 @@
 #include "utils.hpp"
 int main()
 {
-	KnapsackUnbounded::test(T_USED::TABULATION);
+	RodCut::test(T_USED::ALL);
 }

@@ -138,5 +138,19 @@ namespace KnapsackUnbounded
 	long spaceOptimization(std::vector<int>&, std::vector<int>&, int);
 	long spaceOptimizationTwo(std::vector<int>& v, std::vector<int>& w, int k);
 	void test(T_USED);
-	void test(T_USED);
 } // namespace KnapsackUnbounded
+
+// Given a rod of length N inches and an array price[] where price[i] denotes the value of a piece
+// of rod of length i inches (1-based indexing). Determine the maximum value obtainable by cutting
+// up the rod and selling the pieces. Make any number of cuts, or none at all, and sell the
+// resulting pieces.
+// https://takeuforward.org/practice/dsa/rod-cutting-problem
+namespace RodCut
+{
+	long recursion(std::vector<int>&, int);
+	long memoization(std::vector<int>&, int);
+	long tabulation(std::vector<int>&, int);
+	long spaceOptimization(std::vector<int>&, int);
+	long spaceOptimizationTwo(std::vector<int>&, int);
+	void test(T_USED);
+} // namespace RodCut

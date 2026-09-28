@@ -17,3 +17,7 @@ pp
 CyberNetyx
 bin
 15-dynamic_programming/src/main.cpp
+15-dynamic_programming/compile_commands.json
+*compile_commands.json
+
+*/.cache

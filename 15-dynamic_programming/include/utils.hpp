@@ -29,6 +29,10 @@ inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 		break;
 	case T_USED::SPACEOPTIMIZATION:
 		os << "Space Optimization";
+	case T_USED::ALL:
+		os << "All technique";
+	default:
+		break;
 	}
 	return os;
 }
