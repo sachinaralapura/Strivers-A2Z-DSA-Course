@@ -1,6 +1,6 @@
-#include "sub_seq.hpp"
+#include "lis.hpp"
 #include "utils.hpp"
 int main()
 {
-	RodCut::test(T_USED::ALL);
+	LongIncSubseq::test(T_USED::TABULATION);
 }

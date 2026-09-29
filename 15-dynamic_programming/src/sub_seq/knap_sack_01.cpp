@@ -39,10 +39,10 @@ static int memoization(int ind, std::vector<int>& v, std::vector<int>& w, int k,
 	}
 	if (dp[ind][k] != -1)
 		return dp[ind][k];
-	int not_take = 0 + recursion(ind - 1, v, w, k);
+	int not_take = 0 + memoization(ind - 1, v, w, k, dp);
 	int take = INT_MIN;
 	if (w[ind] <= k)
-		take = v[ind] + recursion(ind - 1, v, w, k - w[ind]);
+		take = v[ind] + memoization(ind - 1, v, w, k - w[ind], dp);
 	return dp[ind][k] = std::max(take, not_take);
 }
 

@@ -40,10 +40,10 @@ static long memoization(int ind, std::vector<int>& arr, int k, Dp& dp)
 	if (k == 0)
 		return 1;
 
-	long not_take = recursion(ind - 1, arr, k);
+	long not_take = memoization(ind - 1, arr, k, dp);
 	long take = 0;
 	if (k >= arr[ind])
-		take = recursion(ind, arr, k - arr[ind]);
+		take = memoization(ind, arr, k - arr[ind], dp);
 	return dp[ind][k] = not_take + take;
 }
 

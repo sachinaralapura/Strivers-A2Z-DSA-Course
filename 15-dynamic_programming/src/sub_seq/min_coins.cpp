@@ -28,7 +28,7 @@ int MinimunCoins::recursion(std::vector<int>& arr, int k)
 	return ::recursion(arr, n - 1, k);
 }
 
-int recursion_memo(std::vector<int>& arr, int ind, int k, Dp& dp)
+static int recursion_memo(std::vector<int>& arr, int ind, int k, Dp& dp)
 {
 	// base cases
 	if (ind == 0) {
@@ -41,10 +41,10 @@ int recursion_memo(std::vector<int>& arr, int ind, int k, Dp& dp)
 	if (dp[ind][k] != -1)
 		return dp[ind][k];
 
-	int not_take = 0 + recursion(arr, ind - 1, k);
+	int not_take = 0 + recursion_memo(arr, ind - 1, k, dp);
 	int take = INT_MAX;
 	if (k >= arr[ind])
-		take = 1 + recursion(arr, ind, k - arr[ind]);
+		take = 1 + recursion_memo(arr, ind, k - arr[ind], dp);
 	return dp[ind][k] = std::min(take, not_take);
 }
 

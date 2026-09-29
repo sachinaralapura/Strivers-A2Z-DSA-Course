@@ -30,12 +30,12 @@ bool subset_sum_memo(int ind, int target, std::vector<int>& arr, Dp& dp)
 		return (arr[0] == target);
 	if (dp[ind][target])
 		return true;
-	bool not_taken = subset_sum_recursion(ind - 1, target, arr);
+	bool not_taken = subset_sum_memo(ind - 1, target, arr, dp);
 	if (not_taken)
 		return not_taken;
 	bool taken = false;
 	if (arr[ind] <= target)
-		taken = subset_sum_recursion(ind - 1, target - arr[ind], arr);
+		taken = subset_sum_memo(ind - 1, target - arr[ind], arr, dp);
 	return dp[ind][target] = (not_taken || taken);
 }
 bool SubsetKSum::memoization(std::vector<int>& arr, int k)

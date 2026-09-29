@@ -39,7 +39,7 @@ inline std::ostream& operator<<(std::ostream& os, T_USED t_used)
 
 template <typename T> using Vecvec = std::vector<std::vector<T>>;
 
-inline std::ostream& operator<<(std::ostream& os, const Vecvec<int>& matrix)
+template <typename T> std::ostream& operator<<(std::ostream& os, const Vecvec<T>& matrix)
 {
 	if (matrix.empty()) {
 		os << "[ ] (Empty Matrix)\n";
@@ -62,6 +62,7 @@ inline std::ostream& operator<<(std::ostream& os, const Vecvec<int>& matrix)
 	// os << "]\n";
 	return os;
 }
+
 using cube = std::vector<std::vector<std::vector<int>>>;
 
 // Template function to overload the << operator for vectors

@@ -1,5 +1,4 @@
 #include "utils.hpp"
-#include <vector>
 // We are given an array ‘ARR’ with N positive integers. We need to find if there is a subset in
 // “ARR” with a sum equal to K. If there is, return true else return false. A subset/subsequence is
 // a contiguous or non-contiguous part of an array, where elements appear in the same order as the

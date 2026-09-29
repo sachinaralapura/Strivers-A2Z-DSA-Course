@@ -1,7 +1,7 @@
 #include "sub_seq.hpp"
 
 using Dp = Vecvec<int>;
-int count_subset_recursion(int ind, int target, std::vector<int>& arr)
+static int recursion(int ind, int target, std::vector<int>& arr)
 {
 	if (target == 0)
 		return 1;
@@ -10,19 +10,19 @@ int count_subset_recursion(int ind, int target, std::vector<int>& arr)
 			return 1;
 		return 0;
 	}
-	int not_taken = count_subset_recursion(ind - 1, target, arr);
+	int not_taken = recursion(ind - 1, target, arr);
 	int taken = 0;
 	if (arr[ind] <= target)
-		taken = count_subset_recursion(ind - 1, target - arr[ind], arr);
+		taken = recursion(ind - 1, target - arr[ind], arr);
 	return not_taken + taken;
 }
 
 int CountSubsetSumK::recursion(std::vector<int>& arr, int k)
 {
-	return count_subset_recursion(arr.size() - 1, k, arr);
+	return ::recursion(arr.size() - 1, k, arr);
 }
 
-int count_subset_memo(int ind, int target, std::vector<int>& arr, Dp& dp)
+static int memoization(int ind, int target, std::vector<int>& arr, Dp& dp)
 {
 	if (target == 0)
 		return 1;
@@ -33,16 +33,16 @@ int count_subset_memo(int ind, int target, std::vector<int>& arr, Dp& dp)
 	}
 	if (dp[ind][target] != -1)
 		return dp[ind][target];
-	int not_taken = count_subset_recursion(ind - 1, target, arr);
+	int not_taken = memoization(ind - 1, target, arr, dp);
 	int taken = 0;
 	if (arr[ind] <= target)
-		taken = count_subset_recursion(ind - 1, target - arr[ind], arr);
+		taken = memoization(ind - 1, target - arr[ind], arr, dp);
 	return dp[ind][target] = (not_taken + taken);
 }
 int CountSubsetSumK::memoization(std::vector<int>& arr, int k)
 {
 	Dp dp(arr.size(), std::vector<int>(k + 1, -1));
-	return count_subset_memo(arr.size() - 1, k, arr, dp);
+	return ::memoization(arr.size() - 1, k, arr, dp);
 }
 
 int CountSubsetSumK::tabulation(std::vector<int>& arr, int k)
