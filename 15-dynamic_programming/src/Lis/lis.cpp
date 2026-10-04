@@ -4,13 +4,13 @@
 #include <climits>
 
 using DP = Vecvec<long>;
-static int N;
 
+static int N;
 static long recursion(int ind, int prevInd, std::vector<int>& arr)
 {
 	if (ind == N)
 		return 0;
-	long not_take = recursion(ind + 1, ind, arr);
+	long not_take = recursion(ind + 1, prevInd, arr);
 	long take = LONG_MIN;
 	if (prevInd == -1 || arr[prevInd] < arr[ind]) {
 		take = 1 + recursion(ind + 1, ind, arr);
@@ -25,7 +25,7 @@ static long memoization(int ind, int prevInd, std::vector<int>& arr, DP& dp)
 	if (prevInd >= 0 && dp[ind][prevInd] != -1)
 		return dp[ind][prevInd];
 
-	long not_take = memoization(ind + 1, ind, arr, dp);
+	long not_take = memoization(ind + 1, prevInd, arr, dp);
 	long take = LONG_MIN;
 	if (prevInd == -1 || arr[prevInd] < arr[ind]) {
 		take = 1 + memoization(ind + 1, ind, arr, dp);
@@ -47,7 +47,9 @@ long LongIncSubseq::memoization(std::vector<int>& arr)
 {
 	N = arr.size();
 	DP dp(N, std::vector<long>(N, -1));
-	return ::memoization(0, -1, arr, dp);
+	long res = ::memoization(0, -1, arr, dp);
+	// std::cout << dp << std::endl;
+	return res;
 }
 
 long LongIncSubseq::tabulation(std::vector<int>& arr)
@@ -66,6 +68,23 @@ long LongIncSubseq::tabulation(std::vector<int>& arr)
 	}
 	std::cout << dp << std::endl;
 	return dp[0][0];
+}
+
+long LongIncSubseq::spaceOptimization(std::vector<int>& arr)
+{
+	N = arr.size();
+	std::vector<long> dp(N, 1);
+	long maxi = 0;
+
+	for (int i = 0; i < N; i++) {
+		for (int prev = 0; prev < i; prev++) {
+			if (arr[prev] < arr[i]) {
+				dp[i] = std::max(dp[i], 1 + dp[prev]);
+			}
+		}
+		maxi = std::max(maxi, dp[i]);
+	}
+	return maxi;
 }
 
 void LongIncSubseq::test(T_USED t_used)
@@ -95,7 +114,7 @@ void LongIncSubseq::test(T_USED t_used)
 				res = LongIncSubseq::tabulation(v);
 				break;
 			case T_USED::SPACEOPTIMIZATION:
-				// res = LongIncSubseq::spaceOptimization(v);
+				res = LongIncSubseq::spaceOptimization(v);
 				break;
 			case T_USED::ALL:
 				break;
@@ -120,7 +139,7 @@ void LongIncSubseq::test(T_USED t_used)
 		res = LongIncSubseq::tabulation(v);
 		break;
 	case T_USED::SPACEOPTIMIZATION:
-		// res = LongIncSubseq::spaceOptimization(v);
+		res = LongIncSubseq::spaceOptimization(v);
 		break;
 	default:
 		break;
