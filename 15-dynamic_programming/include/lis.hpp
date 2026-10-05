@@ -71,3 +71,21 @@ namespace LongStringChain
 	// long spaceOptimizationTwo(std::vector<int>&);
 	void test();
 } // namespace LongStringChain
+
+// Given an array arr of n integers, the task is to find the length of the longest bitonic sequence.
+// A sequence is considered bitonic if it is strictly increasing, strictly decreasing, or strictly
+// increases and then strictly decreases.. The sequence does not have to be contiguous.
+namespace LongBitonicSubseq
+{
+	long tabulation(std::vector<int>&);
+	void test();
+} // namespace LongBitonicSubseq
+
+
+// Given an integer array nums, find the number of Longest Increasing Subsequences (LIS) in the array.
+
+namespace NumberOfLis
+{
+    long tabulation(std::vector<int>&);
+	void test();
+}

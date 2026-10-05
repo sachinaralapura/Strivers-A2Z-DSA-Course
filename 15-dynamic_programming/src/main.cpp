@@ -2,5 +2,5 @@
 
 int main()
 {
-	LongStringChain::test();
+	NumberOfLis::test();
 }
