@@ -1,11 +1,6 @@
 CXX = clang++
 
 CXXFLAGS = -std=c++20 \
-			-Wall \
-			-Wextra \
-			-Wshadow \
-			-Wconversion \
-			-pedantic \
 			-Iinclude \
 			-g
 

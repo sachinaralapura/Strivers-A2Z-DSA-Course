@@ -1,3 +1,5 @@
+#ifndef LIS
+#define LIS
 #include "utils.hpp"
 #include <string>
 
@@ -81,11 +83,12 @@ namespace LongBitonicSubseq
 	void test();
 } // namespace LongBitonicSubseq
 
-
-// Given an integer array nums, find the number of Longest Increasing Subsequences (LIS) in the array.
-
+// Given an integer array nums, find the number of Longest Increasing Subsequences (LIS) in the
+// array.
 namespace NumberOfLis
 {
-    long tabulation(std::vector<int>&);
+	long tabulation(std::vector<int>&);
 	void test();
-}
+} // namespace NumberOfLis
+
+#endif

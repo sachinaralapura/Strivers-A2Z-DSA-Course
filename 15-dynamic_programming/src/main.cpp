@@ -1,6 +1,6 @@
-#include "lis.hpp"
+#include "dpstrings.hpp"
 
 int main()
 {
-	NumberOfLis::test();
+	LongCommonSubSeq::test(T_USED::TABULATION);
 }

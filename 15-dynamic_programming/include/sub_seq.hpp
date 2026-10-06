@@ -1,3 +1,6 @@
+#ifndef DO_ON_STRING
+#define DO_ON_STRING
+
 #include "utils.hpp"
 // We are given an array ‘ARR’ with N positive integers. We need to find if there is a subset in
 // “ARR” with a sum equal to K. If there is, return true else return false. A subset/subsequence is
@@ -153,3 +156,5 @@ namespace RodCut
 	long spaceOptimizationTwo(std::vector<int>&, int);
 	void test(T_USED);
 } // namespace RodCut
+
+#endif
