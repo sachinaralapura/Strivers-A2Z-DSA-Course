@@ -53,7 +53,7 @@ long LongCommonSubSeq::tabulation(const std::string& str1, const std::string& st
 
 	for (size_t i = 1; i <= N; i++) {
 		for (size_t j = 1; j <= M; j++) {
-			if (str1[i] == str2[j]) {
+			if (str1[i - 1] == str2[j - 1]) {
 				dp[i][j] = 1 + dp[i - 1][j - 1];
 				continue;
 			}

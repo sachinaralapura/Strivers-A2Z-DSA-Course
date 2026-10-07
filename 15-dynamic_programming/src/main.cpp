@@ -2,5 +2,5 @@
 
 int main()
 {
-	LongCommonSubSeq::test(T_USED::TABULATION);
+	LongComPalidrome::test(T_USED::RECURSION_MEMO);
 }
