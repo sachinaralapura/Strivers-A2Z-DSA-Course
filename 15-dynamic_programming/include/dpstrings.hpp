@@ -29,11 +29,34 @@ namespace LongCommonSubStr
 // A palindrome is a sequence that reads the same backwards as forward.
 // A subsequence is a sequence that can be derived from another sequence by deleting some or no
 // elements without changing the order of the remaining elements.
-namespace LongComPalidrome
+namespace LongPalidrome
 {
 	long recursion(const std::string&);
 	long memoization(const std::string&);
 	long tabulation(const std::string&);
 	void test(T_USED);
-} // namespace LongComPalidrome
+} // namespace LongPalidrome
+
+// Given two strings str1 and str2, find the minimum number of insertions and deletions in string
+// str1 required to transform str1 into str2.
+// Insertion and deletion of characters can take place at any position in the string.
+namespace MinInstDelAtoB
+{
+	long recursion(const std::string&, const std::string&);
+	long memoization(const std::string&, const std::string&);
+	long tabulation(const std::string&, const std::string&);
+	void test(T_USED);
+} // namespace MinInstDelAtoB
+
+// Given two strings str1 and str2, find the shortest common supersequence.
+// The shortest common supersequence is the shortest string that contains both str1 and str2 as
+// subsequences.
+// 
+// Note: The problem may have multiple valid answers. Since the return type is a string, the judge
+// will output 1 if your returned string is a valid shortest common supersequence and 0 otherwise.
+namespace PrintShortestSuperSeq
+{
+	std::string tabulation(const std::string&, const std::string&);
+	void test();
+} // namespace PrintShortestSuperSeq
 #endif

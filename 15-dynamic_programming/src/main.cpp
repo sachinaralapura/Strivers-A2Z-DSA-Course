@@ -2,5 +2,5 @@
 
 int main()
 {
-	LongComPalidrome::test(T_USED::RECURSION_MEMO);
+	PrintShortestSuperSeq::test();
 }

@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <string>
 
-long LongComPalidrome::recursion(const std::string& str1)
+long LongPalidrome::recursion(const std::string& str1)
 {
 	std::string s = str1;
 	std::string t = s;
@@ -10,7 +10,7 @@ long LongComPalidrome::recursion(const std::string& str1)
 	return LongCommonSubSeq::recursion(s, t);
 }
 
-long LongComPalidrome::memoization(const std::string& str1)
+long LongPalidrome::memoization(const std::string& str1)
 {
 	std::string s = str1;
 	std::string t = s;
@@ -18,7 +18,7 @@ long LongComPalidrome::memoization(const std::string& str1)
 	return LongCommonSubSeq::memoization(s, t);
 }
 
-long LongComPalidrome::tabulation(const std::string& str1)
+long LongPalidrome::tabulation(const std::string& str1)
 {
 	std::string s = str1;
 	std::string t = s;
@@ -26,7 +26,7 @@ long LongComPalidrome::tabulation(const std::string& str1)
 	return LongCommonSubSeq::tabulation(s, t);
 }
 
-void LongComPalidrome::test(T_USED t_used)
+void LongPalidrome::test(T_USED t_used)
 {
 	std::string str1("eeeme");
 	long res = 0;
@@ -36,13 +36,13 @@ void LongComPalidrome::test(T_USED t_used)
 
 	switch (t_used) {
 	case T_USED::RECURSION:
-		res = LongComPalidrome::recursion(str1);
+		res = LongPalidrome::recursion(str1);
 		break;
 	case T_USED::RECURSION_MEMO:
-		res = LongComPalidrome::memoization(str1);
+		res = LongPalidrome::memoization(str1);
 		break;
 	case T_USED::TABULATION:
-		res = LongComPalidrome::tabulation(str1);
+		res = LongPalidrome::tabulation(str1);
 		break;
 	default:
 		break;
