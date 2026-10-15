@@ -1,6 +1,7 @@
-#include "dpstrings.hpp"
+#include "sub_seq.hpp"
+#include "utils.hpp"
 
 int main()
 {
-	PrintShortestSuperSeq::test();
+	SquareFreeSubset::test(T_USED::TABULATION);
 }
