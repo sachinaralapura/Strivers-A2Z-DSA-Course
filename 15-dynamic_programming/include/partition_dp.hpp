@@ -26,4 +26,14 @@ namespace BurstBalloons
 
 } // namespace BurstBalloons
 
+// Given a string s, partition s such that every substring of the partition is a palindrome.Return
+// the minimum cuts needed for a palindrome partitioning of s.
+namespace PalindromePartition
+{
+	long recursion(std::string& str);
+	long memoization();
+	long tabulation();
+	void test(T_USED);
+} // namespace PalindromePartition
+
 #endif

@@ -1,11 +1,12 @@
 CXX = clang++
 
 CXXFLAGS = -std=c++20 \
-			-Iinclude \
-			-g
+           -Wall -Wextra -Wshadow -Wconversion -pedantic \
+           -Iinclude \
+           -g \
+           -O0
 
 SRC = $(shell find src -name '*.cpp')
-
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
 TARGET = bin/app
@@ -23,7 +24,10 @@ build/%.o: src/%.cpp
 run: all
 	./$(TARGET)
 
+debug: all
+	lldb ./$(TARGET)
+
 clean:
 	rm -rf build bin
 
-.PHONY: all run clean
+.PHONY: all run debug clean

@@ -1,7 +1,7 @@
-#include "sub_seq.hpp"
+#include "partition_dp.hpp"
 #include "utils.hpp"
 
 int main()
 {
-	SquareFreeSubset::test(T_USED::TABULATION);
+	PalindromePartition::test(T_USED::RECURSION);
 }
